@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.info.mapper.GoodsEntityMapper">
+    <resultMap id="BaseResultMapper" type="com.info.entity.GoodsEntity">
+        <id column="GOODS_ID" jdbcType="DECIMAL" property="goodsId"/>
+        <result column="GOODS_CATEGORY" jdbcType="VARCHAR" property="goodsCategory"/>
+        <result column="GOODS_NAME" jdbcType="VARCHAR" property="goodsName"/>
+        <result column="GOODS_NUMBER" jdbcType="NUMERIC" property="goodsNumber"/>
+        <result column="GOODS_PRICE" jdbcType="NUMERIC" property="goodsPrice"/>
+        <result column="PRODUCTION_TIME" jdbcType="DATE" property="productionTime"/>
+        <result column="VALIDITY" jdbcType="VARCHAR" property="validity"/>
+    </resultMap>
+
+    <!--添加商品-->
+    <insert id="insert" parameterType="com.info.entity.GoodsEntity">
+        <selectKey keyProperty="goodsId" order="BEFORE" resultType="java.lang.Long">
+            select SEQ_GOODS.nextval as goodsId from DUAL
+        </selectKey>
+        insert into GOODS
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="goodsId!=null">GOODS_ID,</if>
+            <if test="goodsCategory!=null">GOODS_CATEGORY,</if>
+            <if test="goodsName!=null">GOODS_NAME,</if>
+            <if test="goodsNumber!=null">GOODS_NUMBER,</if>
+            <if test="goodsPrice!=null">GOODS_PRICE,</if>
+            <if test="productionTime!=null">PRODUCTION_TIME,</if>
+            <if test="validity!=null">VALIDITY</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="goodsId!=null">#{goodsId,jdbcType=DECIMAL},</if>
+            <if test="goodsCategory!=null">#{goodsCategory,jdbcType=VARCHAR},</if>
+            <if test="goodsName!=null">#{goodsName,jdbcType=VARCHAR},</if>
+            <if test="goodsNumber!=null">#{goodsNumber,jdbcType=NUMERIC},</if>
+            <if test="goodsPrice!=null">#{goodsPrice,jdbcType=NUMERIC},</if>
+            <if test="productionTime!=null">#{productionTime,jdbcType=DATE},</if>
+            <if test="validity!=null">#{validity,jdbcType=VARCHAR}</if>
+        </trim>
+    </insert>
+
+    <!--更新商品信息-->
+    <update id="updateById" parameterType="java.lang.Long">
+        update GOODS
+        <set>
+            <if test="goodsId!=null">GOODS_ID=#{goodsId,jdbcType=DECIMAL},</if>
+            <if test="goodsCategory!=null">GOODS_CATEGORY=#{goodsCategory,jdbcType=VARCHAR},</if>
+            <if test="goodsName!=null">GOODS_NAME=#{goodsName,jdbcType=VARCHAR},</if>
+            <if test="goodsNumber!=null">GOODS_NUMBER=#{goodsNumber,jdbcType=NUMERIC},</if>
+            <if test="goodsPrice!=null">GOODS_PRICE=#{goodsPrice,jdbcType=NUMERIC},</if>
+            <if test="productionTime!=null">PRODUCTION_TIME=#{productionTime,jdbcType=DATE},</if>
+            <if test="validity!=null">VALIDITY=#{validity,jdbcType=VARCHAR},</if>
+        </set>
+        where GOODS_ID = #{goodsId,jdbcType=DECIMAL}
+    </update>
+
+    <!--根据ID删除商品-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        update GOODS
+        set VALIDITY = 'N'
+        where GOODS_ID = #{goodsId,jdbcType=DECIMAL}
+    </delete>
+
+    <!--根据条件查询商品-->
+    <select id="selectByCondition" resultMap="BaseResultMapper" parameterType="java.util.Map">
+        select *
+        from GOODS
+        <where>
+            VALIDITY = 'Y'
+            <if test="goodsName!=null">AND GOODS_NAME = #{goodsName,jdbcType=VARCHAR}</if>
+            <if test="goodsCategory!=null">AND GOODS_CATEGORY = #{goodsCategory,jdbcType=VARCHAR}</if>
+            <if test="productionTime!=null">AND PRODUCTION_TIME = #{productionTime,jdbcType=DATE}</if>
+        </where>
+    </select>
+
+    <!--根据商品ID查询商品-->
+    <select id="selectByPrimaryKey" resultMap="BaseResultMapper" parameterType="java.lang.Long">
+        select *
+        from GOODS
+        where GOODS_ID = #{goodsId,jdbcType=DECIMAL}
+    </select>
+
+
+</mapper>

@@ -1,0 +1,30 @@
+server:
+  port: 8082
+spring:
+  thymeleaf:
+    check-template: false
+    check-template-location: false
+    prefix: classpath:/templates/
+  datasource:
+    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@192.168.88.5:1521:orcl
+#    url: jdbc:oracle:thin:@192.168.1.22:1521:orcl11g
+    username: GST
+    password: GST
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+      max-wait: 60000
+logging:
+  level:
+    root: debug
+   #去掉多余日志信息
+logging.level:
+   org.springframework.boot.autoconfigure: error
+   #配置thymeleaf日志级别
+   org:
+      thymeleaf:
+        TemplateEngine:
+          CONFIG: info

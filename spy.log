@@ -1,0 +1,2 @@
+1639286807135|16|statement|connection 0|url jdbc:p6spy:oracle:thin:@192.168.1.22:1521:orcl11g|SELECT count(0) FROM GOODS|SELECT count(0) FROM GOODS
+1639286807326|10|statement|connection 0|url jdbc:p6spy:oracle:thin:@192.168.1.22:1521:orcl11g| SELECT TMP_PAGE.*, ROWNUM ROW_ID FROM ( select *         from GOODS ) TMP_PAGE WHERE ROWNUM <= ? | SELECT TMP_PAGE.*, ROWNUM ROW_ID FROM ( select *         from GOODS ) TMP_PAGE WHERE ROWNUM <= 10 

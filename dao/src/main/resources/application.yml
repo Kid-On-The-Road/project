@@ -1,0 +1,22 @@
+mybatis:
+  type-aliases-package: com.info.entity
+  mapper-locations:
+    - classpath: com/info/mapper/*.xml
+  configuration:
+    map-undersorce-to-camel-case: true
+logging:
+  level:
+    com.info: debug
+spring:
+  datasource:
+    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@192.168.88.5:1521:orcl
+#    url: jdbc:oracle:thin:@192.168.1.22:1521:orcl11g
+    username: GST
+    password: GST
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+      max-wait: 60000
