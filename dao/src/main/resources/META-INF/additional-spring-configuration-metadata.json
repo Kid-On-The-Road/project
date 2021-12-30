@@ -4,5 +4,10 @@
       "name": "spring.datasource.druid.initial-size",
       "type": "java.lang.String",
       "description": "Description for spring.datasource.druid.initial-size."
+    },
+    {
+      "name": "mybatis.configuration.map-undersorce-to-camel-case",
+      "type": "java.lang.String",
+      "description": "Description for mybatis.configuration.map-undersorce-to-camel-case."
     }
   ] }
