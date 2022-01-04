@@ -9,7 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -17,7 +16,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Controller("/")
-public class JbossController {
+public class goodsManageController {
     @Resource
     private GoodsServiceImpl goodsService;
 
@@ -28,7 +27,7 @@ public class JbossController {
     @GetMapping("test")
     @ResponseBody
     public String test(@RequestParam(required = false, value = "goodsId") Long goodsId) {
-        return "test";
+        return "/index.html";
     }
 
     /**
@@ -95,7 +94,7 @@ public class JbossController {
         goodsService.selectByCondition(map, pageNum);
         PageInfo<GoodsDto> pageInfo = page.toPageInfo();
         mv.addObject("pageInfo", pageInfo);
-        mv.setViewName("query");
+        mv.setViewName("goodsManage");
         return mv;
     }
 
