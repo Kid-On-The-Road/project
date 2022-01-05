@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.info.mapper.UserEntityMapper">
+    <resultMap id="BaseResultMapper" type="com.info.entity.UserEntity">
+        <id column="USER_ID" jdbcType="DECIMAL" property="userId"/>
+        <result column="USER_NAME" jdbcType="VARCHAR" property="userName"/>
+        <result column="PASSWORD" jdbcType="VARCHAR" property="password"/>
+        <result column="CREATE_TIME" jdbcType="DATE" property="createTime"/>
+        <result column="VALIDITY" jdbcType="VARCHAR" property="validity"/>
+    </resultMap>
+
+    <!--添加用户-->
+    <insert id="insert" parameterType="com.info.entity.UserEntity">
+        <selectKey keyProperty="userId" order="BEFORE" resultType="java.lang.Long">
+            select SEQ_USERS.nextval as userId from DUAL
+        </selectKey>
+        insert into USERS
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId!=null">USER_ID,</if>
+            <if test="userName!=null">USER_NAME,</if>
+            <if test="password!=null">PASSWORD,</if>
+            <if test="createTime!=null">CREATE_TIME,</if>
+            <if test="validity!=null">VALIDITY</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId!=null">#{userId,jdbcType=DECIMAL},</if>
+            <if test="userName!=null">#{userName,jdbcType=VARCHAR},</if>
+            <if test="password!=null">#{password,jdbcType=VARCHAR},</if>
+            <if test="createTime!=null">#{createTime,jdbcType=DATE},</if>
+            <if test="validity!=null">#{validity,jdbcType=VARCHAR}</if>
+        </trim>
+    </insert>
+
+    <!--更新用户信息-->
+    <update id="updateById" parameterType="java.lang.Long">
+        update USERS
+        <set>
+            <if test="userId!=null">USER_ID=#{userId,jdbcType=DECIMAL},</if>
+            <if test="userName!=null">USER_NAME=#{userName,jdbcType=VARCHAR},</if>
+            <if test="password!=null">PASSWORD=#{password,jdbcType=VARCHAR},</if>
+            <if test="validity!=null">VALIDITY=#{validity,jdbcType=VARCHAR},</if>
+        </set>
+        where USER_ID = #{userId,jdbcType=DECIMAL}
+    </update>
+
+    <!--根据ID删除用户-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        update USERS
+        set VALIDITY = 'N'
+        where USER_ID = #{userId,jdbcType=DECIMAL}
+    </delete>
+
+    <!--根据条件查询用户-->
+    <select id="selectByCondition" resultMap="BaseResultMapper" parameterType="java.util.Map">
+        select *
+        from USERS
+        <where>
+            VALIDITY = 'Y'
+            <if test="userName!=null">AND USER_NAME = #{userName,jdbcType=VARCHAR}</if>
+            <if test="createTime!=null">AND CREATE_TIME = #{createTime,jdbcType=DATE}</if>
+        </where>
+    </select>
+
+    <!--根据用户ID查询用户-->
+    <select id="selectByPrimaryKey" resultMap="BaseResultMapper" parameterType="java.lang.Long">
+        select *
+        from USERS
+        where USER_ID = #{userId,jdbcType=DECIMAL}
+    </select>
+
+
+</mapper>

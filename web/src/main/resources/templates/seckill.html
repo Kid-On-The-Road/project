@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>秒杀</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/seckill.css}">
+    <link rel="stylesheet" href="webjars/bootstrap/3.3.5/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="webjars/toastr/2.1.3/toastr.css"/>
+    <link rel="stylesheet" href="webjars/bootstrap-datetimepicker/2.4.4/css/bootstrap-datetimepicker.min.css"/>
+</head>
+<!--onload="selectGoods()" :刷新页面时执行方法-->
+<!--<body onbeforeunload="goodsLoad()">-->
+<body>
+
+<div class="seckill form-inline">
+    <label for="goodsName">商品名称：
+        <input type="text" class="form-control" id="goodsName"
+               onkeyup="this.value=this.value.replace(/[, ]/g,'')">
+    </label>
+    <label for="goodsNumber">剩余数量：
+        <input type="text" class="form-control" id="goodsNumber"
+               onkeyup="this.value=this.value.replace(/[, ]/g,'')">
+    </label>
+</div>
+<div class="seckill form-inline">
+    <button type="button" class="btn btn-warning glyphicon glyphicon-shopping-cart "
+            style="margin-left: 20px;position:static" onclick="startSeckill()">&nbsp;开始秒杀
+    </button>
+    <button type="button" class="btn btn-success glyphicon glyphicon-yen "
+            style="margin-left: 20px;position:static" onclick="pay()">&nbsp;付款
+    </button>
+    <button type="button" class="btn btn-primary glyphicon glyphicon-remove "
+            style="margin-left: 20px;position:static" onclick="refund()">&nbsp;退款/退订
+    </button>
+</div>
+
+<!--引入js-->
+<script src="webjars/jquery/3.6.0/jquery.min.js"></script>
+<script src="webjars/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="webjars/bootstrap-datetimepicker/2.4.4/js/bootstrap-datetimepicker.min.js"></script>
+<script src="webjars/bootstrap-datetimepicker/2.4.4/js/bootstrap-datetimepicker.js"></script>
+<script src="webjars/moment/2.29.1/moment.js"></script>
+<script src="webjars/bootstrap-datetimepicker/2.4.4/js/locales/bootstrap-datetimepicker.fr.js"></script>
+<script src="webjars/bootstrap-datetimepicker/2.4.4/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="webjars/toastr/2.1.3/toastr.js"></script>
+<script type="text/javascript" th:src="@{/js/goodsManage.js}"></script>
+</body>
+</html>

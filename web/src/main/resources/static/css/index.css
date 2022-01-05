@@ -1,0 +1,13 @@
+.index {
+    width: 300px;
+    position: center;
+    margin: 50%;
+    border: 1px solid #ddd;
+    outline: 0;
+    padding: 10px;
+    font-size: 14px;
+    display: inline-block;
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 1px 1px 3px rgb(0 0 0 / 20%);
+}

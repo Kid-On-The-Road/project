@@ -15,27 +15,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-@Controller("/")
-public class goodsManageController {
+@Controller
+public class GoodsManageController {
     @Resource
     private GoodsServiceImpl goodsService;
-
-    /**
-     * 测试页面
-     * @param goodsId 商品ID
-     */
-    @GetMapping("test")
-    @ResponseBody
-    public String test(@RequestParam(required = false, value = "goodsId") Long goodsId) {
-        return "/index.html";
-    }
 
     /**
      * 保存/修改商品信息
      *
      * @param goodsDto 需要保存的商品对象
      */
-    @RequestMapping(value = "save", method = RequestMethod.POST)
+    @RequestMapping(value = "saveGoods", method = RequestMethod.POST)
     @ResponseBody
     public int save(@ModelAttribute(value = "save") GoodsDto goodsDto) throws Exception {
         return goodsService.save(goodsDto);
@@ -46,7 +36,7 @@ public class goodsManageController {
      *
      * @param goodsId 商品ID
      */
-    @GetMapping("delete")
+    @GetMapping("deleteGoods")
     @ResponseBody
     public int delete(@RequestParam(required = false, value = "goodsId") Long goodsId) {
         return goodsService.deleteByGoodsId(goodsId);

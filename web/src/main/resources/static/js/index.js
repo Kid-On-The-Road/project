@@ -37,7 +37,7 @@ function saveGoods() {
     };
     $.ajax({
         type: "POST",
-        url: "saveGoods",
+        url: "save",
         data: data,
         success: function (result) {
             if (result >= 1) {
@@ -94,7 +94,7 @@ function delGoods(goodsId) {
     };
     $.ajax({
         type: "get",
-        url: "deleteGoods",
+        url: "delete",
         data: data,
         success: function (result) {
             if (result >= 1) {
