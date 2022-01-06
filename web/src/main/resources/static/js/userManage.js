@@ -31,9 +31,9 @@ function verifyUserName(save) {
         success: function (result) {
             if (result.length !== 0 && document.getElementById('userModalLabel').innerText === '新增用户') {
                 $('#modalUserName').val('');
-                toastr.success('用户名已存在,请重新输入!');
+                toastr.warning('用户名已存在,请重新输入!');
             } else if (document.getElementById('modalUserName').value === '' || document.getElementById('modalPassword').value === '') {
-                toastr.success('用户名或密码不能为空!');
+                toastr.warning('用户名或密码不能为空!');
             } else if (save === 'save') {
                 saveUser();
             }

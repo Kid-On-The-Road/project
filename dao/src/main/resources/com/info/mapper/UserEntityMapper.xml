@@ -67,6 +67,7 @@
             VALIDITY = 'Y'
             <if test="userName!=null">AND USER_NAME = #{userName,jdbcType=VARCHAR}</if>
             <if test="createTime!=null">AND CREATE_TIME = #{createTime,jdbcType=DATE}</if>
+            <if test="password!=null">AND PASSWORD = #{password,jdbcType=VARCHAR}</if>
             <if test="role!=null">AND ROLE= #{role,jdbcType=VARCHAR}</if>
         </where>
         order by USER_ID
