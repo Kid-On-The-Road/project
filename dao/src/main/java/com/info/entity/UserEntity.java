@@ -13,6 +13,18 @@ public class UserEntity {
     private Date createTime;
     //是否有效
     private String validity;
+    //角色
+    private String role;
+    //角色名称
+    private String roleName;
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
 
     public Long getUserId() {
         return userId;
@@ -52,5 +64,13 @@ public class UserEntity {
 
     public void setValidity(String validity) {
         this.validity = validity;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

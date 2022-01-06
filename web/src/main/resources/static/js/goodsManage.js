@@ -58,13 +58,16 @@ function editGoods(goodsId, operation) {
         $('.modalForm input').val('');
         $('#goodsModalLabel').html('新增商品');
         $('.modalForm').find('input').attr('disabled', false)
+        document.getElementById('save').style.display = 'inline-block';
     } else {
         if (operation === 'detail') {
             $('#goodsModalLabel').html('商品详情');
             $('.modalForm').find('input').attr('disabled', true)
+            document.getElementById('save').style.display = 'none';
         } else {
             $('#goodsModalLabel').html('修改商品信息');
             $('.modalForm').find('input').attr('disabled', false)
+            document.getElementById('save').style.display = 'inline-block';
         }
 
         $.ajax({
@@ -89,25 +92,29 @@ function editGoods(goodsId, operation) {
 
 //删除商品
 function delGoods(goodsId) {
-    const data = {
-        "goodsId": goodsId
-    };
-    $.ajax({
-        type: "get",
-        url: "deleteGoods",
-        data: data,
-        success: function (result) {
-            if (result >= 1) {
-                //关闭模态框遮罩
-                $(".modal-backdrop").remove();
-                //刷新表格数据
-                $(".goodsList").load(location.href + " .goodsList>*");
-                toastr.success('删除成功');
-            } else {
-                toastr.error(' 删除失败');
+    if (goodsId > 0) {
+        document.getElementById('confirm').value = goodsId;
+    } else {
+        const data = {
+            "goodsId": document.getElementById('confirm').value
+        };
+        $.ajax({
+            type: "get",
+            url: "deleteGoods",
+            data: data,
+            success: function (result) {
+                if (result >= 1) {
+                    //关闭模态框遮罩
+                    $(".modal-backdrop").remove();
+                    //刷新表格数据
+                    $(".goodsList").load(location.href + " .goodsList>*");
+                    toastr.success('删除成功');
+                } else {
+                    toastr.error(' 删除失败');
+                }
             }
-        }
-    });
+        });
+    }
 }
 
 //配置日期控件
@@ -138,6 +145,6 @@ toastr.options = {
 };
 
 // 页面加载动画
-function  goodsLoad() {
-        $(".goodsPage").fadeIn();
+function goodsLoad() {
+    $(".goodsPage").fadeIn();
 };

@@ -6,6 +6,8 @@
         <result column="USER_NAME" jdbcType="VARCHAR" property="userName"/>
         <result column="PASSWORD" jdbcType="VARCHAR" property="password"/>
         <result column="CREATE_TIME" jdbcType="DATE" property="createTime"/>
+        <result column="ROLE" jdbcType="VARCHAR" property="role"/>
+        <result column="ROLE_NAME" jdbcType="VARCHAR" property="roleName"/>
         <result column="VALIDITY" jdbcType="VARCHAR" property="validity"/>
     </resultMap>
 
@@ -20,6 +22,8 @@
             <if test="userName!=null">USER_NAME,</if>
             <if test="password!=null">PASSWORD,</if>
             <if test="createTime!=null">CREATE_TIME,</if>
+            <if test="role!=null">ROLE,</if>
+            <if test="roleName!=null">ROLE_NAME,</if>
             <if test="validity!=null">VALIDITY</if>
         </trim>
         values
@@ -28,6 +32,8 @@
             <if test="userName!=null">#{userName,jdbcType=VARCHAR},</if>
             <if test="password!=null">#{password,jdbcType=VARCHAR},</if>
             <if test="createTime!=null">#{createTime,jdbcType=DATE},</if>
+            <if test="role!=null">#{role,jdbcType=VARCHAR},</if>
+            <if test="roleName!=null">#{roleName,jdbcType=VARCHAR},</if>
             <if test="validity!=null">#{validity,jdbcType=VARCHAR}</if>
         </trim>
     </insert>
@@ -39,6 +45,8 @@
             <if test="userId!=null">USER_ID=#{userId,jdbcType=DECIMAL},</if>
             <if test="userName!=null">USER_NAME=#{userName,jdbcType=VARCHAR},</if>
             <if test="password!=null">PASSWORD=#{password,jdbcType=VARCHAR},</if>
+            <if test="role!=null">ROLE=#{role,jdbcType=VARCHAR},</if>
+            <if test="roleName!=null">ROLE_NAME=#{roleName,jdbcType=VARCHAR},</if>
             <if test="validity!=null">VALIDITY=#{validity,jdbcType=VARCHAR},</if>
         </set>
         where USER_ID = #{userId,jdbcType=DECIMAL}
@@ -59,14 +67,18 @@
             VALIDITY = 'Y'
             <if test="userName!=null">AND USER_NAME = #{userName,jdbcType=VARCHAR}</if>
             <if test="createTime!=null">AND CREATE_TIME = #{createTime,jdbcType=DATE}</if>
+            <if test="role!=null">AND ROLE= #{role,jdbcType=VARCHAR}</if>
         </where>
+        order by USER_ID
     </select>
 
     <!--根据用户ID查询用户-->
     <select id="selectByPrimaryKey" resultMap="BaseResultMapper" parameterType="java.lang.Long">
         select *
         from USERS
-        where USER_ID = #{userId,jdbcType=DECIMAL}
+        where USER_ID =
+              #{userId,jdbcType=DECIMAL}
+          and VALIDITY = 'Y'
     </select>
 
 

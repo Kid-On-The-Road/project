@@ -11,6 +11,26 @@ public class UserDto {
     private String createTime;
     //是否有效
     private String validity;
+    //角色
+    private String role;
+    //角色名称
+    private String roleName;
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
     public String getUserName() {
         return userName;
@@ -42,5 +62,13 @@ public class UserDto {
 
     public void setValidity(String validity) {
         this.validity = validity;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

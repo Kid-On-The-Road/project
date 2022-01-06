@@ -4,17 +4,41 @@ function selectUser() {
     const queryCondition = {
         "userName": document.getElementById("userName").value,
         "createTime": document.getElementById("createTime").value,
+        "role": document.getElementById("role").value
     };
     $.ajax({
         type: "GET",
         url: "selectUserList",
         data: queryCondition,
         success: function (result) {
+            $("#modalRole option").removeAttr("selected");
             //将结果在body中刷新
             $("body").html(result);
             toastr.success('查询完成');
         }
     });
+}
+
+//验证用户名是否存在
+function verifyUserName(save) {
+    $.ajax({
+        type: "GET",
+        url: "verifyUserName",
+        data: {
+            "userName": document.getElementById('modalUserName').value,
+            "role": document.getElementById('modalRole').value
+        },
+        success: function (result) {
+            if (result.length !== 0 && document.getElementById('userModalLabel').innerText === '新增用户') {
+                $('#modalUserName').val('');
+                toastr.success('用户名已存在,请重新输入!');
+            } else if (document.getElementById('modalUserName').value === '' || document.getElementById('modalPassword').value === '') {
+                toastr.success('用户名或密码不能为空!');
+            } else if (save === 'save') {
+                saveUser();
+            }
+        }
+    })
 }
 
 //保存用户
@@ -29,6 +53,7 @@ function saveUser() {
         "userId": userId,
         "userName": document.getElementById("modalUserName").value,
         "password": document.getElementById("modalPassword").value,
+        "role": document.getElementById("modalRole").value,
         "validity": "Y"
     };
     $.ajax({
@@ -53,14 +78,17 @@ function editUser(userId, operation) {
         //删除模态框信息
         $('.modalForm input').val('');
         $('#userModalLabel').html('新增用户');
-        $('.modalForm').find('input').attr('disabled', false)
+        $('.form-control').attr('disabled', false);
+        document.getElementById('save').style.display = 'inline-block';
     } else {
         if (operation === 'detail') {
             $('#userModalLabel').html('用户详情');
-            $('.modalForm').find('input').attr('disabled', true)
+            $('.form-control').attr('disabled', true);
+            document.getElementById('save').style.display = 'none';
         } else {
             $('#userModalLabel').html('修改用户信息');
-            $('.modalForm').find('input').attr('disabled', false)
+            $('.form-control').attr('disabled', false);
+            document.getElementById('save').style.display = 'inline-block';
         }
 
         $.ajax({
@@ -72,10 +100,10 @@ function editUser(userId, operation) {
             success: function (result) {
                 $('#modalUserId').val(result.userId);
                 $('#modalUserName').val(result.userName);
-                $('#modalUserCategory').val(result.userCategory);
-                $('#modalUserPrice').val(result.userPrice);
-                $('#modalUserNumber').val(result.userNumber);
+                $('#modalPassword').val(result.password);
                 $('#modalCreateTime').val(result.createTime);
+                $("#modalRole option").removeAttr("selected");
+                $('#modalRole').find("option[value=" + result.role + "]").attr("selected", "selected");
                 //刷新表格数据
                 $(".userList").load(location.href + " .userList>*");
             }
@@ -85,37 +113,34 @@ function editUser(userId, operation) {
 
 //删除用户
 function delUser(userId) {
-    const data = {
-        "userId": userId
-    };
-    $.ajax({
-        type: "get",
-        url: "deleteUser",
-        data: data,
-        success: function (result) {
-            if (result >= 1) {
-                //关闭模态框遮罩
-                $(".modal-backdrop").remove();
-                //刷新表格数据
-                $(".userList").load(location.href + " .userList>*");
-                toastr.success('删除成功');
-            } else {
-                toastr.error(' 删除失败');
+    if (userId > 0) {
+        document.getElementById('confirm').value = userId;
+    } else {
+        const data = {
+            "userId": document.getElementById('confirm').value
+        };
+        $.ajax({
+            type: "get",
+            url: "deleteUser",
+            data: data,
+            success: function (result) {
+                if (result >= 1) {
+                    //关闭模态框遮罩
+                    $(".modal-backdrop").remove();
+                    //刷新表格数据
+                    $(".userList").load(location.href + " .userList>*");
+                    toastr.success('删除成功');
+                } else {
+                    toastr.error(' 删除失败');
+                }
             }
-        }
-    });
+        });
+    }
 }
 
-//配置日期控件
-$('.date').datetimepicker({
-    format: 'yyyy-mm-dd',
-    weekStart: 1,
-    autoclose: true,
-    startView: 2,
-    minView: 2,
-    forceParse: false,
-    language: 'zh-CN'
-});
+function changeStatus() {
+    $('#save').attr('disabled', false);
+}
 
 toastr.options = {
     closeButton: false,
@@ -134,6 +159,6 @@ toastr.options = {
 };
 
 // 页面加载动画
-function  userLoad() {
-        $(".userPage").fadeIn();
+function userLoad() {
+    $(".userPage").fadeIn();
 };

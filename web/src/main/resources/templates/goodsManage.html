@@ -63,7 +63,7 @@
                             data-toggle="modal" data-target="#goodsModal"
                             th:onclick="|editGoods('${g.goodsId}','edit')|">&nbsp;编辑
                     </button>
-                    <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#delModalLabel"
+                    <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#delModalLabel" th:onclick="'delGoods(' + ${g.goodsId} + ')'"
                     >&nbsp;删除
                     </button>
                     <!-- 模态框   信息删除确认 -->
@@ -86,8 +86,8 @@
                                     <button type="button" class="btn btn-default"
                                             data-dismiss="modal">取消
                                     </button>
-                                    <button type="button" class="btn btn-primary"
-                                            th:onclick="'delGoods(' + ${g.goodsId} + ')'"  data-dismiss="modal">确认
+                                    <button id="confirm" type="button" class="btn btn-primary"
+                                            onclick="delGoods()"  data-dismiss="modal">确认
                                     </button>
                                 </div>
                             </div>
@@ -185,7 +185,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭
                 </button>
-                <button type="submit" class="btn btn-primary" data-dismiss="modal" onclick="saveGoods()">保存
+                <button id="save" type="submit" class="btn btn-primary" data-dismiss="modal" onclick="saveGoods()">保存
                 </button>
             </div>
         </div>

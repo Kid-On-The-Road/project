@@ -6,12 +6,14 @@ import com.github.pagehelper.PageInfo;
 import com.info.dto.UserDto;
 import com.info.impl.UserServiceImpl;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -22,6 +24,7 @@ public class UserManageController {
 
     /**
      * 测试页面
+     *
      * @param userId 用户ID
      */
     @GetMapping("test")
@@ -54,6 +57,7 @@ public class UserManageController {
 
     /**
      * 根据ID查询用户
+     *
      * @param userId 用户ID
      */
     @RequestMapping(value = "selectUser", method = RequestMethod.POST)
@@ -66,15 +70,16 @@ public class UserManageController {
     /**
      * 根据条件查询用户
      *
-     * @param userName      用户名称
+     * @param userName   用户名称
      * @param createTime 创建时间
-     * @param pageNum        当前页
-     * @param pageSize       每页显示的数据条数
+     * @param pageNum    当前页
+     * @param pageSize   每页显示的数据条数
      */
     @RequestMapping(value = "selectUserList", method = RequestMethod.GET)
     public ModelAndView selectUserList(
             @RequestParam(required = false, value = "userName") String userName,
             @RequestParam(required = false, value = "createTime") String createTime,
+            @RequestParam(required = false, value = "role") String role,
             @RequestParam(required = false, defaultValue = "1", value = "pageNum") int pageNum,
             @RequestParam(required = false, defaultValue = "10", value = "pageSize") int pageSize, ModelAndView mv) throws Exception {
         Page<UserDto> page = PageHelper.startPage(pageNum, pageSize);
@@ -85,6 +90,9 @@ public class UserManageController {
         if (!Objects.isNull(createTime) && createTime.length() > 0) {
             map.put("createTime", new SimpleDateFormat("yyyy-MM-dd").parse(createTime));
         }
+        if (!Objects.isNull(role) && role.length() > 0) {
+            map.put("role", role);
+        }
 //        Thread.sleep(1000);
         userService.selectByCondition(map, pageNum);
         PageInfo<UserDto> pageInfo = page.toPageInfo();
@@ -93,5 +101,21 @@ public class UserManageController {
         return mv;
     }
 
+    /**
+     * 验证用户是否存在
+     * @param userName 用户名
+     * @param role 角色
+     */
+    @RequestMapping(value = "verifyUserName", method = RequestMethod.GET)
+    @ResponseBody
+    public List<UserDto> verifyUserName(
+            @RequestParam(required = false, value = "userName") String userName,
+            @RequestParam(required = false, value = "role") String role
+    ) throws Exception {
+        Map<String, Object> map = new HashMap<>();
+        map.put("userName", userName);
+        map.put("role", role);
+        return userService.selectByCondition(map, 1);
+    }
 
 }

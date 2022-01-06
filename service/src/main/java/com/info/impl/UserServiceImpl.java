@@ -19,6 +19,16 @@ public class UserServiceImpl implements UserService {
     public int save(UserDto userDto) throws Exception {
         UserEntity userEntity = ConvertUtil.convert(userDto, UserEntity.class);
         userEntity.setCreateTime(new Date());
+        switch (userDto.getRole()) {
+            case "B":
+                userEntity.setRoleName("买家");
+                break;
+            case "S":
+                userEntity.setRoleName("卖家");
+                break;
+            case "A":
+                userEntity.setRoleName("管理员");
+        }
         if (!Objects.isNull(userEntity.getUserId()) && userEntity.getUserId() > 0) {
             return userEntityMapper.updateById(userEntity);
         }

@@ -21,6 +21,15 @@
                onkeyup="this.value=this.value.replace(/[, ]/g,'')">
     </label>
     <div>
+        <label for="role">角&emsp;&emsp;色：
+            <select id="role" class="form-control" data-live-search="true">
+                <option value="B">买家</option>
+                <option value="S">卖家</option>
+                <option value="A">管理员</option>
+            </select>
+        </label>
+    </div>
+    <div>
         <button type="button" class="btn btn-success glyphicon glyphicon-log-in " onclick="login()">&nbsp;登录
         </button>
     </div>
