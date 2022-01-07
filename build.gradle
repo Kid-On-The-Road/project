@@ -19,6 +19,11 @@ subprojects {
 project(":utils") {
     dependencies {
         implementation project(':dao')
+        implementation 'org.springframework.boot:spring-boot-starter-web:2.5.2'
+        //rabbitmq依赖
+        implementation 'org.springframework.boot:spring-boot-starter-amqp:2.5.2'
+        //redis依赖
+        implementation 'org.springframework.boot:spring-boot-starter-data-redis:2.5.2'
     }
 }
 //dao模块配置
@@ -51,7 +56,7 @@ project(":web") {
         //springboot
         implementation 'org.springframework.boot:spring-boot-starter-web:2.5.2'
         //替换tomcat服务器
-        implementation 'org.springframework.boot:spring-boot-starter-undertow:2.5.2'
+//        implementation 'org.springframework.boot:spring-boot-starter-undertow:2.5.2'
         //servlet
         providedCompile 'javax.servlet:javax.servlet-api:4.0.1'
         //bootstrap

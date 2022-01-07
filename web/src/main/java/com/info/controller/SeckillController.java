@@ -1,6 +1,8 @@
 package com.info.controller;
 
 import com.info.impl.GoodsServiceImpl;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -18,6 +20,19 @@ public class SeckillController {
     @RequestMapping("seckill")
     @ResponseBody
     public ModelAndView test(ModelAndView mv) {
+        mv.setViewName("seckill");
+        return mv;
+    }
+
+    @Resource
+    private AmqpTemplate amqpTemplate;
+
+    @RequestMapping("send")
+    public ModelAndView send(ModelAndView mv) throws InterruptedException {
+        String msg = "hello, Spring boot amqp";
+        this.amqpTemplate.convertAndSend("spring.test.exchange","a.b", msg);
+        // 等待10秒后再结束
+        Thread.sleep(10000);
         mv.setViewName("seckill");
         return mv;
     }
