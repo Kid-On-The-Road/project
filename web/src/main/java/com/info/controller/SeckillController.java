@@ -2,9 +2,10 @@ package com.info.controller;
 
 import com.info.impl.GoodsServiceImpl;
 import org.springframework.amqp.core.AmqpTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
@@ -13,6 +14,10 @@ import javax.annotation.Resource;
 public class SeckillController {
     @Resource
     private GoodsServiceImpl goodsService;
+    @Resource
+    private AmqpTemplate amqpTemplate;
+    @Resource
+    private RedisTemplate<String,String> redisTemplate;
 
     /**
      * 测试页面
@@ -24,15 +29,23 @@ public class SeckillController {
         return mv;
     }
 
-    @Resource
-    private AmqpTemplate amqpTemplate;
 
     @RequestMapping("send")
     public ModelAndView send(ModelAndView mv) throws InterruptedException {
         String msg = "hello, Spring boot amqp";
-        this.amqpTemplate.convertAndSend("spring.test.exchange","a.b", msg);
+        this.amqpTemplate.convertAndSend("spring.test.exchange", "a.b", msg);
         // 等待10秒后再结束
         Thread.sleep(10000);
+        mv.setViewName("seckill");
+        return mv;
+    }
+
+    @RequestMapping("redis")
+    public ModelAndView redis(ModelAndView mv) {
+        redisTemplate.opsForValue().set("name", "admin");
+        Object name = redisTemplate.opsForValue().get("ame");
+        System.out.println("name" + name);
+        redisTemplate.delete("name");
         mv.setViewName("seckill");
         return mv;
     }

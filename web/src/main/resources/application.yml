@@ -13,8 +13,16 @@ server:
   port: 8082
 spring:
   redis:
-    host: 192.168.88.3
-    port: 7001
+    cluster: #redis 集群服务器地址
+      nodes: 192.168.88.3:7001,192.168.88.3:7002,192.168.88.4:7003,192.168.88.4:7004,192.168.88.6:7005,192.168.88.6:7006
+    database: 0 #数据库索引
+    jedis:
+      pool:
+        max-active: 300 #连接池最大连接数(负值表示没有限制)
+        max-wait: -1s #连接池最大阻塞等待时间(负值表示没有限制)
+        max-idle: 100 #连接池中的最大空闲连接
+        min-idle: 20 #连接池中的最小空闲连接
+    timeout: 60000s #连接超时时间
   rabbitmq:
     host: 192.168.88.7
     username: seckill
