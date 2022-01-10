@@ -17,7 +17,7 @@ public class SeckillController {
     @Resource
     private AmqpTemplate amqpTemplate;
     @Resource
-    private RedisTemplate<String,String> redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
     /**
      * 测试页面
@@ -42,10 +42,11 @@ public class SeckillController {
 
     @RequestMapping("redis")
     public ModelAndView redis(ModelAndView mv) {
-        redisTemplate.opsForValue().set("name", "admin");
-        Object name = redisTemplate.opsForValue().get("ame");
-        System.out.println("name" + name);
-        redisTemplate.delete("name");
+        for (int i = 0; i < 100; i++) {
+            String name = i +"";
+            redisTemplate.opsForValue().set(name, i);
+        }
+
         mv.setViewName("seckill");
         return mv;
     }
