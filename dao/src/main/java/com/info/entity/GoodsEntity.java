@@ -17,19 +17,8 @@ public class GoodsEntity {
     private Date productionTime;
     //是否有效
     private String validity;
-
-    public GoodsEntity() {
-    }
-
-    public GoodsEntity(long goodsId, String goodsCategory, String goodsName, int goodsNumber, double goodsPrice, Date productionTime, String validity) {
-        this.goodsId = goodsId;
-        this.goodsCategory = goodsCategory;
-        this.goodsName = goodsName;
-        this.goodsNumber = goodsNumber;
-        this.goodsPrice = goodsPrice;
-        this.productionTime = productionTime;
-        this.validity = validity;
-    }
+    //状态
+    private String status;
 
     public long getGoodsId() {
         return goodsId;
@@ -85,5 +74,13 @@ public class GoodsEntity {
 
     public void setValidity(String validity) {
         this.validity = validity;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

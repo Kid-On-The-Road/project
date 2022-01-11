@@ -5,6 +5,7 @@ function selectGoods() {
         "goodsName": document.getElementById("goodsName").value,
         "goodsCategory": document.getElementById("goodsCategory").value,
         "productionTime": document.getElementById("productionTime").value,
+        "seckillStatus": document.getElementById("seckillStatus").value
     };
     $.ajax({
         type: "GET",
@@ -13,6 +14,7 @@ function selectGoods() {
         success: function (result) {
             //将结果在body中刷新
             $("body").html(result);
+            $(".goodsPage").fadeOut();
             toastr.success('查询完成');
         }
     });
@@ -33,7 +35,8 @@ function saveGoods() {
         "goodsPrice": document.getElementById("modalGoodsPrice").value,
         "goodsNumber": document.getElementById("modalGoodsNumber").value,
         "productionTime": document.getElementById("modalProductionTime").value,
-        "validity": "Y"
+        "validity": "Y",
+        "status":"S"
     };
     $.ajax({
         type: "POST",
@@ -88,6 +91,26 @@ function editGoods(goodsId, operation) {
             }
         })
     }
+}
+
+// 秒杀状态修改
+function seckillStatus(goodsId, status) {
+    goodsLoad();
+    $.ajax({
+        type: "POST",
+        url: "seckillStatus",
+        data: {
+            "goodsId": goodsId,
+            "status": status
+        },
+        success: function (result) {
+            //刷新表格数据
+            $(".goodsList").load(location.href + " .goodsList>*");
+            $(".goodsPage").fadeOut();
+            toastr.success('状态修改成功');
+        }
+    })
+
 }
 
 //删除商品

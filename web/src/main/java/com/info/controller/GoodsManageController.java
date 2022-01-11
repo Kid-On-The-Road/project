@@ -5,6 +5,8 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.info.dto.GoodsDto;
 import com.info.impl.GoodsServiceImpl;
+import com.info.service.SeckillService;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -19,6 +21,10 @@ import java.util.Objects;
 public class GoodsManageController {
     @Resource
     private GoodsServiceImpl goodsService;
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
+    @Resource
+    private SeckillService seckillService;
 
     /**
      * 保存/修改商品信息
@@ -44,6 +50,7 @@ public class GoodsManageController {
 
     /**
      * 根据ID查询商品
+     *
      * @param goodsId 商品ID
      */
     @RequestMapping(value = "selectGoods", method = RequestMethod.POST)
@@ -67,6 +74,7 @@ public class GoodsManageController {
             @RequestParam(required = false, value = "goodsName") String goodsName,
             @RequestParam(required = false, value = "goodsCategory") String goodsCategory,
             @RequestParam(required = false, value = "productionTime") String productionTime,
+            @RequestParam(required = false, value = "seckillStatus") String status,
             @RequestParam(required = false, defaultValue = "1", value = "pageNum") int pageNum,
             @RequestParam(required = false, defaultValue = "10", value = "pageSize") int pageSize, ModelAndView mv) throws Exception {
         Page<GoodsDto> page = PageHelper.startPage(pageNum, pageSize);
@@ -80,6 +88,9 @@ public class GoodsManageController {
         if (!Objects.isNull(productionTime) && productionTime.length() > 0) {
             map.put("productionTime", new SimpleDateFormat("yyyy-MM-dd").parse(productionTime));
         }
+        if (!Objects.isNull(status) && status.length() > 0) {
+            map.put("status", status);
+        }
 //        Thread.sleep(1000);
         goodsService.selectByCondition(map, pageNum);
         PageInfo<GoodsDto> pageInfo = page.toPageInfo();
@@ -88,5 +99,26 @@ public class GoodsManageController {
         return mv;
     }
 
-
+    /**
+     * 修改商品秒杀状态
+     *
+     * @param goodsId 商品ID
+     */
+    @RequestMapping(value = "seckillStatus", method = RequestMethod.POST)
+    @ResponseBody
+    public void selectGoods(
+            @RequestParam(required = false, value = "goodsId") Long goodsId,
+            @RequestParam(required = false, value = "status") String status
+    ) throws Exception {
+        GoodsDto goodsDto = goodsService.selectByGoodsId(goodsId);
+        if (Objects.equals(status, "putaway")) {
+            seckillService.addInventory(goodsDto);
+            goodsDto.setStatus("P");
+            goodsService.updateStatus(goodsDto);
+        } else if (Objects.equals(status, "soldout")) {
+            seckillService.deleteInventory(goodsDto);
+            goodsDto.setStatus("S");
+            goodsService.updateStatus(goodsDto);
+        }
+    }
 }

@@ -48,4 +48,10 @@ public class GoodsServiceImpl implements GoodsService {
     public int deleteByGoodsId(Long goodsId) {
         return goodsEntityMapper.deleteByPrimaryKey(goodsId);
     }
+
+    @Override
+    public void updateStatus(GoodsDto goodsDto) {
+        goodsEntityMapper.updateStatus(goodsDto);
+    }
+
 }

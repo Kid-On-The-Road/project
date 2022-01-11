@@ -30,4 +30,5 @@ public interface GoodsService {
      */
     int deleteByGoodsId(Long goodsId);
 
+    void updateStatus(GoodsDto goodsDto);
 }

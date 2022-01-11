@@ -9,6 +9,7 @@
         <result column="GOODS_PRICE" jdbcType="NUMERIC" property="goodsPrice"/>
         <result column="PRODUCTION_TIME" jdbcType="DATE" property="productionTime"/>
         <result column="VALIDITY" jdbcType="VARCHAR" property="validity"/>
+        <result column="STATUS" jdbcType="VARCHAR" property="status"/>
     </resultMap>
 
     <!--添加商品-->
@@ -25,6 +26,7 @@
             <if test="goodsPrice!=null">GOODS_PRICE,</if>
             <if test="productionTime!=null">PRODUCTION_TIME,</if>
             <if test="validity!=null">VALIDITY</if>
+            <if test="status!=null">STATUS</if>
         </trim>
         values
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -35,6 +37,7 @@
             <if test="goodsPrice!=null">#{goodsPrice,jdbcType=NUMERIC},</if>
             <if test="productionTime!=null">#{productionTime,jdbcType=DATE},</if>
             <if test="validity!=null">#{validity,jdbcType=VARCHAR}</if>
+            <if test="status!=null">#{status,jdbcType=VARCHAR}</if>
         </trim>
     </insert>
 
@@ -49,6 +52,14 @@
             <if test="goodsPrice!=null">GOODS_PRICE=#{goodsPrice,jdbcType=NUMERIC},</if>
             <if test="productionTime!=null">PRODUCTION_TIME=#{productionTime,jdbcType=DATE},</if>
             <if test="validity!=null">VALIDITY=#{validity,jdbcType=VARCHAR},</if>
+        </set>
+        where GOODS_ID = #{goodsId,jdbcType=DECIMAL}
+    </update>
+    <!--更新商品状态-->
+    <update id="updateStatus" parameterType="java.lang.Long">
+        update GOODS
+        <set>
+            <if test="status!=null">STATUS=#{status,jdbcType=VARCHAR}</if>
         </set>
         where GOODS_ID = #{goodsId,jdbcType=DECIMAL}
     </update>
@@ -69,6 +80,7 @@
             <if test="goodsName!=null">AND GOODS_NAME = #{goodsName,jdbcType=VARCHAR}</if>
             <if test="goodsCategory!=null">AND GOODS_CATEGORY = #{goodsCategory,jdbcType=VARCHAR}</if>
             <if test="productionTime!=null">AND PRODUCTION_TIME = #{productionTime,jdbcType=DATE}</if>
+            <if test="status!=null">AND STATUS = #{status,jdbcType=VARCHAR}</if>
         </where>
     </select>
 

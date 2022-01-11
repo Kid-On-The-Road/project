@@ -1,5 +1,6 @@
 package com.info.mapper;
 
+import com.info.dto.GoodsDto;
 import com.info.entity.GoodsEntity;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -31,4 +32,6 @@ public interface GoodsEntityMapper {
      * 根据商品ID查询商品
      */
     GoodsEntity selectByPrimaryKey(Long goodsId);
+
+    void updateStatus(GoodsDto goodsDto);
 }

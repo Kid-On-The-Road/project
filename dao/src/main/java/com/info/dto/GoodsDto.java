@@ -18,6 +18,8 @@ public class GoodsDto {
     private String productionTime;
     //是否有效
     private String validity;
+    //状态
+    private String status;
 
     public long getGoodsId() {
         return goodsId;
@@ -73,5 +75,13 @@ public class GoodsDto {
 
     public void setValidity(String validity) {
         this.validity = validity;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

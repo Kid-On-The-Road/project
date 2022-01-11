@@ -42,6 +42,12 @@ project(":service") {
         implementation project(':dao')
         implementation project(':utils')
         implementation 'org.springframework.boot:spring-boot-starter-web:2.5.2'
+        //rabbitmq依赖
+        implementation 'org.springframework.boot:spring-boot-starter-amqp:2.5.2'
+        //redis依赖
+        implementation 'org.springframework.boot:spring-boot-starter-data-redis:2.5.2'
+        //jedis依赖
+        implementation 'redis.clients:jedis:3.7.0'
     }
 }
 //web模块配置

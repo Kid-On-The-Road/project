@@ -1,14 +1,19 @@
 package com.info.controller;
 
+import com.info.dto.GoodsDto;
 import com.info.impl.GoodsServiceImpl;
+import com.info.service.SeckillService;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import java.util.Objects;
 
 @Controller
 public class SeckillController {
@@ -18,6 +23,8 @@ public class SeckillController {
     private AmqpTemplate amqpTemplate;
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
+    @Resource
+    private SeckillService seckillService;
 
     /**
      * 测试页面
@@ -33,23 +40,25 @@ public class SeckillController {
     @RequestMapping("send")
     public ModelAndView send(ModelAndView mv) throws InterruptedException {
         String msg = "hello, Spring boot amqp";
-        this.amqpTemplate.convertAndSend("spring.test.exchange", "a.b", msg);
+        amqpTemplate.convertAndSend("spring.test.exchange", "a.b", msg);
         // 等待10秒后再结束
         Thread.sleep(10000);
         mv.setViewName("seckill");
         return mv;
     }
 
-    @RequestMapping("redis")
-    public ModelAndView redis(ModelAndView mv) {
-        for (int i = 0; i < 100; i++) {
-            String name = i +"";
-            redisTemplate.opsForValue().set(name, i);
-        }
-
-        mv.setViewName("seckill");
+    /**
+     * 扣减库存
+     *
+     * @param mv
+     * @return
+     */
+    @RequestMapping("deductionInventory")
+    public ModelAndView deductionInventory(ModelAndView mv) {
         return mv;
     }
+
+
 //
 //    /**
 //     * 保存/修改商品信息
