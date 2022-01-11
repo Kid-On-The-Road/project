@@ -9,21 +9,18 @@
     <link rel="stylesheet" href="webjars/bootstrap-datetimepicker/2.4.4/css/bootstrap-datetimepicker.min.css"/>
 </head>
 <!--onload="selectGoods()" :刷新页面时执行方法-->
-<!--<body onbeforeunload="goodsLoad()">-->
-<body>
+<!--onbeforeunload="selectGoods()" :刷新页面前执行方法-->
+<body onload="selectSeckillGoods()">
 
 <div class="seckill form-inline">
-    <label for="goodsName">商品名称：
-        <input type="text" class="form-control" id="goodsName"
-               onkeyup="this.value=this.value.replace(/[, ]/g,'')">
-    </label>
-    <label for="goodsNumber">剩余数量：
-        <input type="text" class="form-control" id="goodsNumber"
-               onkeyup="this.value=this.value.replace(/[, ]/g,'')">
+    <label for="seckillGoodsName">商品名称：
+        <select id="seckillGoodsName" class="form-control" data-live-search="true">
+            <option th:each="g: ${goodsDtos}" th:text="${g.goodsName}"  th:value="${g.goodsId}"></option>
+        </select>
     </label>
 </div>
 <div class="seckill form-inline">
-    <button type="button" class="btn btn-warning glyphicon glyphicon-shopping-cart "
+    <button id="seckillGoodsButton" type="button" class="btn btn-warning glyphicon glyphicon-shopping-cart "
             style="margin-left: 20px;position:static" onclick="startSeckill()">&nbsp;开始秒杀
     </button>
     <button type="button" class="btn btn-success glyphicon glyphicon-yen "
@@ -32,6 +29,37 @@
     <button type="button" class="btn btn-primary glyphicon glyphicon-remove "
             style="margin-left: 20px;position:static" onclick="refund()">&nbsp;退款/退订
     </button>
+</div>
+
+<!--页面加载动画-->
+<div class="goodsPage">
+    <div class="cv-spinner">
+        <span class="spinner"></span>
+    </div>
+</div>
+<!--秒杀结果模态框-->
+<div class="modal fade text-center" id="seckillModal" tabindex="-1" role="dialog" aria-labelledby="seckillModalLabel">
+    <div class="modal-dialog" style="display: inline-block;width: 30%;" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="seckillModalLabel"></h4>
+            </div>
+            <div class="modal-body form-inline text-left">
+                <form class="modalForm form-horizontal" role="form">
+                   <p>秒杀已结束请前往购物车查看结果!</p>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+                <button id="save" type="submit" class="btn btn-primary" data-dismiss="modal" onclick="selectSeckillGoods('Y')">确认
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!--引入js-->
@@ -43,6 +71,6 @@
 <script src="webjars/bootstrap-datetimepicker/2.4.4/js/locales/bootstrap-datetimepicker.fr.js"></script>
 <script src="webjars/bootstrap-datetimepicker/2.4.4/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
 <script src="webjars/toastr/2.1.3/toastr.js"></script>
-<script type="text/javascript" th:src="@{/js/goodsManage.js}"></script>
+<script type="text/javascript" th:src="@{/js/seckill.js}"></script>
 </body>
 </html>

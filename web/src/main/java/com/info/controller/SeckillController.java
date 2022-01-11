@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Controller
@@ -26,17 +29,6 @@ public class SeckillController {
     @Resource
     private SeckillService seckillService;
 
-    /**
-     * 测试页面
-     */
-    @RequestMapping("seckill")
-    @ResponseBody
-    public ModelAndView test(ModelAndView mv) {
-        mv.setViewName("seckill");
-        return mv;
-    }
-
-
     @RequestMapping("send")
     public ModelAndView send(ModelAndView mv) throws InterruptedException {
         String msg = "hello, Spring boot amqp";
@@ -48,17 +40,38 @@ public class SeckillController {
     }
 
     /**
-     * 扣减库存
+     * 开始秒杀
      *
-     * @param mv
-     * @return
      */
-    @RequestMapping("deductionInventory")
-    public ModelAndView deductionInventory(ModelAndView mv) {
-        return mv;
+    @RequestMapping(value = "startSeckill",method = RequestMethod.GET)
+    @ResponseBody
+    public int deductionInventory(
+                                           @RequestParam(required = false,value = "goodsId")long goodsId) throws Exception {
+        int goodsNumber = seckillService.deductionInventory(goodsId);
+        if (goodsNumber == 0) {
+            GoodsDto goodsDto = goodsService.selectByGoodsId(goodsId);
+            goodsDto.setStatus("S");
+            goodsService.updateStatus(goodsDto);
+            return 0;
+        }
+        return 1;
     }
 
-
+    /**
+     * 根据条件查询商品
+     */
+    @RequestMapping(value = "selectSeckillGoodsList", method = RequestMethod.GET)
+    public ModelAndView selectSeckillGoodsList(
+            @RequestParam(required = false, value = "seckillStatus") String status, ModelAndView mv) throws Exception {
+        Map<String, Object> map = new HashMap<>();
+        if (!Objects.isNull(status) && status.length() > 0) {
+            map.put("status", status);
+        }
+        List<GoodsDto> goodsDtos = goodsService.selectByCondition(map, 1);
+        mv.addObject("goodsDtos", goodsDtos);
+        mv.setViewName("seckill");
+        return mv;
+    }
 //
 //    /**
 //     * 保存/修改商品信息

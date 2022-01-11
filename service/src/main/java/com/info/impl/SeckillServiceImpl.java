@@ -7,6 +7,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class SeckillServiceImpl implements SeckillService {
@@ -17,9 +19,7 @@ public class SeckillServiceImpl implements SeckillService {
 
     @Override
     public void addInventory(GoodsDto goodsDto) {
-        for (int i = 0; i < goodsDto.getGoodsNumber(); i++) {
-            redisTemplate.boundHashOps(goodsDto.getGoodsName()).put(goodsDto.getGoodsId(),goodsDto);
-        }
+            redisTemplate.boundHashOps("秒杀商品").put(goodsDto.getGoodsId(), goodsDto);
     }
 
     @Override
@@ -28,12 +28,16 @@ public class SeckillServiceImpl implements SeckillService {
     }
 
     @Override
-    public void deductionInventory(GoodsDto goodsDto) {
-
+    public int deductionInventory(long goodsId) {
+        Map<String,Object> goodsDto = (Map<String, Object>) redisTemplate.boundHashOps("秒杀商品").get(goodsId);
+        int goodsNumber = (int) Objects.requireNonNull(goodsDto).get("goodsNumber") - 1;
+        goodsDto.put("goodsNumber", goodsNumber);
+        redisTemplate.boundHashOps("秒杀商品").put(goodsId,goodsDto);
+        return goodsNumber;
     }
 
     @Override
     public void deleteInventory(GoodsDto goodsDto) {
-        redisTemplate.delete(goodsDto.getGoodsName());
+        redisTemplate.boundHashOps("秒杀商品").delete(goodsDto.getGoodsName());
     }
 }

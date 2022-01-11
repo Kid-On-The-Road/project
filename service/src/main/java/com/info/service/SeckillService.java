@@ -10,7 +10,7 @@ public interface SeckillService {
     void updateSeckillData(GoodsDto goodsDto);
 
     //扣减库存
-    void deductionInventory(GoodsDto goodsDto);
+    int deductionInventory(long goodsId);
 
     //删除库存
     void deleteInventory(GoodsDto goodsDto);

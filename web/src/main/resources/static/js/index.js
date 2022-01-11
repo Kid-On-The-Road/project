@@ -21,7 +21,7 @@ function login() {
                     location.href = "selectUserList";
                 }  else if(result.length>0&&result[0].role === 'B'){
                     toastr.success('登录成功');
-                    location.href = "seckill";
+                    location.href = "selectSeckillGoodsList";
                 } else {
                     toastr.warning('用户名或密码错误请重新输入!')
                 }
