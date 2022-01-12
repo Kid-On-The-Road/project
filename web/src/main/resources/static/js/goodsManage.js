@@ -15,7 +15,6 @@ function selectGoods() {
         success: function (result) {
             //将结果在body中刷新
             $("body").html(result);
-            // $(".goodsManage").html(result);
             $(".goodsPage").fadeOut();
             toastr.success('查询完成');
         }
@@ -49,7 +48,7 @@ function saveGoods() {
                 //关闭模态框遮罩
                 $(".modal-backdrop").remove();
                 //刷新表格数据
-                refresh(document.getElementById("userId").value);
+                $(".goodsList").load(location.href + " .goodsList>*");
                 toastr.success('保存成功');
             }
         }
@@ -89,8 +88,7 @@ function editGoods(goodsId, operation) {
                 $('#modalGoodsNumber').val(result.goodsNumber);
                 $('#modalProductionTime').val(result.productionTime);
                 //刷新表格数据
-                // $(".goodsList").load(location.href + " .goodsList>*");
-                refresh(document.getElementById("userId").value);
+                $(".goodsList").load(location.href + " .goodsList>*");
             }
         })
     }
@@ -98,6 +96,7 @@ function editGoods(goodsId, operation) {
 
 // 秒杀状态修改
 function seckillStatus(goodsId, status) {
+    $(".goodsPage").fadeIn();
     goodsLoad();
     $.ajax({
         type: "POST",
@@ -107,21 +106,9 @@ function seckillStatus(goodsId, status) {
             "status": status
         },
         success: function (result) {
-            refresh(document.getElementById("userId").value);
+            $(".goodsList").load(location.href + " .goodsList>*");
             $(".goodsPage").fadeOut();
             toastr.success('状态修改成功');
-        }
-    })
-}
-function refresh(userId) {
-    $.ajax({
-        type: "POST",
-        url: "selectGoodsList",
-        data: {
-            "userId": userId
-        },
-        success: function (result) {
-            $(".goodsManage").html(result);
         }
     })
 }

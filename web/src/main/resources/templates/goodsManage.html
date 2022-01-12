@@ -12,147 +12,148 @@
 <body onbeforeunload="goodsLoad()">
 
 <!--顶部查询栏-->
-<div class="goodsManage">
-    <div class="selectGoods form-inline">
-        <label for="goodsName">商品名称：
-            <input type="text" class="form-control" id="goodsName"
-                   onkeyup="this.value=this.value.replace(/[, ]/g,'')">
-        </label>
-        <label for="goodsCategory">商品类型：
-            <input type="text" class="form-control" id="goodsCategory"
-                   onkeyup="this.value=this.value.replace(/[, ]/g,'')">
-        </label>
-        <label for="productionTime">生产日期：
-            <input type='text' class="form-control date" id="productionTime"/>
-        </label>
-        <label for="seckillStatus">状&emsp;&emsp;态：
-            <select id="seckillStatus" class="form-control" data-live-search="true">
-                <option value="" selected disabled hidden></option>
-                <option value="S">下架</option>
-                <option value="P">上架</option>
-            </select>
-        </label>
-        <label for="userId">用户编码：
-            <input class="form-control" id="userId" style="width: 50px" disabled="disabled"
-                   onkeyup="this.value=this.value.replace(/[, ]/g,'')"
-                   th:value="${userId}">
-        </label>
-        <button type="button" class="btn btn-success glyphicon glyphicon-search "
-                style="margin-left: 20px;position:static" onclick="selectGoods()">&nbsp;查询
-        </button>
-        <button type="button" class="btn btn-primary glyphicon glyphicon-plus " style="position:static"
-                data-toggle="modal" data-target="#goodsModal" th:onclick="|editGoods('','add')|">&nbsp;新增
-        </button>
-    </div>
+<div class="selectGoods form-inline">
+    <label for="goodsName">商品名称：
+        <input type="text" class="form-control" id="goodsName"
+               onkeyup="this.value=this.value.replace(/[, ]/g,'')">
+    </label>
+    <label for="goodsCategory">商品类型：
+        <input type="text" class="form-control" id="goodsCategory"
+               onkeyup="this.value=this.value.replace(/[, ]/g,'')">
+    </label>
+    <label for="productionTime">生产日期：
+        <input type='text' class="form-control date" id="productionTime"/>
+    </label>
+    <label for="seckillStatus">状&emsp;&emsp;态：
+        <select id="seckillStatus" class="form-control" data-live-search="true">
+            <option value="" selected disabled hidden></option>
+            <option value="S">下架</option>
+            <option value="P">上架</option>
+        </select>
+    </label>
+    <label for="userId">用户编码：
+        <input class="form-control" id="userId" style="width: 50px" disabled="disabled"
+               onkeyup="this.value=this.value.replace(/[, ]/g,'')"
+               th:value="${userId}">
+    </label>
+    <button type="button" class="btn btn-success glyphicon glyphicon-search "
+            style="margin-left: 20px;position:static" onclick="selectGoods()">&nbsp;查询
+    </button>
+    <button type="button" class="btn btn-primary glyphicon glyphicon-plus " style="position:static"
+            data-toggle="modal" data-target="#goodsModal" th:onclick="|editGoods('','add')|">&nbsp;新增
+    </button>
+</div>
 
-    <!--数据展示表格-->
-    <div class="goodsList" id="goodsList">
-        <div class="panel panel-default">
-            <table class="table table-striped table-bordered table-hover datatable">
-                <thead style="background-color: #dddddd;">
-                <tr>
-                    <td>商品名称</td>
-                    <td>商品类型</td>
-                    <td>商品价格</td>
-                    <td>商品数量</td>
-                    <td>生产日期</td>
-                    <td>状态</td>
-                    <td>操作</td>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="g,start:${pageInfo.list}">
-                    <td th:text="${g.goodsId}" style="display:none"></td>
-                    <td th:text="${g.goodsName}"></td>
-                    <td th:text="${g.goodsCategory}"></td>
-                    <td th:text="${g.goodsPrice}"></td>
-                    <td th:text="${g.goodsNumber}"></td>
-                    <td th:text="${#dates.format(g.productionTime,'yyyy-MM-dd')}"></td>
-                    <td th:text="${g.status=='S'}?'下架':'上架'"></td>
-                    <td>
-                        <button type="button" class="btn btn-info btn-xs"
-                                data-toggle="modal" data-target="#goodsModal"
-                                th:onclick="|editGoods('${g.goodsId}','detail')|">&nbsp;详情
-                        </button>
-                        <button type="button" class="btn btn-warning btn-xs"
-                                data-toggle="modal" data-target="#goodsModal"
-                                th:onclick="|editGoods('${g.goodsId}','edit')|">&nbsp;编辑
-                        </button>
-                        <button type="button" class="btn btn-success btn-xs" id="putaway"
-                                th:onclick="|seckillStatus('${g.goodsId}','putaway')|" th:style="${g.status=='P'}?'display:none':''">&nbsp;上架秒杀
-                        </button>
-                        <button type="button" class="btn btn-success btn-xs" id="soldout"
-                                th:onclick="|seckillStatus('${g.goodsId}','soldout')|" th:style="${g.status=='S'}?'display:none':''">&nbsp;下架秒杀
-                        </button>
-                        <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#delModalLabel" th:onclick="'delGoods(' + ${g.goodsId} + ')'"
-                        >&nbsp;删除
-                        </button>
-                        <!-- 模态框   信息删除确认 -->
-                        <div class="modal fade" id="delModalLabel">
-                            <div class="modal-dialog">
-                                <div class="modal-content message_align">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal"
-                                                aria-label="Close">
-                                            <span aria-hidden="true">×</span>
-                                        </button>
-                                        <h4 class="modal-title">删除确认</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <!-- 隐藏需要删除的id -->
-                                        <input type="hidden" id="deleteHaulId"/>
-                                        <p>确认要删除该条信息吗？</p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-default"
-                                                data-dismiss="modal">取消
-                                        </button>
-                                        <button id="confirm" type="button" class="btn btn-primary"
-                                                onclick="delGoods()"  data-dismiss="modal">确认
-                                        </button>
-                                    </div>
+<!--数据展示表格-->
+<div class="goodsList" id="goodsList">
+    <div class="panel panel-default">
+        <table class="table table-striped table-bordered table-hover datatable">
+            <thead style="background-color: #dddddd;">
+            <tr>
+                <td>商品名称</td>
+                <td>商品类型</td>
+                <td>商品价格</td>
+                <td>商品数量</td>
+                <td>生产日期</td>
+                <td>状态</td>
+                <td>操作</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="g,start:${pageInfo.list}">
+                <td th:text="${g.goodsId}" style="display:none"></td>
+                <td th:text="${g.goodsName}"></td>
+                <td th:text="${g.goodsCategory}"></td>
+                <td th:text="${g.goodsPrice}"></td>
+                <td th:text="${g.goodsNumber}"></td>
+                <td th:text="${#dates.format(g.productionTime,'yyyy-MM-dd')}"></td>
+                <td th:text="${g.status=='S'}?'下架':'上架'"></td>
+                <td>
+                    <button type="button" class="btn btn-info btn-xs"
+                            data-toggle="modal" data-target="#goodsModal"
+                            th:onclick="|editGoods('${g.goodsId}','detail')|">&nbsp;详情
+                    </button>
+                    <button type="button" class="btn btn-warning btn-xs"
+                            data-toggle="modal" data-target="#goodsModal"
+                            th:onclick="|editGoods('${g.goodsId}','edit')|">&nbsp;编辑
+                    </button>
+                    <button type="button" class="btn btn-success btn-xs" id="putaway"
+                            th:onclick="|seckillStatus('${g.goodsId}','putaway')|"
+                            th:style="${g.status=='P'}?'display:none':''">&nbsp;上架秒杀
+                    </button>
+                    <button type="button" class="btn btn-success btn-xs" id="soldout"
+                            th:onclick="|seckillStatus('${g.goodsId}','soldout')|"
+                            th:style="${g.status=='S'}?'display:none':''">&nbsp;下架秒杀
+                    </button>
+                    <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#delModalLabel"
+                            th:onclick="'delGoods(' + ${g.goodsId} + ')'"
+                    >&nbsp;删除
+                    </button>
+                    <!-- 模态框   信息删除确认 -->
+                    <div class="modal fade" id="delModalLabel">
+                        <div class="modal-dialog">
+                            <div class="modal-content message_align">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"
+                                            aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                    <h4 class="modal-title">删除确认</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- 隐藏需要删除的id -->
+                                    <input type="hidden" id="deleteHaulId"/>
+                                    <p>确认要删除该条信息吗？</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default"
+                                            data-dismiss="modal">取消
+                                    </button>
+                                    <button id="confirm" type="button" class="btn btn-primary"
+                                            onclick="delGoods()" data-dismiss="modal">确认
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--翻页-->
+    <div style="display: inline" class="form-inline">
+        <div style="float: left;" class="col-lg-10">
+            <p>当前第<span th:text="${pageInfo.pageNum}"></span>页，总<span
+                    th:text="${pageInfo.pages}"></span>页，共<span
+                    th:text="${pageInfo.total}"></span>条记录</p>
         </div>
-        <!--翻页-->
-        <div style="display: inline" class="form-inline">
-            <div style="float: left;" class="col-lg-10">
-                <p>当前第<span th:text="${pageInfo.pageNum}"></span>页，总<span
-                        th:text="${pageInfo.pages}"></span>页，共<span
-                        th:text="${pageInfo.total}"></span>条记录</p>
-            </div>
-            <div style="float: right;">
-                <ul class="pagination" style="font-size: 10px">
-                    <li class="active"><a th:href="@{/selectGoodsList}">首页</a></li>
-                    <li class="active"><a
-                            th:href="@{/selectGoodsList(pageNum=${pageInfo.hasPreviousPage}?${pageInfo.prePage}:1)}">上一页</a>
-                    </li>
-                    <li th:style="${pageInfo.pageNum<3}?'display:none':''">
-                        <a th:href="@{/selectGoodsList(pageNum=${pageInfo.pageNum}-2)}" th:text="${pageInfo.pageNum}-2"></a>
-                    </li>
-                    <li th:style="${pageInfo.pageNum<2}?'display:none':''">
-                        <a th:href="@{/selectGoodsList(pageNum=${pageInfo.pageNum}-1)}" th:text="${pageInfo.pageNum}-1"></a>
-                    </li>
-                    <li class="active">
-                        <a th:href="@{/selectGoodsList(pageNum=${pageInfo.pageNum})}" th:text="${pageInfo.pageNum}" ></a>
-                    </li>
-                    <li th:style="${pageInfo.pageNum+1>pageInfo.pages}?'display:none':''">
-                        <a th:href="@{/selectGoodsList(pageNum=${pageInfo.pageNum}+1)}" th:text="${pageInfo.pageNum}+1"></a>
-                    </li>
-                    <li th:style="${pageInfo.pageNum+2>pageInfo.pages||pageInfo.pageNum==2}?'display:none':''">
-                        <a th:href="@{/selectGoodsList(pageNum=${pageInfo.pageNum}+2)}" th:text="${pageInfo.pageNum}+2"></a>
-                    </li>
-                    <li class="active"><a
-                            th:href="@{/selectGoodsList(pageNum=${pageInfo.hasNextPage}?${pageInfo.nextPage}:${pageInfo.pages})}">下一页</a>
-                    </li>
-                    <li class="active"><a th:href="@{/selectGoodsList(pageNum=${pageInfo.pages})}">尾页</a></li>
-                </ul>
-            </div>
+        <div style="float: right;">
+            <ul class="pagination" style="font-size: 10px">
+                <li class="active"><a th:href="@{/selectGoodsList}">首页</a></li>
+                <li class="active"><a
+                        th:href="@{/selectGoodsList(pageNum=${pageInfo.hasPreviousPage}?${pageInfo.prePage}:1)}">上一页</a>
+                </li>
+                <li th:style="${pageInfo.pageNum<3}?'display:none':''">
+                    <a th:href="@{/selectGoodsList(pageNum=${pageInfo.pageNum}-2)}" th:text="${pageInfo.pageNum}-2"></a>
+                </li>
+                <li th:style="${pageInfo.pageNum<2}?'display:none':''">
+                    <a th:href="@{/selectGoodsList(pageNum=${pageInfo.pageNum}-1)}" th:text="${pageInfo.pageNum}-1"></a>
+                </li>
+                <li class="active">
+                    <a th:href="@{/selectGoodsList(pageNum=${pageInfo.pageNum})}" th:text="${pageInfo.pageNum}"></a>
+                </li>
+                <li th:style="${pageInfo.pageNum+1>pageInfo.pages}?'display:none':''">
+                    <a th:href="@{/selectGoodsList(pageNum=${pageInfo.pageNum}+1)}" th:text="${pageInfo.pageNum}+1"></a>
+                </li>
+                <li th:style="${pageInfo.pageNum+2>pageInfo.pages||pageInfo.pageNum==2}?'display:none':''">
+                    <a th:href="@{/selectGoodsList(pageNum=${pageInfo.pageNum}+2)}" th:text="${pageInfo.pageNum}+2"></a>
+                </li>
+                <li class="active"><a
+                        th:href="@{/selectGoodsList(pageNum=${pageInfo.hasNextPage}?${pageInfo.nextPage}:${pageInfo.pages})}">下一页</a>
+                </li>
+                <li class="active"><a th:href="@{/selectGoodsList(pageNum=${pageInfo.pages})}">尾页</a></li>
+            </ul>
         </div>
     </div>
 </div>
@@ -213,15 +214,15 @@
             </div>
         </div>
     </div>
-</div>
 
-<!--页面加载动画-->
-<div class="goodsPage">
-    <div class="cv-spinner">
-        <span class="spinner"></span>
+
+    <!--页面加载动画-->
+    <div class="goodsPage">
+        <div class="cv-spinner">
+            <span class="spinner"></span>
+        </div>
     </div>
 </div>
-
 <!--引入js-->
 <script src="webjars/jquery/3.6.0/jquery.min.js"></script>
 <script src="webjars/bootstrap/3.3.5/js/bootstrap.min.js"></script>

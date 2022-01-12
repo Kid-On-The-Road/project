@@ -14,11 +14,13 @@ function login() {
             data: userInfo,
             success: function (result) {
                 if (result.length>0&&result[0].role === 'S') {
+                    toastr.success('登录成功');
                     document.write("<form action='/selectGoodsList' method=post name=loginSeckill style='display:none'>");
                     document.write("<input type=hidden name='userId' value='"+result[0].userId+"'/>");
                     document.write("</form>");
                     document.loginSeckill.submit();
                 } else if(result.length>0&&result[0].role === 'A'){
+                    toastr.success('登录成功');
                     document.write("<form action='/selectUserList' method=post name=loginSeckill style='display:none'>");
                     document.write("<input type=hidden name='userId' value='"+result[0].userId+"'/>");
                     document.write("</form>");
@@ -29,7 +31,7 @@ function login() {
                     document.write("</form>");
                     document.loginSeckill.submit();
                 } else {
-                    toastr.warning('用户名或密码错误请重新输入!')
+                    toastr.warning('用户名或密码错误请重新输入!');
                 }
             }
         });

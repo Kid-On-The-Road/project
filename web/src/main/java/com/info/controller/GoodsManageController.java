@@ -69,7 +69,7 @@ public class GoodsManageController {
      * @param pageNum        当前页
      * @param pageSize       每页显示的数据条数
      */
-    @RequestMapping(value = "selectGoodsList", method = RequestMethod.POST)
+    @RequestMapping(value = "selectGoodsList")
     public ModelAndView selectGoodsList(
             @RequestParam(required = false, value = "goodsName") String goodsName,
             @RequestParam(required = false, value = "goodsCategory") String goodsCategory,

@@ -58,7 +58,7 @@ public class SeckillServiceImpl implements SeckillService {
      */
     @Override
     public void deleteInventory(GoodsDto goodsDto) {
-        redisTemplate.boundHashOps("秒杀商品").delete(goodsDto.getGoodsName());
+        redisTemplate.boundHashOps("秒杀商品").delete(goodsDto.getGoodsId());
     }
 
     /**
