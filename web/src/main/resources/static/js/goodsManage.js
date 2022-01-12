@@ -96,8 +96,7 @@ function editGoods(goodsId, operation) {
 
 // 秒杀状态修改
 function seckillStatus(goodsId, status) {
-    $(".goodsPage").fadeIn();
-    goodsLoad();
+    $('#loading').modal('show');
     $.ajax({
         type: "POST",
         url: "seckillStatus",
@@ -107,8 +106,8 @@ function seckillStatus(goodsId, status) {
         },
         success: function (result) {
             $(".goodsList").load(location.href + " .goodsList>*");
-            $(".goodsPage").fadeOut();
             toastr.success('状态修改成功');
+            $('#loading').modal('hide');
         }
     })
 }
@@ -165,9 +164,4 @@ toastr.options = {
     hideEasing: "linear",
     showMethod: "fadeIn",
     hideMethod: "fadeOut"
-};
-
-// 页面加载动画
-function goodsLoad() {
-    $(".goodsPage").fadeIn();
 };
