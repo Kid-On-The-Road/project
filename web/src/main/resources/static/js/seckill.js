@@ -21,6 +21,7 @@ function selectSeckillGoods(finish) {
 
 //开始秒杀
 function startSeckill() {
+    $('#loading').modal('show');
     $.ajax({
         type: "GET",
         url: "startSeckill",
@@ -31,8 +32,10 @@ function startSeckill() {
         success: function (result) {
             if (result=== 0) {
                 $('#seckillModal').modal();
+                document.getElementById('seckillGoodsButton').style.display = 'none';
                 toastr.success('秒杀已结束!');
             }
+            $('#loading').modal('hide');
         }
     });
 }

@@ -61,12 +61,12 @@ public class SeckillController {
     /**
      * 根据条件查询商品
      */
-    @RequestMapping(value = "selectSeckillGoodsList", method = RequestMethod.POST)
+    @RequestMapping(value = "selectSeckillGoodsList")
     public ModelAndView selectSeckillGoodsList(
             @RequestParam(required = false, value = "seckillStatus") String status,
             @RequestParam(required = false, value = "userId") String userId,
             ModelAndView mv) throws Exception {
-        if (!Objects.equals(userId, "")) {
+        if (!Objects.equals(userId, "")&&!Objects.equals(userId, null)) {
         Map<String, Object> map = new HashMap<>();
         if (!Objects.isNull(status) && status.length() > 0) {
             map.put("status", status);

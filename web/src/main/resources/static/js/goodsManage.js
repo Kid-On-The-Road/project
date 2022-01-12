@@ -48,7 +48,7 @@ function saveGoods() {
                 //关闭模态框遮罩
                 $(".modal-backdrop").remove();
                 //刷新表格数据
-                $(".goodsList").load(location.href + " .goodsList>*");
+                $(".goodsList").load(location.href+"?userId="+document.getElementById("userId").value+ " .goodsList>*");
                 toastr.success('保存成功');
             }
         }
@@ -88,7 +88,7 @@ function editGoods(goodsId, operation) {
                 $('#modalGoodsNumber').val(result.goodsNumber);
                 $('#modalProductionTime').val(result.productionTime);
                 //刷新表格数据
-                $(".goodsList").load(location.href + " .goodsList>*");
+                $(".goodsList").load(location.href+"?userId="+document.getElementById("userId").value+ " .goodsList>*");
             }
         })
     }
@@ -105,7 +105,7 @@ function seckillStatus(goodsId, status) {
             "status": status
         },
         success: function (result) {
-            $(".goodsList").load(location.href + " .goodsList>*");
+            $(".goodsList").load(location.href+"?userId="+document.getElementById("userId").value+ " .goodsList>*");
             toastr.success('状态修改成功');
             $('#loading').modal('hide');
         }
@@ -129,7 +129,7 @@ function delGoods(goodsId) {
                     //关闭模态框遮罩
                     $(".modal-backdrop").remove();
                     //刷新表格数据
-                    $(".goodsList").load(location.href + " .goodsList>*");
+                    $(".goodsList").load(location.href+"?userId="+document.getElementById("userId").value+ " .goodsList>*");
                     toastr.success('删除成功');
                 } else {
                     toastr.error(' 删除失败');

@@ -22,7 +22,7 @@ function selectUser() {
 //验证用户名是否存在
 function verifyUserName(save) {
     $.ajax({
-        type: "GET",
+        type: "POST",
         url: "verifyUserName",
         data: {
             "userName": document.getElementById('modalUserName').value,
@@ -65,7 +65,7 @@ function saveUser() {
                 //关闭模态框遮罩
                 $(".modal-backdrop").remove();
                 //刷新表格数据
-                $(".userList").load(location.href + " .userList>*");
+                $(".userList").load(location.href+"?userId="+document.getElementById("userId").value+ " .userList>*");
                 toastr.success('保存成功');
             }
         }
@@ -92,7 +92,7 @@ function editUser(userId, operation) {
         }
 
         $.ajax({
-            type: "POST",
+            type: "GET",
             url: "selectUser",
             data: {
                 "userId": userId
@@ -105,7 +105,7 @@ function editUser(userId, operation) {
                 $("#modalRole option").removeAttr("selected");
                 $('#modalRole').find("option[value=" + result.role + "]").attr("selected", "selected");
                 //刷新表格数据
-                $(".userList").load(location.href + " .userList>*");
+                $(".userList").load(location.href+"?userId="+document.getElementById("userId").value+ " .userList>*");
             }
         })
     }
@@ -120,7 +120,7 @@ function delUser(userId) {
             "userId": document.getElementById('confirm').value
         };
         $.ajax({
-            type: "get",
+            type: "GET",
             url: "deleteUser",
             data: data,
             success: function (result) {
@@ -128,7 +128,7 @@ function delUser(userId) {
                     //关闭模态框遮罩
                     $(".modal-backdrop").remove();
                     //刷新表格数据
-                    $(".userList").load(location.href + " .userList>*");
+                    $(".userList").load(location.href+"?userId="+document.getElementById("userId").value+ " .userList>*");
                     toastr.success('删除成功');
                 } else {
                     toastr.error(' 删除失败');

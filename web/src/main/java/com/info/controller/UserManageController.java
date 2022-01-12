@@ -38,7 +38,7 @@ public class UserManageController {
      *
      * @param userDto 需要保存的用户对象
      */
-    @RequestMapping(value = "saveUser", method = RequestMethod.POST)
+    @RequestMapping(value = "saveUser")
     @ResponseBody
     public int save(@ModelAttribute(value = "save") UserDto userDto) throws Exception {
         return userService.save(userDto);
@@ -60,7 +60,7 @@ public class UserManageController {
      *
      * @param userId 用户ID
      */
-    @RequestMapping(value = "selectUser", method = RequestMethod.POST)
+    @RequestMapping(value = "selectUser")
     @ResponseBody
     public UserDto selectUser(
             @RequestParam(required = false, value = "userId") Long userId) throws Exception {
@@ -75,7 +75,7 @@ public class UserManageController {
      * @param pageNum    当前页
      * @param pageSize   每页显示的数据条数
      */
-    @RequestMapping(value = "selectUserList", method = RequestMethod.POST)
+    @RequestMapping(value = "selectUserList")
     public ModelAndView selectUserList(
             @RequestParam(required = false, value = "userName") String userName,
             @RequestParam(required = false, value = "createTime") String createTime,
@@ -83,7 +83,7 @@ public class UserManageController {
             @RequestParam(required = false, value = "userId") String userId,
             @RequestParam(required = false, defaultValue = "1", value = "pageNum") int pageNum,
             @RequestParam(required = false, defaultValue = "10", value = "pageSize") int pageSize, ModelAndView mv) throws Exception {
-        if (!Objects.equals(userId, "")) {
+        if (!Objects.equals(userId, "")&&!Objects.equals(userId, null)) {
             Page<UserDto> page = PageHelper.startPage(pageNum, pageSize);
             Map<String, Object> map = new HashMap<>();
             if (!Objects.isNull(userName) && userName.length() > 0) {
@@ -112,7 +112,7 @@ public class UserManageController {
      * @param userName 用户名
      * @param role 角色
      */
-    @RequestMapping(value = "verifyUserName", method = RequestMethod.GET)
+    @RequestMapping(value = "verifyUserName")
     @ResponseBody
     public List<UserDto> verifyUserName(
             @RequestParam(required = false, value = "userName") String userName,

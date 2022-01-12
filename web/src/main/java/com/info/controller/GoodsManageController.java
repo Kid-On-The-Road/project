@@ -78,7 +78,7 @@ public class GoodsManageController {
             @RequestParam(required = false, value = "userId") String userId,
             @RequestParam(required = false, defaultValue = "1", value = "pageNum") int pageNum,
             @RequestParam(required = false, defaultValue = "10", value = "pageSize") int pageSize, ModelAndView mv) throws Exception {
-        if (!Objects.equals(userId, "")) {
+        if (!Objects.equals(userId, "")&&!Objects.equals(userId, null)) {
             Page<GoodsDto> page = PageHelper.startPage(pageNum, pageSize);
             Map<String, Object> map = new HashMap<>();
             if (!Objects.isNull(goodsName) && goodsName.length() > 0) {
