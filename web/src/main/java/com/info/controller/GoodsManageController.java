@@ -69,33 +69,39 @@ public class GoodsManageController {
      * @param pageNum        当前页
      * @param pageSize       每页显示的数据条数
      */
-    @RequestMapping(value = "selectGoodsList", method = RequestMethod.GET)
+    @RequestMapping(value = "selectGoodsList", method = RequestMethod.POST)
     public ModelAndView selectGoodsList(
             @RequestParam(required = false, value = "goodsName") String goodsName,
             @RequestParam(required = false, value = "goodsCategory") String goodsCategory,
             @RequestParam(required = false, value = "productionTime") String productionTime,
             @RequestParam(required = false, value = "seckillStatus") String status,
+            @RequestParam(required = false, value = "userId") String userId,
             @RequestParam(required = false, defaultValue = "1", value = "pageNum") int pageNum,
             @RequestParam(required = false, defaultValue = "10", value = "pageSize") int pageSize, ModelAndView mv) throws Exception {
-        Page<GoodsDto> page = PageHelper.startPage(pageNum, pageSize);
-        Map<String, Object> map = new HashMap<>();
-        if (!Objects.isNull(goodsName) && goodsName.length() > 0) {
-            map.put("goodsName", goodsName);
-        }
-        if (!Objects.isNull(goodsCategory) && goodsCategory.length() > 0) {
-            map.put("goodsCategory", goodsCategory);
-        }
-        if (!Objects.isNull(productionTime) && productionTime.length() > 0) {
-            map.put("productionTime", new SimpleDateFormat("yyyy-MM-dd").parse(productionTime));
-        }
-        if (!Objects.isNull(status) && status.length() > 0) {
-            map.put("status", status);
-        }
+        if (!Objects.equals(userId, "")) {
+            Page<GoodsDto> page = PageHelper.startPage(pageNum, pageSize);
+            Map<String, Object> map = new HashMap<>();
+            if (!Objects.isNull(goodsName) && goodsName.length() > 0) {
+                map.put("goodsName", goodsName);
+            }
+            if (!Objects.isNull(goodsCategory) && goodsCategory.length() > 0) {
+                map.put("goodsCategory", goodsCategory);
+            }
+            if (!Objects.isNull(productionTime) && productionTime.length() > 0) {
+                map.put("productionTime", new SimpleDateFormat("yyyy-MM-dd").parse(productionTime));
+            }
+            if (!Objects.isNull(status) && status.length() > 0) {
+                map.put("status", status);
+            }
 //        Thread.sleep(1000);
-        goodsService.selectByCondition(map, pageNum);
-        PageInfo<GoodsDto> pageInfo = page.toPageInfo();
-        mv.addObject("pageInfo", pageInfo);
-        mv.setViewName("goodsManage");
+            goodsService.selectByCondition(map, pageNum);
+            PageInfo<GoodsDto> pageInfo = page.toPageInfo();
+            mv.addObject("pageInfo", pageInfo);
+            mv.addObject("userId", userId);
+            mv.setViewName("goodsManage");
+        } else {
+            mv.setViewName("index");
+        }
         return mv;
     }
 
@@ -119,6 +125,7 @@ public class GoodsManageController {
             seckillService.deleteInventory(goodsDto);
             goodsDto.setStatus("S");
             goodsService.updateStatus(goodsDto);
+            seckillService.deleteUserInfo(goodsId);
         }
     }
 }

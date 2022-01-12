@@ -7,7 +7,7 @@ function selectUser() {
         "role": document.getElementById("role").value
     };
     $.ajax({
-        type: "GET",
+        type: "POST",
         url: "selectUserList",
         data: queryCondition,
         success: function (result) {

@@ -5,15 +5,17 @@ function selectGoods() {
         "goodsName": document.getElementById("goodsName").value,
         "goodsCategory": document.getElementById("goodsCategory").value,
         "productionTime": document.getElementById("productionTime").value,
-        "seckillStatus": document.getElementById("seckillStatus").value
+        "seckillStatus": document.getElementById("seckillStatus").value,
+        "userId": document.getElementById("userId").value,
     };
     $.ajax({
-        type: "GET",
+        type: "POST",
         url: "selectGoodsList",
         data: queryCondition,
         success: function (result) {
             //将结果在body中刷新
             $("body").html(result);
+            // $(".goodsManage").html(result);
             $(".goodsPage").fadeOut();
             toastr.success('查询完成');
         }
@@ -36,7 +38,7 @@ function saveGoods() {
         "goodsNumber": document.getElementById("modalGoodsNumber").value,
         "productionTime": document.getElementById("modalProductionTime").value,
         "validity": "Y",
-        "status":"S"
+        "status": "S"
     };
     $.ajax({
         type: "POST",
@@ -47,7 +49,7 @@ function saveGoods() {
                 //关闭模态框遮罩
                 $(".modal-backdrop").remove();
                 //刷新表格数据
-                $(".goodsList").load(location.href + " .goodsList>*");
+                refresh(document.getElementById("userId").value);
                 toastr.success('保存成功');
             }
         }
@@ -60,7 +62,7 @@ function editGoods(goodsId, operation) {
         //删除模态框信息
         $('.modalForm input').val('');
         $('#goodsModalLabel').html('新增商品');
-        $('.modalForm').find('input').attr('disabled', false)
+        $('.modalForm').find('input').attr('disabled', false);
         document.getElementById('save').style.display = 'inline-block';
     } else {
         if (operation === 'detail') {
@@ -87,7 +89,8 @@ function editGoods(goodsId, operation) {
                 $('#modalGoodsNumber').val(result.goodsNumber);
                 $('#modalProductionTime').val(result.productionTime);
                 //刷新表格数据
-                $(".goodsList").load(location.href + " .goodsList>*");
+                // $(".goodsList").load(location.href + " .goodsList>*");
+                refresh(document.getElementById("userId").value);
             }
         })
     }
@@ -104,13 +107,23 @@ function seckillStatus(goodsId, status) {
             "status": status
         },
         success: function (result) {
-            //刷新表格数据
-            $(".goodsList").load(location.href + " .goodsList>*");
+            refresh(document.getElementById("userId").value);
             $(".goodsPage").fadeOut();
             toastr.success('状态修改成功');
         }
     })
-
+}
+function refresh(userId) {
+    $.ajax({
+        type: "POST",
+        url: "selectGoodsList",
+        data: {
+            "userId": userId
+        },
+        success: function (result) {
+            $(".goodsManage").html(result);
+        }
+    })
 }
 
 //删除商品
@@ -122,7 +135,7 @@ function delGoods(goodsId) {
             "goodsId": document.getElementById('confirm').value
         };
         $.ajax({
-            type: "get",
+            type: "POST",
             url: "deleteGoods",
             data: data,
             success: function (result) {
@@ -130,7 +143,7 @@ function delGoods(goodsId) {
                     //关闭模态框遮罩
                     $(".modal-backdrop").remove();
                     //刷新表格数据
-                    $(".goodsList").load(location.href + " .goodsList>*");
+                    selectGoods();
                     toastr.success('删除成功');
                 } else {
                     toastr.error(' 删除失败');

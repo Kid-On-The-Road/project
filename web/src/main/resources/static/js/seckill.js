@@ -6,10 +6,11 @@ function selectSeckillGoods(finish) {
         document.getElementById("seckillGoodsButton").style.display = "inline-block";
     }
     $.ajax({
-        type: "GET",
+        type: "POST",
         url: "selectSeckillGoodsList",
         data: {
-            "seckillStatus": "P"
+            "seckillStatus": "P",
+            "userId":document.getElementById("userId").value
         },
         success: function (result) {
             //将结果在body中刷新

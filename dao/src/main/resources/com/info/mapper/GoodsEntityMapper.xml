@@ -25,7 +25,7 @@
             <if test="goodsNumber!=null">GOODS_NUMBER,</if>
             <if test="goodsPrice!=null">GOODS_PRICE,</if>
             <if test="productionTime!=null">PRODUCTION_TIME,</if>
-            <if test="validity!=null">VALIDITY</if>
+            <if test="validity!=null">VALIDITY,</if>
             <if test="status!=null">STATUS</if>
         </trim>
         values
@@ -36,7 +36,7 @@
             <if test="goodsNumber!=null">#{goodsNumber,jdbcType=NUMERIC},</if>
             <if test="goodsPrice!=null">#{goodsPrice,jdbcType=NUMERIC},</if>
             <if test="productionTime!=null">#{productionTime,jdbcType=DATE},</if>
-            <if test="validity!=null">#{validity,jdbcType=VARCHAR}</if>
+            <if test="validity!=null">#{validity,jdbcType=VARCHAR},</if>
             <if test="status!=null">#{status,jdbcType=VARCHAR}</if>
         </trim>
     </insert>

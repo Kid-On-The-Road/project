@@ -15,8 +15,13 @@
 <div class="seckill form-inline">
     <label for="seckillGoodsName">商品名称：
         <select id="seckillGoodsName" class="form-control" data-live-search="true">
-            <option th:each="g: ${goodsDtos}" th:text="${g.goodsName}"  th:value="${g.goodsId}"></option>
+            <option th:each="g: ${goodsDtos}" th:text="${g.goodsName}" th:value="${g.goodsId}"></option>
         </select>
+    </label>
+    <label for="userId">用户编码：
+        <input class="form-control" id="userId" style="width: 50px" disabled="disabled"
+               onkeyup="this.value=this.value.replace(/[, ]/g,'')"
+               th:value="${userId}">
     </label>
 </div>
 <div class="seckill form-inline">
@@ -49,13 +54,14 @@
             </div>
             <div class="modal-body form-inline text-left">
                 <form class="modalForm form-horizontal" role="form">
-                   <p>秒杀已结束请前往购物车查看结果!</p>
+                    <p>秒杀已结束请前往购物车查看结果!</p>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭
                 </button>
-                <button id="save" type="submit" class="btn btn-primary" data-dismiss="modal" onclick="selectSeckillGoods('Y')">确认
+                <button id="save" type="submit" class="btn btn-primary" data-dismiss="modal"
+                        onclick="selectSeckillGoods('Y')">确认
                 </button>
             </div>
         </div>

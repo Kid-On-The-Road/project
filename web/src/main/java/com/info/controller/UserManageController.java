@@ -75,29 +75,35 @@ public class UserManageController {
      * @param pageNum    当前页
      * @param pageSize   每页显示的数据条数
      */
-    @RequestMapping(value = "selectUserList", method = RequestMethod.GET)
+    @RequestMapping(value = "selectUserList", method = RequestMethod.POST)
     public ModelAndView selectUserList(
             @RequestParam(required = false, value = "userName") String userName,
             @RequestParam(required = false, value = "createTime") String createTime,
             @RequestParam(required = false, value = "role") String role,
+            @RequestParam(required = false, value = "userId") String userId,
             @RequestParam(required = false, defaultValue = "1", value = "pageNum") int pageNum,
             @RequestParam(required = false, defaultValue = "10", value = "pageSize") int pageSize, ModelAndView mv) throws Exception {
-        Page<UserDto> page = PageHelper.startPage(pageNum, pageSize);
-        Map<String, Object> map = new HashMap<>();
-        if (!Objects.isNull(userName) && userName.length() > 0) {
-            map.put("userName", userName);
-        }
-        if (!Objects.isNull(createTime) && createTime.length() > 0) {
-            map.put("createTime", new SimpleDateFormat("yyyy-MM-dd").parse(createTime));
-        }
-        if (!Objects.isNull(role) && role.length() > 0) {
-            map.put("role", role);
-        }
+        if (!Objects.equals(userId, "")) {
+            Page<UserDto> page = PageHelper.startPage(pageNum, pageSize);
+            Map<String, Object> map = new HashMap<>();
+            if (!Objects.isNull(userName) && userName.length() > 0) {
+                map.put("userName", userName);
+            }
+            if (!Objects.isNull(createTime) && createTime.length() > 0) {
+                map.put("createTime", new SimpleDateFormat("yyyy-MM-dd").parse(createTime));
+            }
+            if (!Objects.isNull(role) && role.length() > 0) {
+                map.put("role", role);
+            }
 //        Thread.sleep(1000);
-        userService.selectByCondition(map, pageNum);
-        PageInfo<UserDto> pageInfo = page.toPageInfo();
-        mv.addObject("pageInfo", pageInfo);
-        mv.setViewName("userManage");
+            userService.selectByCondition(map, pageNum);
+            PageInfo<UserDto> pageInfo = page.toPageInfo();
+            mv.addObject("pageInfo", pageInfo);
+            mv.addObject("userId", userId);
+            mv.setViewName("userManage");
+        }else{
+            mv.setViewName("index");
+        }
         return mv;
     }
 

@@ -13,10 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import javax.servlet.ServletRequest;
+import java.util.*;
 
 @Controller
 public class SeckillController {
@@ -41,13 +39,21 @@ public class SeckillController {
 
     /**
      * 开始秒杀
-     *
      */
-    @RequestMapping(value = "startSeckill",method = RequestMethod.GET)
+    @RequestMapping(value = "startSeckill", method = RequestMethod.GET)
     @ResponseBody
     public int deductionInventory(
-                                           @RequestParam(required = false,value = "goodsId")long goodsId) throws Exception {
+            @RequestParam(required = false, value = "goodsId") long goodsId,
+            ServletRequest request
+    ) throws Exception {
         int goodsNumber = seckillService.deductionInventory(goodsId);
+
+        List<String> paraNames = (List<String>) request.getParameterNames();
+        for (String paraName : paraNames) {
+            if (paraName.equals("userId")) {
+                seckillService.saveUserInfo(goodsId, Long.valueOf(request.getParameter(paraName)));
+            }
+        }
         if (goodsNumber == 0) {
             GoodsDto goodsDto = goodsService.selectByGoodsId(goodsId);
             goodsDto.setStatus("S");
@@ -60,16 +66,23 @@ public class SeckillController {
     /**
      * 根据条件查询商品
      */
-    @RequestMapping(value = "selectSeckillGoodsList", method = RequestMethod.GET)
+    @RequestMapping(value = "selectSeckillGoodsList", method = RequestMethod.POST)
     public ModelAndView selectSeckillGoodsList(
-            @RequestParam(required = false, value = "seckillStatus") String status, ModelAndView mv) throws Exception {
+            @RequestParam(required = false, value = "seckillStatus") String status,
+            @RequestParam(required = false, value = "userId") String userId,
+            ModelAndView mv) throws Exception {
+        if (!Objects.equals(userId, "")) {
         Map<String, Object> map = new HashMap<>();
         if (!Objects.isNull(status) && status.length() > 0) {
             map.put("status", status);
         }
         List<GoodsDto> goodsDtos = goodsService.selectByCondition(map, 1);
-        mv.addObject("goodsDtos", goodsDtos);
-        mv.setViewName("seckill");
+            mv.addObject("goodsDtos", goodsDtos);
+            mv.addObject("userId", userId);
+            mv.setViewName("seckill");
+        }else {
+            mv.setViewName("index");
+        }
         return mv;
     }
 //

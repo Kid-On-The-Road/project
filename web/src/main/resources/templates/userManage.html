@@ -29,6 +29,11 @@
             <option value="A">管理员</option>
         </select>
     </label>
+    <label for="userId">用户编码：
+        <input class="form-control" id="userId" style="width: 50px" disabled="disabled"
+               onkeyup="this.value=this.value.replace(/[, ]/g,'')"
+               th:value="${userId}">
+    </label>
     <button type="button" class="btn btn-success glyphicon glyphicon-search "
             style="margin-left: 20px;position:static" onclick="selectUser()">&nbsp;查询
     </button>
