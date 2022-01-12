@@ -121,7 +121,7 @@ function delGoods(goodsId) {
             "goodsId": document.getElementById('confirm').value
         };
         $.ajax({
-            type: "POST",
+            type: "GET",
             url: "deleteGoods",
             data: data,
             success: function (result) {
@@ -129,7 +129,7 @@ function delGoods(goodsId) {
                     //关闭模态框遮罩
                     $(".modal-backdrop").remove();
                     //刷新表格数据
-                    selectGoods();
+                    $(".goodsList").load(location.href + " .goodsList>*");
                     toastr.success('删除成功');
                 } else {
                     toastr.error(' 删除失败');

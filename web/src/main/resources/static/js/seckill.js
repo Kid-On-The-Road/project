@@ -25,7 +25,8 @@ function startSeckill() {
         type: "GET",
         url: "startSeckill",
         data: {
-            "goodsId": document.getElementById("seckillGoodsName").value
+            "goodsId": document.getElementById("seckillGoodsName").value,
+            "userId": document.getElementById("userId").value
         },
         success: function (result) {
             if (result=== 0) {

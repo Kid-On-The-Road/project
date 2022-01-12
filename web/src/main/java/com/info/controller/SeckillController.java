@@ -44,16 +44,11 @@ public class SeckillController {
     @ResponseBody
     public int deductionInventory(
             @RequestParam(required = false, value = "goodsId") long goodsId,
+            @RequestParam(required = false, value = "userId") long userId,
             ServletRequest request
     ) throws Exception {
         int goodsNumber = seckillService.deductionInventory(goodsId);
-
-        List<String> paraNames = (List<String>) request.getParameterNames();
-        for (String paraName : paraNames) {
-            if (paraName.equals("userId")) {
-                seckillService.saveUserInfo(goodsId, Long.valueOf(request.getParameter(paraName)));
-            }
-        }
+       seckillService.saveUserInfo(goodsId,userId);
         if (goodsNumber == 0) {
             GoodsDto goodsDto = goodsService.selectByGoodsId(goodsId);
             goodsDto.setStatus("S");
