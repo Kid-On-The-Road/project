@@ -48,7 +48,7 @@ public class SeckillController {
             ServletRequest request
     ) throws Exception {
         int goodsNumber = seckillService.deductionInventory(goodsId);
-       seckillService.saveUserInfo(goodsId,userId);
+        seckillService.saveUserInfo(goodsId, userId);
         if (goodsNumber == 0) {
             GoodsDto goodsDto = goodsService.selectByGoodsId(goodsId);
             goodsDto.setStatus("S");
@@ -63,19 +63,16 @@ public class SeckillController {
      */
     @RequestMapping(value = "selectSeckillGoodsList")
     public ModelAndView selectSeckillGoodsList(
-            @RequestParam(required = false, value = "seckillStatus") String status,
             @RequestParam(required = false, value = "userId") String userId,
             ModelAndView mv) throws Exception {
-        if (!Objects.equals(userId, "")&&!Objects.equals(userId, null)) {
-        Map<String, Object> map = new HashMap<>();
-        if (!Objects.isNull(status) && status.length() > 0) {
-            map.put("status", status);
-        }
-        List<GoodsDto> goodsDtos = goodsService.selectByCondition(map, 1);
+        if (!Objects.equals(userId, "") && !Objects.equals(userId, null)) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("status", "P");
+            List<GoodsDto> goodsDtos = goodsService.selectByCondition(map, 1);
             mv.addObject("goodsDtos", goodsDtos);
             mv.addObject("userId", userId);
             mv.setViewName("seckill");
-        }else {
+        } else {
             mv.setViewName("index");
         }
         return mv;

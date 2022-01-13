@@ -9,7 +9,6 @@ function selectSeckillGoods(finish) {
         type: "POST",
         url: "selectSeckillGoodsList",
         data: {
-            "seckillStatus": "P",
             "userId":document.getElementById("userId").value
         },
         success: function (result) {
@@ -21,27 +20,31 @@ function selectSeckillGoods(finish) {
 
 //开始秒杀
 function startSeckill() {
-    $('#loading').modal('show');
-    $.ajax({
-        type: "GET",
-        url: "startSeckill",
-        data: {
-            "goodsId": document.getElementById("seckillGoodsName").value,
-            "userId": document.getElementById("userId").value
-        },
-        success: function (result) {
-            if (result=== 0) {
-                $('#seckillModal').modal();
-                document.getElementById('seckillGoodsButton').style.display = 'none';
-                toastr.success('秒杀已结束!');
+    if(document.getElementById("seckillGoodsName").value===''||document.getElementById("seckillGoodsName").value===null){
+        toastr.success('暂无可秒杀商品');
+        location.reload();
+    }else {
+        $('#loading').modal('show');
+        $.ajax({
+            type: "GET",
+            url: "startSeckill",
+            data: {
+                "goodsId": document.getElementById("seckillGoodsName").value,
+                "userId": document.getElementById("userId").value
+            },
+            success: function (result) {
+                if (result=== 0) {
+                    $('#seckillModal').modal();
+                    toastr.success('秒杀已结束!');
+                }
+                $('#loading').modal('hide');
             }
-            $('#loading').modal('hide');
-        }
-    });
+        });
+    }
 }
 
-//支付
-function pay(goodsName) {
+//购物车
+function shopping(goodsName) {
     $.ajax({
         type: "GET",
         url: "startSeckill",

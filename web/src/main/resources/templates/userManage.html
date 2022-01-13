@@ -115,29 +115,29 @@
         </div>
         <div style="float: right;">
             <ul class="pagination" style="font-size: 10px">
-                <li class="active"><a th:href="@{/selectUserList}">首页</a></li>
+                <li class="active"><a th:href="@{/selectUserList(userId=${userId})}">首页</a></li>
                 <li class="active"><a
-                        th:href="@{/selectUserList(pageNum=${pageInfo.hasPreviousPage}?${pageInfo.prePage}:1)}">上一页</a>
+                        th:href="@{/selectUserList(pageNum=${pageInfo.hasPreviousPage}?${pageInfo.prePage}:1,userId=${userId})}">上一页</a>
                 </li>
                 <li th:style="${pageInfo.pageNum<3}?'display:none':''">
-                    <a th:href="@{/selectUserList(pageNum=${pageInfo.pageNum}-2)}" th:text="${pageInfo.pageNum}-2"></a>
+                    <a th:href="@{/selectUserList(pageNum=${pageInfo.pageNum}-2,userId=${userId})}" th:text="${pageInfo.pageNum}-2"></a>
                 </li>
                 <li th:style="${pageInfo.pageNum<2}?'display:none':''">
-                    <a th:href="@{/selectUserList(pageNum=${pageInfo.pageNum}-1)}" th:text="${pageInfo.pageNum}-1"></a>
+                    <a th:href="@{/selectUserList(pageNum=${pageInfo.pageNum}-1,userId=${userId})}" th:text="${pageInfo.pageNum}-1"></a>
                 </li>
                 <li class="active">
-                    <a th:href="@{/selectUserList(pageNum=${pageInfo.pageNum})}" th:text="${pageInfo.pageNum}"></a>
+                    <a th:href="@{/selectUserList(pageNum=${pageInfo.pageNum},userId=${userId})}" th:text="${pageInfo.pageNum}"></a>
                 </li>
                 <li th:style="${pageInfo.pageNum+1>pageInfo.pages}?'display:none':''">
-                    <a th:href="@{/selectUserList(pageNum=${pageInfo.pageNum}+1)}" th:text="${pageInfo.pageNum}+1"></a>
+                    <a th:href="@{/selectUserList(pageNum=${pageInfo.pageNum}+1,userId=${userId})}" th:text="${pageInfo.pageNum}+1"></a>
                 </li>
                 <li th:style="${pageInfo.pageNum+2>pageInfo.pages||pageInfo.pageNum==2}?'display:none':''">
-                    <a th:href="@{/selectUserList(pageNum=${pageInfo.pageNum}+2)}" th:text="${pageInfo.pageNum}+2"></a>
+                    <a th:href="@{/selectUserList(pageNum=${pageInfo.pageNum}+2,userId=${userId})}" th:text="${pageInfo.pageNum}+2"></a>
                 </li>
                 <li class="active"><a
-                        th:href="@{/selectUserList(pageNum=${pageInfo.hasNextPage}?${pageInfo.nextPage}:${pageInfo.pages})}">下一页</a>
+                        th:href="@{/selectUserList(pageNum=${pageInfo.hasNextPage}?${pageInfo.nextPage}:${pageInfo.pages},userId=${userId})}">下一页</a>
                 </li>
-                <li class="active"><a th:href="@{/selectUserList(pageNum=${pageInfo.pages})}">尾页</a></li>
+                <li class="active"><a th:href="@{/selectUserList(pageNum=${pageInfo.pages},userId=${userId})}">尾页</a></li>
             </ul>
         </div>
     </div>

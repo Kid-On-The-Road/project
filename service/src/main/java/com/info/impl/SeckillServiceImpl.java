@@ -66,7 +66,7 @@ public class SeckillServiceImpl implements SeckillService {
      */
     @Override
     public void saveUserInfo(Long goodsId,Long userId) {
-        redisTemplate.boundHashOps("用户信息").put(goodsId,userId);
+        redisTemplate.boundHashOps("用户信息").put(goodsId+""+userId,userId);
     }
 
     /**

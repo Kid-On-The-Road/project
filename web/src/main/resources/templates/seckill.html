@@ -10,7 +10,7 @@
 </head>
 <!--onload="selectGoods()" :刷新页面时执行方法-->
 <!--onbeforeunload="selectGoods()" :刷新页面前执行方法-->
-<body onload="selectSeckillGoods()">
+<body>
 
 <div class="seckill form-inline">
     <label for="seckillGoodsName">商品名称：
@@ -26,13 +26,12 @@
 </div>
 <div class="seckill form-inline">
     <button id="seckillGoodsButton" type="button" class="btn btn-warning glyphicon glyphicon-shopping-cart "
-            style="margin-left: 20px;position:static" onclick="startSeckill()">&nbsp;开始秒杀
+            th:style="${goodsDtos.size()==0}?'display:none;margin-left: 20px;position:static;':'margin-left: 20px;position:static;'"
+            onclick="startSeckill();">&nbsp;开始秒杀
     </button>
-    <button type="button" class="btn btn-success glyphicon glyphicon-yen "
-            style="margin-left: 20px;position:static" onclick="pay()">&nbsp;付款
-    </button>
-    <button type="button" class="btn btn-primary glyphicon glyphicon-remove "
-            style="margin-left: 20px;position:static" onclick="refund()">&nbsp;退款/退订
+    <button type="button" class="btn btn-success glyphicon glyphicon-shopping-cart"
+            th:style="${goodsDtos.size()>0}?'display:none;margin-left: 20px;position:static;':'margin-left: 20px;position:static;'"
+            onclick="shopping()">&nbsp;购物车
     </button>
 </div>
 
@@ -72,12 +71,10 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabel">提示</h4>
+                <h4 class="modal-title" id="myModalLabel">正在秒杀</h4>
             </div>
             <div class="modal-body">
-                <div class="cv-spinner">
-                    <span class="spinner"></span>
-                </div>
+                <p>请稍后...</p>
             </div>
         </div>
     </div>
