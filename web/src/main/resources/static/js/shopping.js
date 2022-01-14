@@ -30,6 +30,11 @@ function payment(goodsId,type){
         },
         success : function(result) {
             $(".goodsList").load("../selectShoppingGoods"+"?userId="+document.getElementById("userId").value+ " .goodsList>*");
+            if(type ==='P'){
+                toastr.success('付款成功');
+            }else if (type === 'R') {
+                toastr.success('退款成功');
+            }
         }
     })
 }
@@ -42,20 +47,13 @@ function delRecord(goodsId){
         "goodsId":goodsId
         },
         success : function(result) {
-
+            //关闭模态框遮罩
+            $(".modal-backdrop").remove();
+            $(".goodsList").load("../selectShoppingGoods"+"?userId="+document.getElementById("userId").value+ " .goodsList>*");
+            toastr.success('删除成功');
         }
     })
 }
-//配置日期控件
-$('.date').datetimepicker({
-    format: 'yyyy-mm-dd',
-    weekStart: 1,
-    autoclose: true,
-    startView: 2,
-    minView: 2,
-    forceParse: false,
-    language: 'zh-CN'
-});
 
 toastr.options = {
     closeButton: false,

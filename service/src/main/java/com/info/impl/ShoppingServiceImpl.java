@@ -9,6 +9,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -27,11 +29,11 @@ public class ShoppingServiceImpl implements ShoppingService {
     }
 
     @Override
-    public void saveSeckillRecord(Long userId, Long goodsId) {
+    public void saveSeckillRecord(Long userId, Long goodsId) throws ParseException {
         ShoppingCarEntity shoppingCarEntity = new ShoppingCarEntity();
         shoppingCarEntity.setUserId(userId);
         shoppingCarEntity.setGoodsId(goodsId);
-        shoppingCarEntity.setCreateTime(new Date());
+        shoppingCarEntity.setCreateTime(new SimpleDateFormat("yyyy-MM-dd").parse(String.valueOf(new Date())));
         shoppingCarEntity.setValidity("Y");
         shoppingCarEntity.setStatus("W");
         shoppingCarEntityMapper.insert(shoppingCarEntity);
@@ -43,5 +45,10 @@ public class ShoppingServiceImpl implements ShoppingService {
         map.put("type",type);
         map.put("goodsId",goodsId);
         shoppingCarEntityMapper.updateByGoodsId(map);
+    }
+
+    @Override
+    public void deleteSeckillRecord(Long goodsId) {
+        shoppingCarEntityMapper.deleteByPrimaryKey(goodsId);
     }
 }

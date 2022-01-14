@@ -66,4 +66,12 @@ public class ShoppingController {
         shoppingService.updateSeckillRecord(type, goodsId);
     }
 
+    //删除
+    @RequestMapping(value = "delRecord")
+    @ResponseBody
+    public void delRecord(
+            @RequestParam(required = false,value = "goodsId")Long goodsId
+    ){
+        shoppingService.deleteSeckillRecord(goodsId);
+    }
 }
