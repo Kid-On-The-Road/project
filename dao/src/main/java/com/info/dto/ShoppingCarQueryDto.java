@@ -1,6 +1,7 @@
 package com.info.dto;
 
 
+import java.util.Date;
 
 public class ShoppingCarQueryDto {
     //id
@@ -16,9 +17,9 @@ public class ShoppingCarQueryDto {
     //商品价格
     private String goodsPrice;
     //生产日期
-    private String productionTime;
+    private Date productionTime;
     //创建时间
-    private String createTime;
+    private Date createTime;
     //有效性
     private String validity;
     //状态
@@ -72,19 +73,19 @@ public class ShoppingCarQueryDto {
         this.goodsPrice = goodsPrice;
     }
 
-    public String getProductionTime() {
+    public Date getProductionTime() {
         return productionTime;
     }
 
-    public void setProductionTime(String productionTime) {
+    public void setProductionTime(Date productionTime) {
         this.productionTime = productionTime;
     }
 
-    public String getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(String createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 

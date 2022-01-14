@@ -33,7 +33,7 @@ public class ShoppingServiceImpl implements ShoppingService {
         ShoppingCarEntity shoppingCarEntity = new ShoppingCarEntity();
         shoppingCarEntity.setUserId(userId);
         shoppingCarEntity.setGoodsId(goodsId);
-        shoppingCarEntity.setCreateTime(new SimpleDateFormat("yyyy-MM-dd").parse(String.valueOf(new Date())));
+        shoppingCarEntity.setCreateTime(new Date());
         shoppingCarEntity.setValidity("Y");
         shoppingCarEntity.setStatus("W");
         shoppingCarEntityMapper.insert(shoppingCarEntity);
