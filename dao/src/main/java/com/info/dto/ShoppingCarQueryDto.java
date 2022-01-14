@@ -1,27 +1,50 @@
 package com.info.dto;
 
 
-public class GoodsQueryDto {
+
+public class ShoppingCarQueryDto {
+    //id
+    private Long id;
+    //用户ID
+    private Long userId;
     //商品ID
-    private long goodsId;
+    private Long goodsId;
     //商品名称
     private String goodsName;
-    //商品类别
+    //商品类型
     private String goodsCategory;
     //商品价格
-    private Double goodsPrice;
-    //商品数量
-    private int goodsNumber;
+    private String goodsPrice;
     //生产日期
     private String productionTime;
-    //是否有效
+    //创建时间
+    private String createTime;
+    //有效性
     private String validity;
+    //状态
+    private String status;
 
-    public long getGoodsId() {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Long getGoodsId() {
         return goodsId;
     }
 
-    public void setGoodsId(long goodsId) {
+    public void setGoodsId(Long goodsId) {
         this.goodsId = goodsId;
     }
 
@@ -41,20 +64,12 @@ public class GoodsQueryDto {
         this.goodsCategory = goodsCategory;
     }
 
-    public Double getGoodsPrice() {
+    public String getGoodsPrice() {
         return goodsPrice;
     }
 
-    public void setGoodsPrice(Double goodsPrice) {
+    public void setGoodsPrice(String goodsPrice) {
         this.goodsPrice = goodsPrice;
-    }
-
-    public int getGoodsNumber() {
-        return goodsNumber;
-    }
-
-    public void setGoodsNumber(int goodsNumber) {
-        this.goodsNumber = goodsNumber;
     }
 
     public String getProductionTime() {
@@ -65,11 +80,27 @@ public class GoodsQueryDto {
         this.productionTime = productionTime;
     }
 
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
     public String getValidity() {
         return validity;
     }
 
     public void setValidity(String validity) {
         this.validity = validity;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

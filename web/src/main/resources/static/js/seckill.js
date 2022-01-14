@@ -42,14 +42,13 @@ function startSeckill() {
         });
     }
 }
-
 //购物车
-function shopping(goodsName) {
+function shopping() {
     $.ajax({
         type: "GET",
-        url: "startSeckill",
+        url: "selectShoppingGoods",
         data: {
-            "goodsName": document.getElementById("seckillGoodsName").value
+            "userId": document.getElementById("userId").value
         },
         success: function (result) {
             //将结果在body中刷新

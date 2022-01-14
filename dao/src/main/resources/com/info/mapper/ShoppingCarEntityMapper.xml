@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.info.mapper.ShoppingCarEntityMapper">
+    <resultMap id="BaseResultMapper" type="com.info.entity.ShoppingCarEntity">
+        <id column="ID" jdbcType="DECIMAL" property="id"/>
+        <id column="USER_ID" javaType="LONG" property="userId"/>
+        <id column="GOODS_ID" javaType="LONG" property="goodsId"/>
+        <result column="CREATE_TIME" jdbcType="DATE" property="createTime"/>
+        <result column="VALIDITY" jdbcType="VARCHAR" property="validity"/>
+        <result column="STATUS" jdbcType="VARCHAR" property="status"/>
+    </resultMap>
+    <resultMap id="QueryResultMapper" type="com.info.dto.ShoppingCarQueryDto">
+        <id column="ID" jdbcType="DECIMAL" property="id"/>
+        <id column="USER_ID" javaType="LONG" property="userId"/>
+        <id column="GOODS_ID" javaType="LONG" property="goodsId"/>
+        <result column="GOODS_CATEGORY" jdbcType="VARCHAR" property="goodsCategory"/>
+        <result column="GOODS_NAME" jdbcType="VARCHAR" property="goodsName"/>
+        <result column="GOODS_PRICE" jdbcType="NUMERIC" property="goodsPrice"/>
+        <result column="PRODUCTION_TIME" jdbcType="VARCHAR" property="productionTime"/>
+        <result column="CREATE_TIME" jdbcType="DATE" property="createTime"/>
+        <result column="VALIDITY" jdbcType="VARCHAR" property="validity"/>
+        <result column="STATUS" jdbcType="VARCHAR" property="status"/>
+    </resultMap>
+    <!--添加记录-->
+    <insert id="insert" parameterType="com.info.entity.ShoppingCarEntity">
+        <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+            select SEQ_SHOPPING_CAR.nextval as id from DUAL
+        </selectKey>
+        insert into SHOPPING_CAR
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id!=null">ID,</if>
+            <if test="userId!=null">USER_ID,</if>
+            <if test="goodsId!=null">GOODS_ID,</if>
+            <if test="createTime!=null">CREATE_TIME,</if>
+            <if test="validity!=null">VALIDITY,</if>
+            <if test="status!=null">STATUS</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id!=null">#{id,jdbcType=DECIMAL},</if>
+            <if test="userId!=null">#{userId,jdbcType=DECIMAL},</if>
+            <if test="goodsId!=null">#{goodsId,jdbcType=DECIMAL},</if>
+            <if test="createTime!=null">#{createTime,jdbcType=DATE},</if>
+            <if test="validity!=null">#{validity,jdbcType=VARCHAR},</if>
+            <if test="status!=null">#{status,jdbcType=VARCHAR}</if>
+        </trim>
+    </insert>
+
+    <!--更新记录-->
+    <update id="updateByGoodsId" parameterType="java.util.Map">
+        update SHOPPING_CAR
+        <set>
+            <if test="type!=null">STATUS=#{type,jdbcType=VARCHAR}</if>
+        </set>
+        where GOODS_ID = #{goodsId,jdbcType=DECIMAL}
+    </update>
+
+    <!--根据ID删除记录-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        update SHOPPING_CAR
+        set VALIDITY = 'N'
+        where GOODS_ID = #{goodsId,jdbcType=DECIMAL}
+    </delete>
+
+    <!--根据条件查询记录-->
+    <select id="selectByCondition" resultMap="QueryResultMapper" parameterType="java.util.Map">
+        select s.*, g.GOODS_CATEGORY, g.GOODS_NAME, g.GOODS_PRICE, g.PRODUCTION_TIME
+        from SHOPPING_CAR s
+        left join GOODS g on s.GOODS_ID = g.GOODS_ID
+        <where>
+            s. VALIDITY = 'Y'
+            <if test="status!=null">AND s.STATUS = #{status,jdbcType=VARCHAR}</if>
+            <if test="goodsCategory!=null">AND g.GOODS_CATEGORY = #{goodsCategory,jdbcType=VARCHAR}</if>
+            <if test="goodsName!=null">AND g.GOODS_NAME = #{goodsName,jdbcType=VARCHAR}</if>
+        </where>
+    </select>
+
+    <!--根据商品ID查询记录-->
+    <select id="selectByPrimaryKey" resultMap="QueryResultMapper" parameterType="java.lang.Long">
+        select s.*, g.GOODS_CATEGORY, g.GOODS_NAME, g.GOODS_PRICE, g.PRODUCTION_TIME
+        from SHOPPING_CAR s
+                 left join GOODS g on s.GOODS_ID = g.GOODS_ID
+        where s.GOODS_ID = #{goodsId,jdbcType=DECIMAL}
+    </select>
+
+
+</mapper>

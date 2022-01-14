@@ -1,8 +1,11 @@
 package com.info.controller;
 
 import com.info.dto.GoodsDto;
+import com.info.entity.ShoppingCarEntity;
 import com.info.impl.GoodsServiceImpl;
+import com.info.mapper.ShoppingCarEntityMapper;
 import com.info.service.SeckillService;
+import com.info.service.ShoppingService;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
@@ -26,7 +29,8 @@ public class SeckillController {
     private RedisTemplate<String, Object> redisTemplate;
     @Resource
     private SeckillService seckillService;
-
+    @Resource
+    private ShoppingService shoppingService;
     @RequestMapping("send")
     public ModelAndView send(ModelAndView mv) throws InterruptedException {
         String msg = "hello, Spring boot amqp";
@@ -47,8 +51,10 @@ public class SeckillController {
             @RequestParam(required = false, value = "userId") long userId,
             ServletRequest request
     ) throws Exception {
+
         int goodsNumber = seckillService.deductionInventory(goodsId);
         seckillService.saveUserInfo(goodsId, userId);
+        shoppingService.saveSeckillRecord(userId,goodsId);
         if (goodsNumber == 0) {
             GoodsDto goodsDto = goodsService.selectByGoodsId(goodsId);
             goodsDto.setStatus("S");
