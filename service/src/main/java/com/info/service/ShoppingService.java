@@ -10,5 +10,5 @@ public interface ShoppingService {
     List<ShoppingCarQueryDto> selectSeckillGoodsList(Map<String ,Object> map) throws Exception;
     void saveSeckillRecord(Long userId,Long goodsId) throws ParseException;
     void updateSeckillRecord(String type,String goodsId);
-    void deleteSeckillRecord(Long goodsId);
+    void deleteSeckillRecord(Long goodsId,Long userId) throws Exception;
 }

@@ -1,20 +1,17 @@
 package com.info.controller;
 
-import com.info.dto.ShoppingCarQueryDto;
 import com.info.service.GoodsService;
 import com.info.service.SeckillService;
 import com.info.service.ShoppingService;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -70,8 +67,9 @@ public class ShoppingController {
     @RequestMapping(value = "delRecord")
     @ResponseBody
     public void delRecord(
-            @RequestParam(required = false,value = "goodsId")Long goodsId
-    ){
-        shoppingService.deleteSeckillRecord(goodsId);
+            @RequestParam(required = false,value = "goodsId")Long goodsId,
+            @RequestParam(required = false, value = "userId") Long userId
+    ) throws Exception {
+        shoppingService.deleteSeckillRecord(goodsId,userId);
     }
 }

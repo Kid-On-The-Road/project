@@ -1,6 +1,9 @@
 package com.info.impl;
 
+import com.info.convert.ConvertUtil;
+import com.info.dto.GoodsDto;
 import com.info.dto.ShoppingCarQueryDto;
+import com.info.entity.GoodsEntity;
 import com.info.entity.ShoppingCarEntity;
 import com.info.mapper.GoodsEntityMapper;
 import com.info.mapper.ShoppingCarEntityMapper;
@@ -10,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -50,8 +52,27 @@ public class ShoppingServiceImpl implements ShoppingService {
     }
 
     @Override
-    public void deleteSeckillRecord(Long goodsId) {
+    public void deleteSeckillRecord(Long goodsId,Long userId) throws Exception {
+        //删除订单信息
         shoppingCarEntityMapper.deleteByPrimaryKey(goodsId);
-
+        //恢复缓存中商品的库存
+        Map<String,Object> goodsDto = (Map<String, Object>) redisTemplate.boundHashOps("秒杀商品").get(goodsId);
+        int goodsNumber = (int) Objects.requireNonNull(goodsDto).get("goodsNumber");
+        if (goodsNumber <= 0) {
+            goodsDto.put("goodsNumber", goodsNumber + goodsEntityMapper.selectByPrimaryKey(goodsId).getGoodsNumber());
+            Map<String,Object> map = new HashMap<>();
+            map.put("goodsId",goodsId);
+            map.put("status","P");
+            for (GoodsEntity goodsEntity : goodsEntityMapper.selectByCondition(map)) {
+                goodsEntity.setStatus("P");
+                goodsEntityMapper.updateStatus(ConvertUtil.convert(goodsEntity, GoodsDto.class));
+            }
+        }else {
+            goodsDto.put("goodsNumber", goodsNumber + goodsEntityMapper.selectByPrimaryKey(goodsId).getGoodsNumber());
+        }
+        redisTemplate.boundHashOps("秒杀商品").put(goodsId,goodsDto);
+        //删除缓存中的订单信息
+//        redisTemplate.boundListOps(String.valueOf(userId)).remove(1,goodsId);
+//        redisTemplate.boundListOps(userId+"").remove(userId,goodsId);
     }
 }

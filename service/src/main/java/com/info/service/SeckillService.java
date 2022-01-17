@@ -15,8 +15,8 @@ public interface SeckillService {
     void deleteInventory(GoodsDto goodsDto);
 
     //保存用户信息
-    void saveUserInfo(Long goodsId,Long userId);
+//    void saveUserInfo(Long goodsId,Long userId);
 
     //删除用户信息
-    void deleteUserInfo(Long goodsId);
+//    void deleteUserInfo(Long goodsId);
 }

@@ -48,11 +48,10 @@ public class SeckillController {
     @ResponseBody
     public int deductionInventory(
             @RequestParam(required = false, value = "goodsId") long goodsId,
-            @RequestParam(required = false, value = "userId") long userId,
-            ServletRequest request
+            @RequestParam(required = false, value = "userId") long userId
     ) throws Exception {
         int goodsNumber = seckillService.deductionInventory(goodsId);
-        seckillService.saveUserInfo(goodsId, userId);
+//        seckillService.saveUserInfo(goodsId, userId);
         shoppingService.saveSeckillRecord(userId,goodsId);
         if (goodsNumber <= 0) {
             GoodsDto goodsDto = goodsService.selectByGoodsId(goodsId);

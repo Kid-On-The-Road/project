@@ -53,6 +53,7 @@
             <if test="type!=null">STATUS=#{type,jdbcType=VARCHAR}</if>
         </set>
         where GOODS_ID = #{goodsId,jdbcType=DECIMAL}
+        and validity = 'Y'
     </update>
 
     <!--根据ID删除记录-->

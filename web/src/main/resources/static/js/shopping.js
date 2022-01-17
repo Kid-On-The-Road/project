@@ -19,37 +19,40 @@ function selectGoods() {
         }
     });
 }
+
 //支付
-function payment(goodsId,type){
+function payment(goodsId, type) {
     $.ajax({
-        type : 'POST',
+        type: 'POST',
         url: "payment",
-        data:{
-            "goodsId":goodsId,
-            "type":type
+        data: {
+            "goodsId": goodsId,
+            "type": type
         },
-        success : function(result) {
-            $(".goodsList").load("../selectShoppingGoods"+"?userId="+document.getElementById("userId").value+ " .goodsList>*");
-            if(type ==='P'){
+        success: function (result) {
+            $(".goodsList").load("../selectShoppingGoods" + "?userId=" + document.getElementById("userId").value + " .goodsList>*");
+            if (type === 'P') {
                 toastr.success('付款成功');
-            }else if (type === 'R') {
+            } else if (type === 'R') {
                 toastr.success('退款成功');
             }
         }
     })
 }
+
 //删除记录
-function delRecord(goodsId){
+function delRecord(goodsId) {
     $.ajax({
-        type : "POST",
-        url:"delRecord",
-        data:{
-        "goodsId":goodsId
+        type: "POST",
+        url: "delRecord",
+        data: {
+            "goodsId": goodsId,
+            "userId": document.getElementById("userId").value
         },
-        success : function(result) {
+        success: function (result) {
             //关闭模态框遮罩
             $(".modal-backdrop").remove();
-            $(".goodsList").load("../selectShoppingGoods"+"?userId="+document.getElementById("userId").value+ " .goodsList>*");
+            $(".goodsList").load("../selectShoppingGoods" + "?userId=" + document.getElementById("userId").value + " .goodsList>*");
             toastr.success('删除成功');
         }
     })

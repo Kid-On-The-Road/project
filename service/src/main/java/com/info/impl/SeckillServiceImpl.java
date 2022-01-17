@@ -54,18 +54,17 @@ public class SeckillServiceImpl implements SeckillService {
     /**
      * 保存用户信息
      */
-    @Override
-    public void saveUserInfo(Long goodsId,Long userId) {
-        redisTemplate.boundListOps(userId+"").leftPush(goodsId);
-        redisTemplate.boundListOps(userId+"").remove(userId,goodsId);
-    }
+//    @Override
+//    public void saveUserInfo(Long goodsId,Long userId) {
+//        redisTemplate.boundListOps(userId+"").leftPush(goodsId);
+//    }
 
     /**
      * 删除用户信息
      */
-    @Override
-    public void deleteUserInfo(Long goodsId) {
-//        redisTemplate.
-    }
+//    @Override
+//    public void deleteUserInfo(Long goodsId) {
+//        redisTemplate.boundListOps(userId+"").remove(userId,goodsId);
+//    }
 
 }

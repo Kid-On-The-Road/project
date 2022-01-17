@@ -125,7 +125,6 @@ public class GoodsManageController {
             seckillService.deleteInventory(goodsDto);
             goodsDto.setStatus("S");
             goodsService.updateStatus(goodsDto);
-            seckillService.deleteUserInfo(goodsId);
         }
     }
 }
