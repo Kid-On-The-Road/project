@@ -23,8 +23,9 @@ public class ShoppingServiceImpl implements ShoppingService {
     private GoodsEntityMapper goodsEntityMapper;
     @Resource
     private ShoppingCarEntityMapper shoppingCarEntityMapper;
+
     @Override
-    public List<ShoppingCarQueryDto> selectSeckillGoodsList(Map<String ,Object> map) throws Exception {
+    public List<ShoppingCarQueryDto> selectSeckillGoodsList(Map<String, Object> map) throws Exception {
         return shoppingCarEntityMapper.selectByCondition(map);
     }
 
@@ -40,15 +41,17 @@ public class ShoppingServiceImpl implements ShoppingService {
     }
 
     @Override
-    public void updateSeckillRecord(String type,String goodsId) {
-        Map<String ,Object> map = new HashMap<>();
-        map.put("type",type);
-        map.put("goodsId",goodsId);
+    public void updateSeckillRecord(String type, String goodsId) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("type", type);
+        map.put("goodsId", goodsId);
         shoppingCarEntityMapper.updateByGoodsId(map);
+        goodsEntityMapper.deductionInventory(type, goodsId);
     }
 
     @Override
     public void deleteSeckillRecord(Long goodsId) {
         shoppingCarEntityMapper.deleteByPrimaryKey(goodsId);
+
     }
 }

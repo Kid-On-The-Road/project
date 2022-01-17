@@ -51,7 +51,6 @@ public class SeckillController {
             @RequestParam(required = false, value = "userId") long userId,
             ServletRequest request
     ) throws Exception {
-
         int goodsNumber = seckillService.deductionInventory(goodsId);
         seckillService.saveUserInfo(goodsId, userId);
         shoppingService.saveSeckillRecord(userId,goodsId);

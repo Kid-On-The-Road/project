@@ -51,7 +51,6 @@ public class SeckillServiceImpl implements SeckillService {
     }
 
 
-
     /**
      * 下架商品（redis中删除秒杀商品记录）
      * @param goodsDto 商品对象
@@ -67,6 +66,7 @@ public class SeckillServiceImpl implements SeckillService {
     @Override
     public void saveUserInfo(Long goodsId,Long userId) {
         redisTemplate.boundListOps(userId+"").leftPush(goodsId);
+        redisTemplate.boundListOps(userId+"").remove(userId,goodsId);
     }
 
     /**
@@ -74,7 +74,7 @@ public class SeckillServiceImpl implements SeckillService {
      */
     @Override
     public void deleteUserInfo(Long goodsId) {
-        redisTemplate.boundHashOps("用户信息").delete(goodsId);
+//        redisTemplate.
     }
 
 }

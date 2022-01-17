@@ -63,6 +63,15 @@
         </set>
         where GOODS_ID = #{goodsId,jdbcType=DECIMAL}
     </update>
+    <!--    扣减库存-->
+    <update id="deductionInventory">
+        update GOODS
+        <set>
+            <if test='type!=null and type=="P"'>GOODS_NUMBER = GOODS_NUMBER-1</if>
+            <if test='type!=null and type=="R"'>GOODS_NUMBER = GOODS_NUMBER+1</if>
+        </set>
+        where GOODS_ID = #{goodsId,jdbcType=DECIMAL}
+    </update>
 
     <!--根据ID删除商品-->
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
@@ -77,6 +86,7 @@
         from GOODS
         <where>
             VALIDITY = 'Y'
+            and GOODS_NUMBER > 0
             <if test="goodsName!=null">AND GOODS_NAME = #{goodsName,jdbcType=VARCHAR}</if>
             <if test="goodsCategory!=null">AND GOODS_CATEGORY = #{goodsCategory,jdbcType=VARCHAR}</if>
             <if test="productionTime!=null">AND PRODUCTION_TIME = #{productionTime,jdbcType=DATE}</if>

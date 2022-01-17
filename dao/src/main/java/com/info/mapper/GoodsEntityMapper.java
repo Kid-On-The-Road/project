@@ -3,6 +3,7 @@ package com.info.mapper;
 import com.info.dto.GoodsDto;
 import com.info.entity.GoodsEntity;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -33,5 +34,12 @@ public interface GoodsEntityMapper {
      */
     GoodsEntity selectByPrimaryKey(Long goodsId);
 
+    /**
+     * 更新商品状态
+     */
     void updateStatus(GoodsDto goodsDto);
+    /**
+     * 扣减库存
+     */
+    void deductionInventory(@Param("type") String type,@Param("goodsId") String goodsId);
 }
