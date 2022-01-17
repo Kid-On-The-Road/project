@@ -28,15 +28,6 @@ public class SeckillServiceImpl implements SeckillService {
     }
 
     /**
-     *
-     * @param goodsDto 商品对象
-     */
-    @Override
-    public void updateSeckillData(GoodsDto goodsDto) {
-//        redisTemplate.opsForValue().set(i+"Id", i+"Id")
-    }
-
-    /**
      * 扣减库存
      * @param goodsId 商品ID
      * @return 返回商品数量

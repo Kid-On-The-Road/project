@@ -8,9 +8,6 @@ public interface SeckillService {
     //redis中添加库存
     void addInventory(GoodsDto goodsDto);
 
-    //更新秒杀数据
-    void updateSeckillData(GoodsDto goodsDto);
-
     //扣减库存
     int deductionInventory(Long goodsId);
 
