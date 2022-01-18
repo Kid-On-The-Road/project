@@ -52,17 +52,17 @@ public class ShoppingServiceImpl implements ShoppingService {
     }
 
     @Override
-    public void deleteSeckillRecord(Long goodsId,Long userId) throws Exception {
+    public void deleteSeckillRecord(Long goodsId, Long userId) throws Exception {
+        //恢复缓存中商品的库存
+        Map<String, Object> map = new HashMap<>();
+        map.put("userId", userId);
+        map.put("goodsId", goodsId);
+        for (ShoppingCarQueryDto shoppingCarQueryDto : shoppingCarEntityMapper.selectByCondition(map)) {
+            if (!shoppingCarQueryDto.getStatus().equals("P")) {
+                redisTemplate.boundHashOps("秒杀商品").put(goodsId, ConvertUtil.convert(goodsEntityMapper.selectByPrimaryKey(goodsId), GoodsDto.class));
+            }
+        }
         //删除订单信息
         shoppingCarEntityMapper.deleteByPrimaryKey(goodsId);
-        //恢复缓存中商品的库存
-        Map<String,Object> goodsDto = (Map<String, Object>) redisTemplate.boundHashOps("秒杀商品").get(goodsId);
-        int goodsNumber = (int) Objects.requireNonNull(goodsDto).get("goodsNumber");
-        if (goodsNumber <= 0) {
-            goodsDto.put("goodsNumber", goodsNumber + goodsEntityMapper.selectByPrimaryKey(goodsId).getGoodsNumber());
-        }else {
-            goodsDto.put("goodsNumber", goodsNumber + goodsEntityMapper.selectByPrimaryKey(goodsId).getGoodsNumber());
-        }
-        redisTemplate.boundHashOps("秒杀商品").put(goodsId,goodsDto);
     }
 }
