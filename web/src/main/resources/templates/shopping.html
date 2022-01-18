@@ -58,7 +58,6 @@
                 <td th:text="${g.goodsCategory}"></td>
                 <td th:text="${g.goodsPrice}"></td>
                 <td th:text="${#dates.format(g.productionTime,'yyyy-MM-dd')}"></td>
-                <!--<td th:text="${g.productionTime}"></td>-->
                 <td>
                     <button type="button" class="btn btn-success btn-xs" id="payment"
                             th:onclick="|payment('${g.goodsId}','P')|"

@@ -51,12 +51,8 @@ public class SeckillController {
             @RequestParam(required = false, value = "userId") long userId
     ) throws Exception {
         int goodsNumber = seckillService.deductionInventory(goodsId);
-//        seckillService.saveUserInfo(goodsId, userId);
         shoppingService.saveSeckillRecord(userId,goodsId);
         if (goodsNumber <= 0) {
-            GoodsDto goodsDto = goodsService.selectByGoodsId(goodsId);
-            goodsDto.setStatus("S");
-            goodsService.updateStatus(goodsDto);
             return 0;
         }
         return 1;
@@ -72,7 +68,13 @@ public class SeckillController {
         if (!Objects.equals(userId, "") && !Objects.equals(userId, null)) {
             Map<String, Object> map = new HashMap<>();
             map.put("status", "P");
-            List<GoodsDto> goodsDtos = goodsService.selectByCondition(map, 1);
+            List<GoodsDto> goodsDtos = new ArrayList<>();
+            for (GoodsDto goodsDto : goodsService.selectByCondition(map, 1)) {
+                int goodsNumber = (int) Objects.requireNonNull((Map<String, Object>) redisTemplate.boundHashOps("秒杀商品").get(goodsDto.getGoodsId())).get("goodsNumber");
+                if (goodsNumber>0) {
+                    goodsDtos.add(goodsDto);
+                }
+            }
             mv.addObject("goodsDtos", goodsDtos);
             mv.addObject("userId", userId);
             mv.setViewName("seckill");

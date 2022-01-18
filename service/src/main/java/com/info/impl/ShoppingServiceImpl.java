@@ -60,19 +60,9 @@ public class ShoppingServiceImpl implements ShoppingService {
         int goodsNumber = (int) Objects.requireNonNull(goodsDto).get("goodsNumber");
         if (goodsNumber <= 0) {
             goodsDto.put("goodsNumber", goodsNumber + goodsEntityMapper.selectByPrimaryKey(goodsId).getGoodsNumber());
-            Map<String,Object> map = new HashMap<>();
-            map.put("goodsId",goodsId);
-            map.put("status","P");
-            for (GoodsEntity goodsEntity : goodsEntityMapper.selectByCondition(map)) {
-                goodsEntity.setStatus("P");
-                goodsEntityMapper.updateStatus(ConvertUtil.convert(goodsEntity, GoodsDto.class));
-            }
         }else {
             goodsDto.put("goodsNumber", goodsNumber + goodsEntityMapper.selectByPrimaryKey(goodsId).getGoodsNumber());
         }
         redisTemplate.boundHashOps("秒杀商品").put(goodsId,goodsDto);
-        //删除缓存中的订单信息
-//        redisTemplate.boundListOps(String.valueOf(userId)).remove(1,goodsId);
-//        redisTemplate.boundListOps(userId+"").remove(userId,goodsId);
     }
 }
