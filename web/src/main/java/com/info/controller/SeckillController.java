@@ -1,6 +1,7 @@
 package com.info.controller;
 
 import com.info.dto.GoodsDto;
+import com.info.dto.ShoppingCarQueryDto;
 import com.info.entity.ShoppingCarEntity;
 import com.info.impl.GoodsServiceImpl;
 import com.info.mapper.ShoppingCarEntityMapper;
@@ -31,6 +32,8 @@ public class SeckillController {
     private SeckillService seckillService;
     @Resource
     private ShoppingService shoppingService;
+    @Resource
+    private  ShoppingCarEntityMapper shoppingCarEntityMapper;
     @RequestMapping("send")
     public ModelAndView send(ModelAndView mv) throws InterruptedException {
         String msg = "hello, Spring boot amqp";
@@ -51,8 +54,8 @@ public class SeckillController {
             @RequestParam(required = false, value = "userId") long userId
     ) throws Exception {
         int goodsNumber = seckillService.deductionInventory(goodsId);
-        shoppingService.saveSeckillRecord(userId,goodsId);
-        if (goodsNumber <= 0) {
+        if (goodsNumber >= 0) {
+            shoppingService.saveSeckillRecord(userId,goodsId);
             return 0;
         }
         return 1;
@@ -63,16 +66,22 @@ public class SeckillController {
      */
     @RequestMapping(value = "selectSeckillGoodsList")
     public ModelAndView selectSeckillGoodsList(
-            @RequestParam(required = false, value = "userId") String userId,
+            @RequestParam(required = false, value = "userId") Long userId,
             ModelAndView mv) throws Exception {
         if (!Objects.equals(userId, "") && !Objects.equals(userId, null)) {
             Map<String, Object> map = new HashMap<>();
             map.put("status", "P");
             List<GoodsDto> goodsDtos = new ArrayList<>();
             for (GoodsDto goodsDto : goodsService.selectByCondition(map, 1)) {
-                int goodsNumber = (int) Objects.requireNonNull((Map<String, Object>) redisTemplate.boundHashOps("秒杀商品").get(goodsDto.getGoodsId())).get("goodsNumber");
-                if (goodsNumber>0) {
-                    goodsDtos.add(goodsDto);
+                map.clear();
+                map.put("userId",userId);
+                map.put("goodsId",goodsDto.getGoodsId());
+                List<ShoppingCarQueryDto> shoppingCarQueryDtos = shoppingCarEntityMapper.selectByCondition(map);
+                if(shoppingCarEntityMapper.selectByCondition(map).size()==0){
+                    int goodsNumber = (int) Objects.requireNonNull((Map<String, Object>) redisTemplate.boundHashOps("秒杀商品").get(goodsDto.getGoodsId())).get("goodsNumber");
+                    if (goodsNumber>0) {
+                        goodsDtos.add(goodsDto);
+                    }
                 }
             }
             mv.addObject("goodsDtos", goodsDtos);

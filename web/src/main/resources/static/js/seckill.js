@@ -33,9 +33,11 @@ function startSeckill() {
                 "userId": document.getElementById("userId").value
             },
             success: function (result) {
+                $('#seckillModal').modal();
                 if (result=== 0) {
-                    $('#seckillModal').modal();
-                    toastr.success('秒杀已结束!');
+                    toastr.success('成功抢到商品!');
+                }else {
+                    toastr.success('未能抢到商品,试试其他的!');
                 }
                 $('#loading').modal('hide');
             }

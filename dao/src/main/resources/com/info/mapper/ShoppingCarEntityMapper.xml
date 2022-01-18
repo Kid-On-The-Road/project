@@ -65,15 +65,17 @@
 
     <!--根据条件查询记录-->
     <select id="selectByCondition" resultMap="QueryResultMapper" parameterType="java.util.Map">
-        select s.*, g.GOODS_CATEGORY, g.GOODS_NAME, g.GOODS_PRICE, g.PRODUCTION_TIME
-        from SHOPPING_CAR s
-        left join GOODS g on s.GOODS_ID = g.GOODS_ID
-        <where>
-            s. VALIDITY = 'Y'
-            <if test="status!=null">AND s.STATUS = #{status,jdbcType=VARCHAR}</if>
-            <if test="goodsCategory!=null">AND g.GOODS_CATEGORY = #{goodsCategory,jdbcType=VARCHAR}</if>
-            <if test="goodsName!=null">AND g.GOODS_NAME = #{goodsName,jdbcType=VARCHAR}</if>
-        </where>
+                select s.*, g.GOODS_CATEGORY, g.GOODS_NAME, g.GOODS_PRICE, g.PRODUCTION_TIME
+                from SHOPPING_CAR s
+                left join GOODS g on s.GOODS_ID = g.GOODS_ID
+                <where>
+                    s. VALIDITY = 'Y'
+                    <if test="userId!=null">and s.USER_ID = #{userId,jdbcType=DECIMAL}</if>
+                    <if test="goodsId!=null">and s.GOODS_ID = #{goodsId,jdbcType=DECIMAL}</if>
+                    <if test="status!=null">AND s.STATUS = #{status,jdbcType=VARCHAR}</if>
+                    <if test="goodsCategory!=null">AND g.GOODS_CATEGORY = #{goodsCategory,jdbcType=VARCHAR}</if>
+                    <if test="goodsName!=null">AND g.GOODS_NAME = #{goodsName,jdbcType=VARCHAR}</if>
+                </where>
     </select>
 
     <!--根据商品ID查询记录-->
