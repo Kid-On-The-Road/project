@@ -112,6 +112,20 @@ function seckillStatus(goodsId, status) {
     })
 }
 
+//结束秒杀
+function endSeckill(){
+    $.ajax({
+        type : 'POST',
+        url : ' endSeckill',
+        data :{
+
+        },
+        success : function(result) {
+            toastr.success('已结束秒杀');
+        }
+    })
+}
+
 //删除商品
 function delGoods(goodsId) {
     if (goodsId > 0) {

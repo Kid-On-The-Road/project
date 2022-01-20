@@ -6,6 +6,7 @@ import com.github.pagehelper.PageInfo;
 import com.info.dto.GoodsDto;
 import com.info.impl.GoodsServiceImpl;
 import com.info.service.SeckillService;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,8 @@ public class GoodsManageController {
     private RedisTemplate<String, Object> redisTemplate;
     @Resource
     private SeckillService seckillService;
+    @Resource
+    private AmqpTemplate amqpTemplate;
 
     /**
      * 保存/修改商品信息
@@ -78,7 +81,7 @@ public class GoodsManageController {
             @RequestParam(required = false, value = "userId") String userId,
             @RequestParam(required = false, defaultValue = "1", value = "pageNum") int pageNum,
             @RequestParam(required = false, defaultValue = "10", value = "pageSize") int pageSize, ModelAndView mv) throws Exception {
-        if (!Objects.equals(userId, "")&&!Objects.equals(userId, null)) {
+        if (!Objects.equals(userId, "") && !Objects.equals(userId, null)) {
             Page<GoodsDto> page = PageHelper.startPage(pageNum, pageSize);
             Map<String, Object> map = new HashMap<>();
             if (!Objects.isNull(goodsName) && goodsName.length() > 0) {

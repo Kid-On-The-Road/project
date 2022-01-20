@@ -7,6 +7,7 @@ import com.info.impl.GoodsServiceImpl;
 import com.info.mapper.ShoppingCarEntityMapper;
 import com.info.service.SeckillService;
 import com.info.service.ShoppingService;
+import com.rabbitmq.client.Channel;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
@@ -33,14 +34,15 @@ public class SeckillController {
     @Resource
     private ShoppingService shoppingService;
     @Resource
-    private  ShoppingCarEntityMapper shoppingCarEntityMapper;
+    private ShoppingCarEntityMapper shoppingCarEntityMapper;
+
     @RequestMapping("send")
-    public ModelAndView send(ModelAndView mv) throws InterruptedException {
-        String msg = "hello, Spring boot amqp";
+    public ModelAndView send(ModelAndView mv, Channel channel) throws Exception {
+        String msg = "success";
         amqpTemplate.convertAndSend("spring.test.exchange", "a.b", msg);
         // 等待10秒后再结束
-        Thread.sleep(10000);
-        mv.setViewName("seckill");
+//        Thread.sleep(3000);
+        mv.setViewName("test");
         return mv;
     }
 
@@ -49,16 +51,25 @@ public class SeckillController {
      */
     @RequestMapping(value = "startSeckill", method = RequestMethod.GET)
     @ResponseBody
-    public int deductionInventory(
+    public int startSeckill(
             @RequestParam(required = false, value = "goodsId") long goodsId,
             @RequestParam(required = false, value = "userId") long userId
     ) throws Exception {
         int goodsNumber = seckillService.deductionInventory(goodsId);
         if (goodsNumber >= 0) {
-            shoppingService.saveSeckillRecord(userId,goodsId);
+            seckillService.saveUserInfo(goodsId,userId);
             return 0;
         }
         return 1;
+    }
+
+    /**
+     * 结束秒杀
+     */
+    @RequestMapping(value = "endSeckill")
+    @ResponseBody
+    public void endSeckil(){
+        amqpTemplate.convertAndSend("seckill.exchange", "seckillGoods", "success");
     }
 
     /**
@@ -74,12 +85,11 @@ public class SeckillController {
             List<GoodsDto> goodsDtos = new ArrayList<>();
             for (GoodsDto goodsDto : goodsService.selectByCondition(map, 1)) {
                 map.clear();
-                map.put("userId",userId);
-                map.put("goodsId",goodsDto.getGoodsId());
-                List<ShoppingCarQueryDto> shoppingCarQueryDtos = shoppingCarEntityMapper.selectByCondition(map);
-                if(shoppingCarEntityMapper.selectByCondition(map).size()==0){
+                map.put("userId", userId);
+                map.put("goodsId", goodsDto.getGoodsId());
+                if (shoppingCarEntityMapper.selectByCondition(map).size() == 0) {
                     int goodsNumber = (int) Objects.requireNonNull((Map<String, Object>) redisTemplate.boundHashOps("秒杀商品").get(goodsDto.getGoodsId())).get("goodsNumber");
-                    if (goodsNumber>0) {
+                    if (goodsNumber > 0) {
                         goodsDtos.add(goodsDto);
                     }
                 }

@@ -54,4 +54,25 @@ public class SeckillServiceImpl implements SeckillService {
         redisTemplate.boundHashOps("秒杀商品").delete(goodsDto.getGoodsId());
     }
 
+    /**
+     * 保存用户信息
+     *
+     * @param goodsId
+     * @param userId
+     */
+    @Override
+    public void saveUserInfo(Long goodsId, Long userId) {
+        redisTemplate.boundHashOps("用户信息").put(goodsId+userId, userId);
+    }
+
+    /**
+     * 删除用户信息
+     *
+     * @param goodsId
+     */
+    @Override
+    public void deleteUserInfo(Long goodsId) {
+        redisTemplate.boundHashOps("用户信息").delete(goodsId);
+    }
+
 }

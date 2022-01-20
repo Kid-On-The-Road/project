@@ -64,5 +64,6 @@ public class ShoppingServiceImpl implements ShoppingService {
         }
         //删除订单信息
         shoppingCarEntityMapper.deleteByPrimaryKey(goodsId);
+        redisTemplate.boundHashOps("用户信息").delete(goodsId+userId);
     }
 }
