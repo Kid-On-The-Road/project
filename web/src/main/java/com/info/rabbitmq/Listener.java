@@ -13,6 +13,8 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -34,9 +36,12 @@ public class Listener {
         if (msg.contains("success")) {
             // 正确消费时，通过调用 basicAck 方法即可,RabbitMQ的ack机制中，第二个参数返回true，表示需要将这条消息投递给其他的消费者重新消费
             channel.basicAck(deliveryTag, false);
-            for (Object o : redisTemplate.boundHashOps("用户信息").entries().keySet()) {
-                shoppingService.saveSeckillRecord(Long.valueOf(String.valueOf(redisTemplate.boundHashOps("用户信息").entries().get(o))).longValue(), Long.valueOf(String.valueOf(o)).longValue() - Long.valueOf(String.valueOf(redisTemplate.boundHashOps("用户信息").entries().get(o))).longValue());
-            }
+            Map<Long, Long> map = new HashMap<>();
+//            for (Object o : redisTemplate.boundHashOps("用户信息").entries().keySet()) {
+//                shoppingService.saveSeckillRecord(Long.valueOf(String.valueOf(redisTemplate.boundHashOps("用户信息").entries().get(o))).longValue(), Long.valueOf(String.valueOf(o)).longValue() - Long.valueOf(String.valueOf(redisTemplate.boundHashOps("用户信息").entries().get(o))).longValue());
+//            }
+            //压测代码
+            shoppingService.saveSeckillRecord(redisTemplate.boundHashOps("用户信息").entries());
             redisTemplate.delete("用户信息");
         } else {
             //消费失败时，需要将消息重新塞入队列，等待重新消费时，可以使用 basicNack,第三个参数true，表示这个消息会重新进入队列

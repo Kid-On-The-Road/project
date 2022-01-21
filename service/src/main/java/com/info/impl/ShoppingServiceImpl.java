@@ -32,14 +32,20 @@ public class ShoppingServiceImpl implements ShoppingService {
     }
 
     @Override
-    public void saveSeckillRecord(Long userId, Long goodsId) throws ParseException {
-        ShoppingCarEntity shoppingCarEntity = new ShoppingCarEntity();
-        shoppingCarEntity.setUserId(userId);
-        shoppingCarEntity.setGoodsId(goodsId);
-        shoppingCarEntity.setCreateTime(new Date());
-        shoppingCarEntity.setValidity("Y");
-        shoppingCarEntity.setStatus("W");
-        shoppingCarEntityMapper.insert(shoppingCarEntity);
+    public void saveSeckillRecord(Map map) throws ParseException {
+        List<ShoppingCarEntity> shoppingCarEntities = new ArrayList<>();
+        Set set = map.keySet();
+        for (Object o : map.keySet()) {
+            ShoppingCarEntity shoppingCarEntity = new ShoppingCarEntity();
+            shoppingCarEntity.setUserId(121L);
+            shoppingCarEntity.setGoodsId(242L);
+            shoppingCarEntity.setCreateTime(new Date());
+            shoppingCarEntity.setValidity("Y");
+            shoppingCarEntity.setStatus("W");
+            shoppingCarEntities.add(shoppingCarEntity);
+        }
+
+        shoppingCarEntityMapper.insertBatchWithAll(shoppingCarEntities);
     }
 
     @Override

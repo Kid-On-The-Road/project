@@ -26,6 +26,8 @@ project(":utils") {
         implementation 'org.springframework.boot:spring-boot-starter-data-redis:2.5.2'
         //jedis依赖
         implementation 'redis.clients:jedis:3.7.0'
+        //redisson依赖
+        implementation 'org.redisson:redisson:3.16.0'
     }
 }
 //dao模块配置
@@ -64,7 +66,7 @@ project(":web") {
         //springboot
         implementation 'org.springframework.boot:spring-boot-starter-web:2.5.2'
         //替换tomcat服务器
-//        implementation 'org.springframework.boot:spring-boot-starter-undertow:2.5.2'
+        implementation 'org.springframework.boot:spring-boot-starter-undertow:2.5.2'
         //servlet
         providedCompile 'javax.servlet:javax.servlet-api:4.0.1'
         //bootstrap

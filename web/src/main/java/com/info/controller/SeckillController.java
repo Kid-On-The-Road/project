@@ -5,10 +5,12 @@ import com.info.dto.ShoppingCarQueryDto;
 import com.info.entity.ShoppingCarEntity;
 import com.info.impl.GoodsServiceImpl;
 import com.info.mapper.ShoppingCarEntityMapper;
+import com.info.redis.RedissonLock;
 import com.info.service.SeckillService;
 import com.info.service.ShoppingService;
 import com.rabbitmq.client.Channel;
 import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,13 +37,13 @@ public class SeckillController {
     private ShoppingService shoppingService;
     @Resource
     private ShoppingCarEntityMapper shoppingCarEntityMapper;
+    @Resource
+    RedissonLock redissonLock;
 
     @RequestMapping("send")
     public ModelAndView send(ModelAndView mv, Channel channel) throws Exception {
         String msg = "success";
         amqpTemplate.convertAndSend("spring.test.exchange", "a.b", msg);
-        // 等待10秒后再结束
-//        Thread.sleep(3000);
         mv.setViewName("test");
         return mv;
     }
@@ -55,10 +57,17 @@ public class SeckillController {
             @RequestParam(required = false, value = "goodsId") long goodsId,
             @RequestParam(required = false, value = "userId") long userId
     ) throws Exception {
-        int goodsNumber = seckillService.deductionInventory(goodsId);
-        if (goodsNumber >= 0) {
-            seckillService.saveUserInfo(goodsId,userId);
-            return 0;
+        try {
+            redissonLock.acquire("key");
+            int goodsNumber = seckillService.deductionInventory(goodsId);
+            if (goodsNumber >= 0) {
+                seckillService.saveUserInfo(goodsId, userId);
+                return 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            redissonLock.release("key");
         }
         return 1;
     }
@@ -68,7 +77,7 @@ public class SeckillController {
      */
     @RequestMapping(value = "endSeckill")
     @ResponseBody
-    public void endSeckil(){
+    public void endSeckil() {
         amqpTemplate.convertAndSend("seckill.exchange", "seckillGoods", "success");
     }
 

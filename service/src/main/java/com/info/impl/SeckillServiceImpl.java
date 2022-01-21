@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 @Service
 public class SeckillServiceImpl implements SeckillService {
@@ -62,7 +63,8 @@ public class SeckillServiceImpl implements SeckillService {
      */
     @Override
     public void saveUserInfo(Long goodsId, Long userId) {
-        redisTemplate.boundHashOps("用户信息").put(goodsId+userId, userId);
+//        redisTemplate.boundHashOps("用户信息").put(goodsId+userId, userId);
+        redisTemplate.boundHashOps("用户信息").put(UUID.randomUUID().toString() +userId, userId);
     }
 
     /**

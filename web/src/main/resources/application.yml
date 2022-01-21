@@ -65,4 +65,3 @@ spring:
       max-active: 20
       max-wait: 60000
 #    jndi-name: java:jboss/jdbc/oracleDS
-

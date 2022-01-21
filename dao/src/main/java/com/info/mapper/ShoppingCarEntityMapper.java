@@ -20,14 +20,19 @@ public interface ShoppingCarEntityMapper {
     int insert(ShoppingCarEntity shoppingCarEntity);
 
     /**
+     * 批量插入
+     */
+    int insertBatchWithAll(List<ShoppingCarEntity> shoppingCarEntities);
+
+    /**
      * 更新信息
      */
-    int updateByGoodsId(Map<String,Object> map);
+    int updateByGoodsId(Map<String, Object> map);
 
     /**
      * 根据条件查询记录
      */
-    List<ShoppingCarQueryDto> selectByCondition(Map<String,Object> map);
+    List<ShoppingCarQueryDto> selectByCondition(Map<String, Object> map);
 
     /**
      * 根据商品ID查询记录

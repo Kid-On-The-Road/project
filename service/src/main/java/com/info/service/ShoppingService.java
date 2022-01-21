@@ -8,7 +8,7 @@ import java.util.Map;
 
 public interface ShoppingService {
     List<ShoppingCarQueryDto> selectSeckillGoodsList(Map<String ,Object> map) throws Exception;
-    void saveSeckillRecord(Long userId,Long goodsId) throws ParseException;
+    void saveSeckillRecord(Map map) throws ParseException;
     void updateSeckillRecord(String type,String goodsId);
     void deleteSeckillRecord(Long goodsId,Long userId) throws Exception;
 }
