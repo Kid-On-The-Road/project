@@ -115,13 +115,20 @@ function seckillStatus(goodsId, status) {
 //结束秒杀
 function endSeckill(){
     $.ajax({
-        type : 'POST',
+        type : 'GET',
         url : ' endSeckill',
-        data :{
-
-        },
         success : function(result) {
-            toastr.success('已结束秒杀');
+            if(result===1){
+                toastr.success('已结束秒杀');
+            }else{
+                $(".goodsPage").fadeOut();
+                toastr.warning('数据库存在异常');
+            }
+        },
+        complete: function (XMLHttpRequest, status) {
+            if(status != 200){
+                toastr.warning('数据库存在异常');
+            }
         }
     })
 }

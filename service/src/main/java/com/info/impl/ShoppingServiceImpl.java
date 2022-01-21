@@ -32,20 +32,21 @@ public class ShoppingServiceImpl implements ShoppingService {
     }
 
     @Override
-    public void saveSeckillRecord(Map map) throws ParseException {
-        List<ShoppingCarEntity> shoppingCarEntities = new ArrayList<>();
-        Set set = map.keySet();
-        for (Object o : map.keySet()) {
-            ShoppingCarEntity shoppingCarEntity = new ShoppingCarEntity();
-            shoppingCarEntity.setUserId(121L);
-            shoppingCarEntity.setGoodsId(242L);
-            shoppingCarEntity.setCreateTime(new Date());
-            shoppingCarEntity.setValidity("Y");
-            shoppingCarEntity.setStatus("W");
-            shoppingCarEntities.add(shoppingCarEntity);
+    public int saveSeckillRecord(Map map) throws ParseException {
+        if (map.size() > 0) {
+            List<ShoppingCarEntity> shoppingCarEntities = new ArrayList<>();
+            for (Object o : map.keySet()) {
+                ShoppingCarEntity shoppingCarEntity = new ShoppingCarEntity();
+                shoppingCarEntity.setUserId(121L);
+                shoppingCarEntity.setGoodsId(242L);
+                shoppingCarEntity.setCreateTime(new Date());
+                shoppingCarEntity.setValidity("Y");
+                shoppingCarEntity.setStatus("W");
+                shoppingCarEntities.add(shoppingCarEntity);
+            }
+            return shoppingCarEntityMapper.insertBatchWithAll(shoppingCarEntities);
         }
-
-        shoppingCarEntityMapper.insertBatchWithAll(shoppingCarEntities);
+        return 0;
     }
 
     @Override
@@ -70,6 +71,6 @@ public class ShoppingServiceImpl implements ShoppingService {
         }
         //删除订单信息
         shoppingCarEntityMapper.deleteByPrimaryKey(goodsId);
-        redisTemplate.boundHashOps("用户信息").delete(goodsId+userId);
+        redisTemplate.boundHashOps("用户信息").delete(goodsId + userId);
     }
 }

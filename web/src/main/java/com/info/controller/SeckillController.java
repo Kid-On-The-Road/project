@@ -21,6 +21,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.text.ParseException;
 import java.util.*;
 
 @Controller
@@ -77,8 +81,14 @@ public class SeckillController {
      */
     @RequestMapping(value = "endSeckill")
     @ResponseBody
-    public void endSeckil() {
-        amqpTemplate.convertAndSend("seckill.exchange", "seckillGoods", "success");
+    public int endSeckil() throws ParseException {
+        int i = 0;
+        i = shoppingService.saveSeckillRecord(redisTemplate.boundHashOps("用户信息").entries());
+        if (i >= 0) {
+            amqpTemplate.convertAndSend("seckill.exchange", "seckillGoods", i);
+            return 1;
+        }
+        return 0;
     }
 
     /**

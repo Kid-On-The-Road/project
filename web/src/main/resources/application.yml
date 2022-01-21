@@ -45,7 +45,7 @@ spring:
         enabled: true
         initial-interval: 10000ms
         max-interval: 80000ms
-        multiplier: 2
+        multiplier: 100
     publisher-confirm-type: correlated
     publisher-returns: true #消息发送到交换机确认机制,是否确认回调
   thymeleaf:
