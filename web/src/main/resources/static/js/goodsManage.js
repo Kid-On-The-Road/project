@@ -5,7 +5,7 @@ function selectGoods() {
         "goodsName": document.getElementById("goodsName").value,
         "goodsCategory": document.getElementById("goodsCategory").value,
         "productionTime": document.getElementById("productionTime").value,
-        "seckillStatus": document.getElementById("seckillStatus").value,
+        "goodsStatus": document.getElementById("goodsStatus").value,
         "userId": document.getElementById("userId").value,
     };
     $.ajax({
@@ -94,12 +94,12 @@ function editGoods(goodsId, operation) {
     }
 }
 
-// 秒杀状态修改
-function seckillStatus(goodsId, status) {
+// 商品状态修改
+function goodsStatus(goodsId, status) {
     $('#loading').modal('show');
     $.ajax({
         type: "POST",
-        url: "seckillStatus",
+        url: "goodsStatus",
         data: {
             "goodsId": goodsId,
             "status": status
@@ -112,26 +112,6 @@ function seckillStatus(goodsId, status) {
     })
 }
 
-//结束秒杀
-function endSeckill(){
-    $.ajax({
-        type : 'GET',
-        url : ' endSeckill',
-        success : function(result) {
-            if(result===1){
-                toastr.success('已结束秒杀');
-            }else{
-                $(".goodsPage").fadeOut();
-                toastr.warning('数据库存在异常');
-            }
-        },
-        complete: function (XMLHttpRequest, status) {
-            if(status != 200){
-                toastr.warning('数据库存在异常');
-            }
-        }
-    })
-}
 
 //删除商品
 function delGoods(goodsId) {

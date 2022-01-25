@@ -24,8 +24,8 @@
     <label for="productionTime">生产日期：
         <input type='text' class="form-control date" id="productionTime"/>
     </label>
-    <label for="seckillStatus">状&emsp;&emsp;态：
-        <select id="seckillStatus" class="form-control" data-live-search="true">
+    <label for="goodsStatus">状&emsp;&emsp;态：
+        <select id="goodsStatus" class="form-control" data-live-search="true">
             <option value="" selected disabled hidden></option>
             <option value="S">下架</option>
             <option value="P">上架</option>
@@ -41,9 +41,6 @@
     </button>
     <button type="button" class="btn btn-primary glyphicon glyphicon-plus " style="position:static"
             data-toggle="modal" data-target="#goodsModal" th:onclick="|editGoods('','add')|">&nbsp;新增
-    </button>
-    <button type="button" class="btn btn-warning glyphicon glyphicon-off " style="position:static"
-            onclick="endSeckill()">&nbsp;结束秒杀
     </button>
 </div>
 
@@ -81,12 +78,12 @@
                             th:onclick="|editGoods('${g.goodsId}','edit')|">&nbsp;编辑
                     </button>
                     <button type="button" class="btn btn-success btn-xs" id="putaway"
-                            th:onclick="|seckillStatus('${g.goodsId}','putaway')|"
-                            th:style="${g.status=='P'}?'display:none':''">&nbsp;上架秒杀
+                            th:onclick="|goodsStatus('${g.goodsId}','putaway')|"
+                            th:style="${g.status=='P'}?'display:none':''">&nbsp;上架
                     </button>
                     <button type="button" class="btn btn-success btn-xs" id="soldout"
-                            th:onclick="|seckillStatus('${g.goodsId}','soldout')|"
-                            th:style="${g.status=='S'}?'display:none':''">&nbsp;下架秒杀
+                            th:onclick="|goodsStatus('${g.goodsId}','soldout')|"
+                            th:style="${g.status=='S'}?'display:none':''">&nbsp;下架
                     </button>
                     <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#delModalLabel"
                             th:onclick="'delGoods(' + ${g.goodsId} + ')'"

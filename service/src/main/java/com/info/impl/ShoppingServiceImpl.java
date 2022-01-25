@@ -66,7 +66,7 @@ public class ShoppingServiceImpl implements ShoppingService {
         map.put("goodsId", goodsId);
         for (ShoppingCarQueryDto shoppingCarQueryDto : shoppingCarEntityMapper.selectByCondition(map)) {
             if (!shoppingCarQueryDto.getStatus().equals("P")) {
-                redisTemplate.boundHashOps("秒杀商品").put(goodsId, ConvertUtil.convert(goodsEntityMapper.selectByPrimaryKey(goodsId), GoodsDto.class));
+                redisTemplate.boundHashOps("上架商品").put(goodsId, ConvertUtil.convert(goodsEntityMapper.selectByPrimaryKey(goodsId), GoodsDto.class));
             }
         }
         //删除订单信息

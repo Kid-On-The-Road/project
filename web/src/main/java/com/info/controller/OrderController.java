@@ -36,15 +36,6 @@ public class OrderController {
     private ShoppingCarEntityMapper shoppingCarEntityMapper;
     @Resource
     RedissonLock redissonLock;
-
-    @RequestMapping("send")
-    public ModelAndView send(ModelAndView mv, Channel channel) throws Exception {
-        String msg = "success";
-        amqpTemplate.convertAndSend("spring.test.exchange", "a.b", msg);
-        mv.setViewName("test");
-        return mv;
-    }
-
     /**
      * 下单
      */
@@ -70,21 +61,6 @@ public class OrderController {
     }
 
     /**
-     * 结束下单
-     */
-    @RequestMapping(value = "endOrder")
-    @ResponseBody
-    public int endOrder() throws ParseException {
-        int i = 0;
-        i = shoppingService.saveOrderRecord(redisTemplate.boundHashOps("用户信息").entries());
-        if (i >= 0) {
-            amqpTemplate.convertAndSend("seckill.exchange", "seckillGoods", i);
-            return 1;
-        }
-        return 0;
-    }
-
-    /**
      * 根据条件查询商品
      */
     @RequestMapping(value = "selectSeckillGoodsList")
@@ -100,7 +76,7 @@ public class OrderController {
                 map.put("userId", userId);
                 map.put("goodsId", goodsDto.getGoodsId());
                 if (shoppingCarEntityMapper.selectByCondition(map).size() == 0) {
-                    int goodsNumber = (int) Objects.requireNonNull((Map<String, Object>) redisTemplate.boundHashOps("秒杀商品").get(goodsDto.getGoodsId())).get("goodsNumber");
+                    int goodsNumber = (int) Objects.requireNonNull((Map<String, Object>) redisTemplate.boundHashOps("上架商品").get(goodsDto.getGoodsId())).get("goodsNumber");
                     if (goodsNumber > 0) {
                         goodsDtos.add(goodsDto);
                     }

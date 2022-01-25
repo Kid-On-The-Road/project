@@ -109,13 +109,13 @@ public class GoodsManageController {
     }
 
     /**
-     * 修改商品秒杀状态
+     * 修改商品状态
      *
      * @param goodsId 商品ID
      */
-    @RequestMapping(value = "seckillStatus", method = RequestMethod.POST)
+    @RequestMapping(value = "goodsStatus", method = RequestMethod.POST)
     @ResponseBody
-    public void selectGoods(
+    public void goodsStatus(
             @RequestParam(required = false, value = "goodsId") Long goodsId,
             @RequestParam(required = false, value = "status") String status
     ) throws Exception {

@@ -26,7 +26,7 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public void addInventory(GoodsDto goodsDto) {
-        redisTemplate.boundHashOps("秒杀商品").put(goodsDto.getGoodsId(), goodsDto);
+        redisTemplate.boundHashOps("上架商品").put(goodsDto.getGoodsId(), goodsDto);
     }
 
     /**
@@ -37,10 +37,10 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public int deductionInventory(Long goodsId) {
-        Map<String, Object> goodsDto = (Map<String, Object>) redisTemplate.boundHashOps("秒杀商品").get(goodsId);
+        Map<String, Object> goodsDto = (Map<String, Object>) redisTemplate.boundHashOps("上架商品").get(goodsId);
         int goodsNumber = (int) Objects.requireNonNull(goodsDto).get("goodsNumber") - 1;
         goodsDto.put("goodsNumber", goodsNumber);
-        redisTemplate.boundHashOps("秒杀商品").put(goodsId, goodsDto);
+        redisTemplate.boundHashOps("上架商品").put(goodsId, goodsDto);
         return goodsNumber;
     }
 
@@ -52,7 +52,7 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public void deleteInventory(GoodsDto goodsDto) {
-        redisTemplate.boundHashOps("秒杀商品").delete(goodsDto.getGoodsId());
+        redisTemplate.boundHashOps("上架商品").delete(goodsDto.getGoodsId());
     }
 
     /**
@@ -63,8 +63,7 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public void saveUserInfo(Long goodsId, Long userId) {
-//        redisTemplate.boundHashOps("用户信息").put(goodsId+userId, userId);
-        redisTemplate.boundHashOps("用户信息").put(UUID.randomUUID().toString() +userId, userId);
+        redisTemplate.boundHashOps("用户信息").put(goodsId+userId, userId);
     }
 
     /**
