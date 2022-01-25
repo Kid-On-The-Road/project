@@ -25,37 +25,31 @@ public class OrderController {
     @Resource
     private GoodsServiceImpl goodsService;
     @Resource
-    private AmqpTemplate amqpTemplate;
-    @Resource
     private RedisTemplate<String, Object> redisTemplate;
     @Resource
-    private OrderService seckillService;
-    @Resource
-    private ShoppingService shoppingService;
+    private OrderService orderService;
     @Resource
     private ShoppingCarEntityMapper shoppingCarEntityMapper;
-    @Resource
-    RedissonLock redissonLock;
     /**
      * 下单
      */
-    @RequestMapping(value = "startSeckill", method = RequestMethod.GET)
+    @RequestMapping(value = "startOrder", method = RequestMethod.GET)
     @ResponseBody
-    public int startSeckill(
+    public int startOrder(
             @RequestParam(required = false, value = "goodsId") long goodsId,
             @RequestParam(required = false, value = "userId") long userId
     ) throws Exception {
         try {
-            redissonLock.acquire("key");
-            int goodsNumber = seckillService.deductionInventory(goodsId);
+            RedissonLock.acquire("key");
+            int goodsNumber = orderService.deductionInventory(goodsId);
             if (goodsNumber >= 0) {
-                seckillService.saveUserInfo(goodsId, userId);
+                orderService.saveUserInfo(goodsId, userId);
                 return 0;
             }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            redissonLock.release("key");
+            RedissonLock.release("key");
         }
         return 1;
     }
@@ -63,8 +57,8 @@ public class OrderController {
     /**
      * 根据条件查询商品
      */
-    @RequestMapping(value = "selectSeckillGoodsList")
-    public ModelAndView selectSeckillGoodsList(
+    @RequestMapping(value = "selectOrderGoodsList")
+    public ModelAndView selectOrderGoodsList(
             @RequestParam(required = false, value = "userId") Long userId,
             ModelAndView mv) throws Exception {
         if (!Objects.equals(userId, "") && !Objects.equals(userId, null)) {
