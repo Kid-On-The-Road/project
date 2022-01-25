@@ -1,7 +1,7 @@
 package com.info.controller;
 
 import com.info.service.GoodsService;
-import com.info.service.SeckillService;
+import com.info.service.OrderService;
 import com.info.service.ShoppingService;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
@@ -22,7 +22,7 @@ public class ShoppingController {
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
     @Resource
-    private SeckillService seckillService;
+    private OrderService OrderService;
     @Resource
     private ShoppingService shoppingService;
 
@@ -47,7 +47,7 @@ public class ShoppingController {
         if (!Objects.isNull(status) && status.length() > 0) {
             map.put("status", status);
         }
-        mv.addObject("goodsList", shoppingService.selectSeckillGoodsList(map));
+        mv.addObject("goodsList", shoppingService.selectOrderGoodsList(map));
         mv.addObject("userId", userId);
         mv.setViewName("shopping");
         return mv;
@@ -60,7 +60,7 @@ public class ShoppingController {
             @RequestParam(required = false, value = "goodsId") String goodsId,
             @RequestParam(required = false, value = "type") String type
     ) {
-        shoppingService.updateSeckillRecord(type, goodsId);
+        shoppingService.updateOrderRecord(type, goodsId);
     }
 
     //删除
@@ -70,6 +70,6 @@ public class ShoppingController {
             @RequestParam(required = false,value = "goodsId")Long goodsId,
             @RequestParam(required = false, value = "userId") Long userId
     ) throws Exception {
-        shoppingService.deleteSeckillRecord(goodsId,userId);
+        shoppingService.deleteOrderRecord(goodsId,userId);
     }
 }

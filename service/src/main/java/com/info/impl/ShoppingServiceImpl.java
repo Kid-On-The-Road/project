@@ -27,12 +27,12 @@ public class ShoppingServiceImpl implements ShoppingService {
     private ShoppingCarEntityMapper shoppingCarEntityMapper;
 
     @Override
-    public List<ShoppingCarQueryDto> selectSeckillGoodsList(Map<String, Object> map) throws Exception {
+    public List<ShoppingCarQueryDto> selectOrderGoodsList(Map<String, Object> map) throws Exception {
         return shoppingCarEntityMapper.selectByCondition(map);
     }
 
     @Override
-    public int saveSeckillRecord(Map map) throws ParseException {
+    public int saveOrderRecord(Map map) throws ParseException {
         if (map.size() > 0) {
             List<ShoppingCarEntity> shoppingCarEntities = new ArrayList<>();
             for (Object o : map.keySet()) {
@@ -50,7 +50,7 @@ public class ShoppingServiceImpl implements ShoppingService {
     }
 
     @Override
-    public void updateSeckillRecord(String type, String goodsId) {
+    public void updateOrderRecord(String type, String goodsId) {
         Map<String, Object> map = new HashMap<>();
         map.put("type", type);
         map.put("goodsId", goodsId);
@@ -59,7 +59,7 @@ public class ShoppingServiceImpl implements ShoppingService {
     }
 
     @Override
-    public void deleteSeckillRecord(Long goodsId, Long userId) throws Exception {
+    public void deleteOrderRecord(Long goodsId, Long userId) throws Exception {
         //恢复缓存中商品的库存
         Map<String, Object> map = new HashMap<>();
         map.put("userId", userId);

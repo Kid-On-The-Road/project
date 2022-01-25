@@ -4,7 +4,7 @@ import com.info.dto.GoodsDto;
 
 import java.util.Map;
 
-public interface SeckillService {
+public interface OrderService {
     //redis中添加库存
     void addInventory(GoodsDto goodsDto);
 

@@ -1,13 +1,13 @@
 // 查询商品
-function selectSeckillGoods(finish) {
+function selectOrderGoods(finish) {
     if (finish==='Y') {
-        document.getElementById("seckillGoodsButton").style.display = "none";
+        document.getElementById("orderGoodsButton").style.display = "none";
     }else {
-        document.getElementById("seckillGoodsButton").style.display = "inline-block";
+        document.getElementById("orderGoodsButton").style.display = "inline-block";
     }
     $.ajax({
         type: "POST",
-        url: "selectSeckillGoodsList",
+        url: "selectOrderGoodsList",
         data: {
             "userId":document.getElementById("userId").value
         },
@@ -18,22 +18,22 @@ function selectSeckillGoods(finish) {
     });
 }
 
-//开始秒杀
-function startSeckill() {
-    if(document.getElementById("seckillGoodsName").value===''||document.getElementById("seckillGoodsName").value===null){
-        toastr.success('暂无可秒杀商品');
+//下单
+function startOrder() {
+    if(document.getElementById("orderGoodsName").value===''||document.getElementById("orderGoodsName").value===null){
+        toastr.success('暂无商品');
         location.reload();
     }else {
         $('#loading').modal('show');
         $.ajax({
             type: "GET",
-            url: "startSeckill",
+            url: "startOrder",
             data: {
-                "goodsId": document.getElementById("seckillGoodsName").value,
+                "goodsId": document.getElementById("orderGoodsName").value,
                 "userId": document.getElementById("userId").value
             },
             success: function (result) {
-                $('#seckillModal').modal();
+                $('#orderModal').modal();
                 if (result=== 0) {
                     toastr.success('成功抢到商品!');
                 }else {

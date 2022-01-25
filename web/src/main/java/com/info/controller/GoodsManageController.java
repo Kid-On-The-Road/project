@@ -5,7 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.info.dto.GoodsDto;
 import com.info.impl.GoodsServiceImpl;
-import com.info.service.SeckillService;
+import com.info.service.OrderService;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
@@ -25,7 +25,7 @@ public class GoodsManageController {
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
     @Resource
-    private SeckillService seckillService;
+    private OrderService seckillService;
     @Resource
     private AmqpTemplate amqpTemplate;
 

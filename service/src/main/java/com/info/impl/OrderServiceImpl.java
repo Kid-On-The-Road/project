@@ -1,7 +1,7 @@
 package com.info.impl;
 
 import com.info.dto.GoodsDto;
-import com.info.service.SeckillService;
+import com.info.service.OrderService;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -12,7 +12,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Service
-public class SeckillServiceImpl implements SeckillService {
+public class OrderServiceImpl implements OrderService {
     @Resource
     private AmqpTemplate amqpTemplate;
     @Resource
@@ -20,7 +20,7 @@ public class SeckillServiceImpl implements SeckillService {
 
 
     /**
-     * 上架商品（redis中创建秒杀商品记录）
+     * 上架商品（redis中创建订单记录）
      *
      * @param goodsDto 商品对象
      */
@@ -46,7 +46,7 @@ public class SeckillServiceImpl implements SeckillService {
 
 
     /**
-     * 下架商品（redis中删除秒杀商品记录）
+     * 下架商品（redis中删除订单记录）
      *
      * @param goodsDto 商品对象
      */

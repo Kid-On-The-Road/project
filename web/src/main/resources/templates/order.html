@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>秒杀</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/seckill.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/order.css}">
     <link rel="stylesheet" href="webjars/bootstrap/3.3.5/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="webjars/toastr/2.1.3/toastr.css"/>
     <link rel="stylesheet" href="webjars/bootstrap-datetimepicker/2.4.4/css/bootstrap-datetimepicker.min.css"/>
@@ -12,9 +12,9 @@
 <!--onbeforeunload="selectGoods()" :刷新页面前执行方法-->
 <body>
 
-<div class="seckill form-inline">
-    <label for="seckillGoodsName">商品名称：
-        <select id="seckillGoodsName" class="form-control" data-live-search="true">
+<div class="order form-inline">
+    <label for="orderGoodsName">商品名称：
+        <select id="orderGoodsName" class="form-control" data-live-search="true">
             <option th:each="g: ${goodsDtos}" th:text="${g.goodsName}" th:value="${g.goodsId}"></option>
         </select>
     </label>
@@ -24,10 +24,10 @@
                th:value="${userId}">
     </label>
 </div>
-<div class="seckill form-inline">
-    <button id="seckillGoodsButton" type="button" class="btn btn-warning glyphicon glyphicon-shopping-cart "
+<div class="order form-inline">
+    <button id="orderGoodsButton" type="button" class="btn btn-warning glyphicon glyphicon-shopping-cart "
             th:style="${goodsDtos.size()==0}?'display:none;margin-left: 20px;position:static;':'margin-left: 20px;position:static;'"
-            onclick="startSeckill();">&nbsp;开始秒杀
+            onclick="startOrder();">&nbsp;下单
     </button>
     <button type="button" class="btn btn-success glyphicon glyphicon-shopping-cart"
             style="margin-left: 20px;position:static;"
@@ -42,14 +42,14 @@
     </div>
 </div>
 <!--秒杀结果模态框-->
-<div class="modal fade text-center" id="seckillModal" tabindex="-1" role="dialog" aria-labelledby="seckillModalLabel">
+<div class="modal fade text-center" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel">
     <div class="modal-dialog" style="display: inline-block;width: 30%;" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
-                <h4 class="modal-title" id="seckillModalLabel"></h4>
+                <h4 class="modal-title" id="orderModalLabel"></h4>
             </div>
             <div class="modal-body form-inline text-left">
                 <form class="modalForm form-horizontal" role="form">
@@ -60,7 +60,7 @@
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭
                 </button>
                 <button id="save" type="submit" class="btn btn-primary" data-dismiss="modal"
-                        onclick="selectSeckillGoods('Y')">确认
+                        onclick="selectOrderGoods('Y')">确认
                 </button>
             </div>
         </div>
@@ -88,7 +88,7 @@
 <script src="webjars/bootstrap-datetimepicker/2.4.4/js/locales/bootstrap-datetimepicker.fr.js"></script>
 <script src="webjars/bootstrap-datetimepicker/2.4.4/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
 <script src="webjars/toastr/2.1.3/toastr.js"></script>
-<script type="text/javascript" th:src="@{/js/seckill.js}"></script>
+<script type="text/javascript" th:src="@{/js/order.js}"></script>
 <!--<script>-->
 <!--    $(function () {-->
 <!--        //禁用“确认重新提交表单”-->

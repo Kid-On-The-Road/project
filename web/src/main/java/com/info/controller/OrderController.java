@@ -1,16 +1,13 @@
 package com.info.controller;
 
 import com.info.dto.GoodsDto;
-import com.info.dto.ShoppingCarQueryDto;
-import com.info.entity.ShoppingCarEntity;
 import com.info.impl.GoodsServiceImpl;
 import com.info.mapper.ShoppingCarEntityMapper;
 import com.info.redis.RedissonLock;
-import com.info.service.SeckillService;
+import com.info.service.OrderService;
 import com.info.service.ShoppingService;
 import com.rabbitmq.client.Channel;
 import org.springframework.amqp.core.AmqpTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,15 +17,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
 import java.util.*;
 
 @Controller
-public class SeckillController {
+public class OrderController {
     @Resource
     private GoodsServiceImpl goodsService;
     @Resource
@@ -36,7 +29,7 @@ public class SeckillController {
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
     @Resource
-    private SeckillService seckillService;
+    private OrderService seckillService;
     @Resource
     private ShoppingService shoppingService;
     @Resource
@@ -53,7 +46,7 @@ public class SeckillController {
     }
 
     /**
-     * 开始秒杀
+     * 下单
      */
     @RequestMapping(value = "startSeckill", method = RequestMethod.GET)
     @ResponseBody
@@ -77,13 +70,13 @@ public class SeckillController {
     }
 
     /**
-     * 结束秒杀
+     * 结束下单
      */
-    @RequestMapping(value = "endSeckill")
+    @RequestMapping(value = "endOrder")
     @ResponseBody
-    public int endSeckil() throws ParseException {
+    public int endOrder() throws ParseException {
         int i = 0;
-        i = shoppingService.saveSeckillRecord(redisTemplate.boundHashOps("用户信息").entries());
+        i = shoppingService.saveOrderRecord(redisTemplate.boundHashOps("用户信息").entries());
         if (i >= 0) {
             amqpTemplate.convertAndSend("seckill.exchange", "seckillGoods", i);
             return 1;
@@ -115,7 +108,7 @@ public class SeckillController {
             }
             mv.addObject("goodsDtos", goodsDtos);
             mv.addObject("userId", userId);
-            mv.setViewName("seckill");
+            mv.setViewName("order");
         } else {
             mv.setViewName("index");
         }
