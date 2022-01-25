@@ -1,13 +1,12 @@
 package com.info.controller;
 
+import com.info.convert.ConvertUtil;
 import com.info.dto.GoodsDto;
 import com.info.impl.GoodsServiceImpl;
+import com.info.mapper.GoodsEntityMapper;
 import com.info.mapper.ShoppingCarEntityMapper;
 import com.info.redis.RedissonLock;
 import com.info.service.OrderService;
-import com.info.service.ShoppingService;
-import com.rabbitmq.client.Channel;
-import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,8 +16,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Controller
 public class OrderController {
@@ -30,6 +31,8 @@ public class OrderController {
     private OrderService orderService;
     @Resource
     private ShoppingCarEntityMapper shoppingCarEntityMapper;
+    @Resource
+    private GoodsEntityMapper goodsEntityMapper;
     /**
      * 下单
      */
@@ -61,22 +64,15 @@ public class OrderController {
     public ModelAndView selectOrderGoodsList(
             @RequestParam(required = false, value = "userId") Long userId,
             ModelAndView mv) throws Exception {
+        //判断userId 是否为空,为空则返回登录界面
         if (!Objects.equals(userId, "") && !Objects.equals(userId, null)) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("status", "P");
-            List<GoodsDto> goodsDtos = new ArrayList<>();
-            for (GoodsDto goodsDto : goodsService.selectByCondition(map, 1)) {
-                map.clear();
-                map.put("userId", userId);
-                map.put("goodsId", goodsDto.getGoodsId());
-                if (shoppingCarEntityMapper.selectByCondition(map).size() == 0) {
-                    int goodsNumber = (int) Objects.requireNonNull((Map<String, Object>) redisTemplate.boundHashOps("上架商品").get(goodsDto.getGoodsId())).get("goodsNumber");
-                    if (goodsNumber > 0) {
-                        goodsDtos.add(goodsDto);
-                    }
-                }
+            List lists = redisTemplate.boundHashOps("上架商品").values();
+            List<GoodsDto> goodsDtoList = new ArrayList<GoodsDto>();
+            for (Object list : lists) {
+                Map<Object, Object> map = (Map<Object, Object>) list;
+                goodsDtoList.add((GoodsDto) ConvertUtil.mapToObject(map, GoodsDto.class));
             }
-            mv.addObject("goodsDtos", goodsDtos);
+            mv.addObject("goodsDtos",goodsDtoList);
             mv.addObject("userId", userId);
             mv.setViewName("order");
         } else {

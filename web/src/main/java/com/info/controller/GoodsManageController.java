@@ -25,7 +25,7 @@ public class GoodsManageController {
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
     @Resource
-    private OrderService seckillService;
+    private OrderService orderService;
     @Resource
     private AmqpTemplate amqpTemplate;
 
@@ -121,11 +121,11 @@ public class GoodsManageController {
     ) throws Exception {
         GoodsDto goodsDto = goodsService.selectByGoodsId(goodsId);
         if (Objects.equals(status, "putaway")) {
-            seckillService.addInventory(goodsDto);
+            orderService.addInventory(goodsDto);
             goodsDto.setStatus("P");
             goodsService.updateStatus(goodsDto);
         } else if (Objects.equals(status, "soldout")) {
-            seckillService.deleteInventory(goodsDto);
+            orderService.deleteInventory(goodsDto);
             goodsDto.setStatus("S");
             goodsService.updateStatus(goodsDto);
         }

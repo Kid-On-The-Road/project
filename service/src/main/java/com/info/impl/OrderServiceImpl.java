@@ -20,7 +20,7 @@ public class OrderServiceImpl implements OrderService {
 
 
     /**
-     * 上架商品（redis中创建订单记录）
+     * 添加商品（redis中添加商品信息）
      *
      * @param goodsDto 商品对象
      */

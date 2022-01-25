@@ -28,6 +28,8 @@ project(":utils") {
         implementation 'redis.clients:jedis:3.7.0'
         //redisson依赖
         implementation 'org.redisson:redisson:3.16.0'
+        //Json工具
+        implementation 'com.alibaba:fastjson:1.2.76'
     }
 }
 //dao模块配置
