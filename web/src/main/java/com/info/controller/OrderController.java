@@ -70,14 +70,9 @@ public class OrderController {
             ModelAndView mv) throws Exception {
         //判断userId 是否为空,为空则返回登录界面
         if (!Objects.equals(userId, "") && !Objects.equals(userId, null)) {
-//            List lists = redisTemplate.boundHashOps("上架商品").values();
-//            List<GoodsDto> goodsDtoList = new ArrayList<GoodsDto>();
-//            for (Object list : lists) {
-//                Map<Object, Object> map = (Map<Object, Object>) list;
-//                goodsDtoList.add((GoodsDto) ConvertUtil.mapToObject(map, GoodsDto.class));
-//            }
             Page<GoodsDto> page = PageHelper.startPage(pageNum, pageSize);
             Map<String, Object> map = new HashMap<>();
+            map.put("userId",userId);
             if (!Objects.isNull(goodsName) && goodsName.length() > 0) {
                 map.put("goodsName", goodsName);
             }
@@ -87,7 +82,8 @@ public class OrderController {
             if (!Objects.isNull(productionTime) && productionTime.length() > 0) {
                 map.put("productionTime", new SimpleDateFormat("yyyy-MM-dd").parse(productionTime));
             }
-            orderService.selectByCondition(map, pageNum);
+            map.put("status","P");
+            List<GoodsDto> goodsDtos = orderService.selectByCondition(map, pageNum);
             PageInfo<GoodsDto> pageInfo = page.toPageInfo();
             mv.addObject("pageInfo", pageInfo);
             mv.addObject("userId", userId);

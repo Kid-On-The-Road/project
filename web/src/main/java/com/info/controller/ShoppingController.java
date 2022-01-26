@@ -70,7 +70,7 @@ public class ShoppingController {
     public void saveOrder(
             @RequestParam(required = false, value = "userId") Long userId,
             @RequestParam(required = false, value = "goodsId") Long goodsId,
-            @RequestParam(required = false, value = "orderNumber") Long orderNumber
+            @RequestParam(required = false, value = "orderNumber") int orderNumber
     ){
         shoppingService.saveOrder(userId,goodsId,orderNumber);
     }

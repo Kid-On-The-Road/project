@@ -59,8 +59,9 @@ public class ShoppingServiceImpl implements ShoppingService {
      * 保存编辑
      */
     @Override
-    public void saveOrder(Long userId, Long goodsId, Long orderNumber) {
+    public void saveOrder(Long userId, Long goodsId, int orderNumber) {
         Map<String, Object> userInfo = (Map<String, Object>) redisTemplate.boundHashOps("用户信息").get(userId + goodsId);
+        redisTemplate.boundHashOps("上架商品").put(goodsId, (int)redisTemplate.boundHashOps("上架商品").get(goodsId)-(orderNumber-(int)userInfo.get("orderNumber")));
         userInfo.put("orderNumber", orderNumber);
         redisTemplate.boundHashOps("用户信息").put(goodsId + userId, userInfo);
     }

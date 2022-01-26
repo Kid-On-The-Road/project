@@ -72,7 +72,10 @@ function addShoppingCar() {
         data: data,
         success: function (result) {
             if (result === 1) {
+                $(".goodsList").load(location.href + "?userId=" + document.getElementById("userId").value + " .goodsList>*");
                 toastr.success('添加购物车成功');
+            }else if (result === 2) {
+                toastr.warning('购物车中已存在相同商品!')
             }else {
                 toastr.warning('添加购物车失败');
             }
