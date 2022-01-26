@@ -26,37 +26,45 @@ public class ShoppingServiceImpl implements ShoppingService {
     @Resource
     private ShoppingCarEntityMapper shoppingCarEntityMapper;
 
+    /**
+     * 查询订单信息
+     */
     @Override
-    public List<ShoppingCarQueryDto> selectOrderGoodsList(Map<String, Object> map) throws Exception {
-        return shoppingCarEntityMapper.selectByCondition(map);
-    }
-
-    @Override
-    public int saveOrderRecord(Map map) throws ParseException {
-        if (map.size() > 0) {
-            List<ShoppingCarEntity> shoppingCarEntities = new ArrayList<>();
-            for (Object o : map.keySet()) {
-                ShoppingCarEntity shoppingCarEntity = new ShoppingCarEntity();
-                shoppingCarEntity.setUserId(121L);
-                shoppingCarEntity.setGoodsId(242L);
-                shoppingCarEntity.setCreateTime(new Date());
-                shoppingCarEntity.setValidity("Y");
-                shoppingCarEntity.setStatus("W");
-                shoppingCarEntities.add(shoppingCarEntity);
+    public List<GoodsEntity> selectOrderGoodsList(Map<String, Object> map) throws Exception {
+        List<GoodsEntity> goodsEntityList = new ArrayList<>();
+        Map<Object, Object> userInfos = redisTemplate.boundHashOps("用户信息").entries();
+        for (Object userinfo : userInfos.keySet()) {
+            Map<String, Object> user = (Map<String, Object>) userInfos.get(userinfo);
+            if (Long.valueOf((String) map.get("userId")) == Long.valueOf(String.valueOf(user.get("userId"))).longValue()) {
+                GoodsEntity goodsEntity = goodsEntityMapper.selectByPrimaryKey(Long.valueOf(String.valueOf(user.get("goodsId"))).longValue());
+                goodsEntity.setGoodsNumber((Integer) user.get("orderNumber"));
+                goodsEntity.setStatus((String) user.get("status"));
+                goodsEntityList.add(goodsEntity);
             }
-            return shoppingCarEntityMapper.insertBatchWithAll(shoppingCarEntities);
         }
-        return 0;
+        return goodsEntityList;
     }
 
+    /**
+     * 付款
+     */
     @Override
-    public void updateOrderRecord(String type, String goodsId) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("type", type);
-        map.put("goodsId", goodsId);
-        shoppingCarEntityMapper.updateByGoodsId(map);
-        goodsEntityMapper.deductionInventory(type, goodsId);
+    public void payment(String type, Long goodsId, Long userId) {
+        Map<String, Object> userInfo = (Map<String, Object>) redisTemplate.boundHashOps("用户信息").get(userId + goodsId);
+        userInfo.put("status", type);
+        redisTemplate.boundHashOps("用户信息").put(goodsId + userId, userInfo);
     }
+
+    /**
+     * 保存编辑
+     */
+    @Override
+    public void saveOrder(Long userId, Long goodsId, Long orderNumber) {
+        Map<String, Object> userInfo = (Map<String, Object>) redisTemplate.boundHashOps("用户信息").get(userId + goodsId);
+        userInfo.put("orderNumber", orderNumber);
+        redisTemplate.boundHashOps("用户信息").put(goodsId + userId, userInfo);
+    }
+
 
     @Override
     public void deleteOrderRecord(Long goodsId, Long userId) throws Exception {
@@ -73,4 +81,6 @@ public class ShoppingServiceImpl implements ShoppingService {
         shoppingCarEntityMapper.deleteByPrimaryKey(goodsId);
         redisTemplate.boundHashOps("用户信息").delete(goodsId + userId);
     }
+
+
 }

@@ -70,6 +70,7 @@ public class OrderServiceImpl implements OrderService {
             userInfo.put("userId",userId);
             userInfo.put("goodsId",goodsId);
             userInfo.put("orderNumber",orderNumber);
+            userInfo.put("status","W");
             redisTemplate.boundHashOps("用户信息").put(goodsId + userId, userInfo);
             //设置过期时间
             redisTemplate.expire(String.valueOf(goodsId + userId), 10, TimeUnit.SECONDS);

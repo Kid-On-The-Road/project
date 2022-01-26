@@ -1,14 +1,15 @@
 package com.info.service;
 
 import com.info.dto.ShoppingCarQueryDto;
+import com.info.entity.GoodsEntity;
 
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
 public interface ShoppingService {
-    List<ShoppingCarQueryDto> selectOrderGoodsList(Map<String ,Object> map) throws Exception;
-    int saveOrderRecord(Map map) throws ParseException;
-    void updateOrderRecord(String type,String goodsId);
+    List<GoodsEntity> selectOrderGoodsList(Map<String ,Object> map) throws Exception;
     void deleteOrderRecord(Long goodsId,Long userId) throws Exception;
+    void payment(String type, Long goodsId,Long userId);
+    void saveOrder(Long userId, Long goodsId, Long orderNumber);
 }

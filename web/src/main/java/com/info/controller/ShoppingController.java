@@ -57,12 +57,23 @@ public class ShoppingController {
     @RequestMapping(value = "payment")
     @ResponseBody
     public void payment(
-            @RequestParam(required = false, value = "goodsId") String goodsId,
-            @RequestParam(required = false, value = "type") String type
+            @RequestParam(required = false, value = "goodsId") Long goodsId,
+            @RequestParam(required = false, value = "type") String type,
+            @RequestParam(required = false, value = "userId") Long userId
     ) {
-        shoppingService.updateOrderRecord(type, goodsId);
+        shoppingService.payment(type, goodsId,userId);
     }
 
+    //保存编辑
+    @RequestMapping(value = "saveOrder")
+    @ResponseBody
+    public void saveOrder(
+            @RequestParam(required = false, value = "userId") Long userId,
+            @RequestParam(required = false, value = "goodsId") Long goodsId,
+            @RequestParam(required = false, value = "orderNumber") Long orderNumber
+    ){
+        shoppingService.saveOrder(userId,goodsId,orderNumber);
+    }
     //删除
     @RequestMapping(value = "delRecord")
     @ResponseBody

@@ -27,7 +27,8 @@ function payment(goodsId, type) {
         url: "payment",
         data: {
             "goodsId": goodsId,
-            "type": type
+            "type": type,
+            "userId":document.getElementById("userId").value
         },
         success: function (result) {
             $(".goodsList").load("../selectShoppingGoods" + "?userId=" + document.getElementById("userId").value + " .goodsList>*");
@@ -36,6 +37,27 @@ function payment(goodsId, type) {
             } else if (type === 'R') {
                 toastr.success('退款成功');
             }
+        }
+    })
+}
+//编辑订单
+function editOrder(goodsId){
+    $('.modalForm input').val('');
+    $('#modalGoodsId').val(goodsId);
+}
+//保存编辑
+function saveOrder(){
+    $.ajax({
+        type:'POST',
+        url:'saveOrder',
+        data:{
+            "goodsId":document.getElementById("modalGoodsId").value,
+            "userId":document.getElementById("userId").value,
+            "orderNumber":document.getElementById("modalGoodsNumber").value
+        },
+        success:function (){
+            $(".goodsList").load("../selectShoppingGoods" + "?userId=" + document.getElementById("userId").value + " .goodsList>*");
+            toastr.success("修改成功");
         }
     })
 }
