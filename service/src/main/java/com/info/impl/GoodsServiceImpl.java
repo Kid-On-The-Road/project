@@ -6,6 +6,7 @@ import com.info.entity.GoodsEntity;
 import com.info.mapper.GoodsEntityMapper;
 import com.info.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -17,8 +18,16 @@ import java.util.Map;
 public class GoodsServiceImpl implements GoodsService {
     @Resource
     private GoodsEntityMapper goodsEntityMapper;
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
     @Override
     public int save(GoodsDto goodsDto) throws Exception {
+        //数据库中修改已上架商品数量,同步到redis
+        if(redisTemplate.boundHashOps("上架商品").get(goodsDto.getGoodsId())!=null) {
+            int initNumber = goodsEntityMapper.selectByPrimaryKey(goodsDto.getGoodsId()).getGoodsNumber();
+            int nowNumber = goodsDto.getGoodsNumber();
+            redisTemplate.boundHashOps("上架商品").put(goodsDto.getGoodsId(),(int)redisTemplate.boundHashOps("上架商品").get(goodsDto.getGoodsId())-(int)(initNumber-nowNumber));
+        }
         GoodsEntity goodsEntity = ConvertUtil.convert(goodsDto, GoodsEntity.class);
         if(goodsEntity.getGoodsId()>0){
             return goodsEntityMapper.updateById(goodsEntity);

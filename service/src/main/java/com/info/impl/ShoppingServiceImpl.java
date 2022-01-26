@@ -1,30 +1,22 @@
 package com.info.impl;
 
-import com.info.convert.ConvertUtil;
-import com.info.dto.GoodsDto;
-import com.info.dto.ShoppingCarQueryDto;
 import com.info.entity.GoodsEntity;
-import com.info.entity.ShoppingCarEntity;
 import com.info.mapper.GoodsEntityMapper;
-import com.info.mapper.ShoppingCarEntityMapper;
 import com.info.service.ShoppingService;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class ShoppingServiceImpl implements ShoppingService {
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
     @Resource
-    private GoodsServiceImpl goodsService;
-    @Resource
     private GoodsEntityMapper goodsEntityMapper;
-    @Resource
-    private ShoppingCarEntityMapper shoppingCarEntityMapper;
 
     /**
      * 查询订单信息
@@ -66,7 +58,9 @@ public class ShoppingServiceImpl implements ShoppingService {
         redisTemplate.boundHashOps("用户信息").put(goodsId + userId, userInfo);
     }
 
-
+    /**
+     * 删除订单信息
+     */
     @Override
     public void deleteOrderRecord(Long goodsId, Long userId) throws Exception {
         //恢复缓存中商品的库存
