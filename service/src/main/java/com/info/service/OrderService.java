@@ -2,6 +2,7 @@ package com.info.service;
 
 import com.info.dto.GoodsDto;
 
+import java.util.List;
 import java.util.Map;
 
 public interface OrderService {
@@ -15,8 +16,18 @@ public interface OrderService {
     void deleteInventory(GoodsDto goodsDto);
 
     //保存用户信息
-    void saveUserInfo(Long goodsId,Long userId);
+    int saveUserInfo(Long goodsId,Long userId,int orderNumber);
 
     //删除用户信息
     void deleteUserInfo(Long goodsId);
+
+    //自定义查询
+    List<GoodsDto> selectByCondition(Map<String, Object> map, int pageNum) throws Exception;
+
+    /**
+     * 根据商品ID查询商品
+     *
+     */
+    GoodsDto selectByGoodsId(Long goodsId) throws Exception;
+
 }

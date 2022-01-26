@@ -1,5 +1,8 @@
 package com.info.controller;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.info.convert.ConvertUtil;
 import com.info.dto.GoodsDto;
 import com.info.impl.GoodsServiceImpl;
@@ -16,10 +19,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Controller
 public class OrderController {
@@ -33,28 +34,26 @@ public class OrderController {
     private ShoppingCarEntityMapper shoppingCarEntityMapper;
     @Resource
     private GoodsEntityMapper goodsEntityMapper;
+
     /**
-     * 下单
+     * 加入购物车
      */
-    @RequestMapping(value = "startOrder", method = RequestMethod.GET)
+    @RequestMapping(value = "addShoppingCar")
     @ResponseBody
-    public int startOrder(
+    public int addShoppingCar(
             @RequestParam(required = false, value = "goodsId") long goodsId,
-            @RequestParam(required = false, value = "userId") long userId
+            @RequestParam(required = false, value = "userId") long userId,
+            @RequestParam(required = false, value = "orderNumber") int orderNumber
     ) throws Exception {
         try {
             RedissonLock.acquire("key");
-            int goodsNumber = orderService.deductionInventory(goodsId);
-            if (goodsNumber >= 0) {
-                orderService.saveUserInfo(goodsId, userId);
-                return 0;
-            }
+            return orderService.saveUserInfo(goodsId, userId, orderNumber);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             RedissonLock.release("key");
         }
-        return 1;
+        return 0;
     }
 
     /**
@@ -63,21 +62,51 @@ public class OrderController {
     @RequestMapping(value = "selectOrderGoodsList")
     public ModelAndView selectOrderGoodsList(
             @RequestParam(required = false, value = "userId") Long userId,
+            @RequestParam(required = false, value = "goodsName") String goodsName,
+            @RequestParam(required = false, value = "goodsCategory") String goodsCategory,
+            @RequestParam(required = false, value = "productionTime") String productionTime,
+            @RequestParam(required = false, defaultValue = "1", value = "pageNum") int pageNum,
+            @RequestParam(required = false, defaultValue = "10", value = "pageSize") int pageSize,
             ModelAndView mv) throws Exception {
         //判断userId 是否为空,为空则返回登录界面
         if (!Objects.equals(userId, "") && !Objects.equals(userId, null)) {
-            List lists = redisTemplate.boundHashOps("上架商品").values();
-            List<GoodsDto> goodsDtoList = new ArrayList<GoodsDto>();
-            for (Object list : lists) {
-                Map<Object, Object> map = (Map<Object, Object>) list;
-                goodsDtoList.add((GoodsDto) ConvertUtil.mapToObject(map, GoodsDto.class));
+//            List lists = redisTemplate.boundHashOps("上架商品").values();
+//            List<GoodsDto> goodsDtoList = new ArrayList<GoodsDto>();
+//            for (Object list : lists) {
+//                Map<Object, Object> map = (Map<Object, Object>) list;
+//                goodsDtoList.add((GoodsDto) ConvertUtil.mapToObject(map, GoodsDto.class));
+//            }
+            Page<GoodsDto> page = PageHelper.startPage(pageNum, pageSize);
+            Map<String, Object> map = new HashMap<>();
+            if (!Objects.isNull(goodsName) && goodsName.length() > 0) {
+                map.put("goodsName", goodsName);
             }
-            mv.addObject("goodsDtos",goodsDtoList);
+            if (!Objects.isNull(goodsCategory) && goodsCategory.length() > 0) {
+                map.put("goodsCategory", goodsCategory);
+            }
+            if (!Objects.isNull(productionTime) && productionTime.length() > 0) {
+                map.put("productionTime", new SimpleDateFormat("yyyy-MM-dd").parse(productionTime));
+            }
+            orderService.selectByCondition(map, pageNum);
+            PageInfo<GoodsDto> pageInfo = page.toPageInfo();
+            mv.addObject("pageInfo", pageInfo);
             mv.addObject("userId", userId);
             mv.setViewName("order");
         } else {
             mv.setViewName("index");
         }
         return mv;
+    }
+
+    /**
+     * 根据ID查询商品
+     *
+     * @param goodsId 商品ID
+     */
+    @RequestMapping(value = "selectOrderGoods", method = RequestMethod.POST)
+    @ResponseBody
+    public GoodsDto selectGoods(
+            @RequestParam(required = false, value = "goodsId") Long goodsId) throws Exception {
+        return orderService.selectByGoodsId(goodsId);
     }
 }
