@@ -70,16 +70,9 @@ public class ShoppingServiceImpl implements ShoppingService {
     @Override
     public void deleteOrderRecord(Long goodsId, Long userId) throws Exception {
         //恢复缓存中商品的库存
-        Map<String, Object> map = new HashMap<>();
-        map.put("userId", userId);
-        map.put("goodsId", goodsId);
-        for (ShoppingCarQueryDto shoppingCarQueryDto : shoppingCarEntityMapper.selectByCondition(map)) {
-            if (!shoppingCarQueryDto.getStatus().equals("P")) {
-                redisTemplate.boundHashOps("上架商品").put(goodsId, ConvertUtil.convert(goodsEntityMapper.selectByPrimaryKey(goodsId), GoodsDto.class));
-            }
-        }
+        Map<String, Object> goodsInfo = (Map<String, Object>)redisTemplate.boundHashOps("用户信息").get(goodsId + userId);
+        redisTemplate.boundHashOps("上架商品").put(goodsId, (int)goodsInfo.get("orderNumber")+(int)redisTemplate.boundHashOps("上架商品").get(goodsId));
         //删除订单信息
-        shoppingCarEntityMapper.deleteByPrimaryKey(goodsId);
         redisTemplate.boundHashOps("用户信息").delete(goodsId + userId);
     }
 
