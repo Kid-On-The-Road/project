@@ -59,6 +59,7 @@
     <update id="updateStatus" parameterType="java.lang.Long">
         update GOODS
         <set>
+            <if test="goodsNumber!=null">GOODS_NUMBER=#{goodsNumber,jdbcType=NUMERIC},</if>
             <if test="status!=null">STATUS=#{status,jdbcType=VARCHAR}</if>
         </set>
         where GOODS_ID = #{goodsId,jdbcType=DECIMAL}

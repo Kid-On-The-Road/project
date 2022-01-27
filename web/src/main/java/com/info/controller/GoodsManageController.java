@@ -125,9 +125,9 @@ public class GoodsManageController {
             goodsDto.setStatus("P");
             goodsService.updateStatus(goodsDto);
         } else if (Objects.equals(status, "soldout")) {
-            orderService.deleteInventory(goodsDto);
             goodsDto.setStatus("S");
             goodsService.updateStatus(goodsDto);
+            orderService.deleteInventory(goodsDto);
         }
     }
 }

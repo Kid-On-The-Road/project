@@ -6,6 +6,7 @@ import com.info.entity.GoodsEntity;
 import com.info.mapper.GoodsEntityMapper;
 import com.info.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -20,16 +21,17 @@ public class GoodsServiceImpl implements GoodsService {
     private GoodsEntityMapper goodsEntityMapper;
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
+
     @Override
     public int save(GoodsDto goodsDto) throws Exception {
         //数据库中修改已上架商品数量,同步到redis
-        if(redisTemplate.boundHashOps("上架商品").get(goodsDto.getGoodsId())!=null) {
-            int initNumber = goodsEntityMapper.selectByPrimaryKey(goodsDto.getGoodsId()).getGoodsNumber();
-            int nowNumber = goodsDto.getGoodsNumber();
-            redisTemplate.boundHashOps("上架商品").put(goodsDto.getGoodsId(),(int)redisTemplate.boundHashOps("上架商品").get(goodsDto.getGoodsId())-(int)(initNumber-nowNumber));
+        if (redisTemplate.boundHashOps("上架商品").get(goodsDto.getGoodsId()) != null) {
+            redisTemplate.boundHashOps("上架商品").put(
+                    goodsDto.getGoodsId(),
+                    (int) redisTemplate.boundHashOps("上架商品").get(goodsDto.getGoodsId()) - (goodsEntityMapper.selectByPrimaryKey(goodsDto.getGoodsId()).getGoodsNumber() - goodsDto.getGoodsNumber()));
         }
         GoodsEntity goodsEntity = ConvertUtil.convert(goodsDto, GoodsEntity.class);
-        if(goodsEntity.getGoodsId()>0){
+        if (goodsEntity.getGoodsId() > 0) {
             return goodsEntityMapper.updateById(goodsEntity);
         }
         return goodsEntityMapper.insert(goodsEntity);
@@ -42,7 +44,7 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     @Override
-    public List<GoodsDto> selectByCondition(Map<String, Object> map,int pageNum) throws Exception {
+    public List<GoodsDto> selectByCondition(Map<String, Object> map, int pageNum) throws Exception {
 
         List<GoodsEntity> goodsEntities = goodsEntityMapper.selectByCondition(map);
         List<GoodsDto> goodsDtos = new ArrayList<>();
@@ -60,6 +62,7 @@ public class GoodsServiceImpl implements GoodsService {
 
     @Override
     public void updateStatus(GoodsDto goodsDto) {
+        goodsDto.setGoodsNumber((int) redisTemplate.boundHashOps("上架商品").get(goodsDto.getGoodsId()));
         goodsEntityMapper.updateStatus(goodsDto);
     }
 
