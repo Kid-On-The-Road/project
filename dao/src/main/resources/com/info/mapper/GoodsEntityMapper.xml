@@ -87,7 +87,6 @@
         from GOODS
         <where>
             VALIDITY = 'Y'
-            and GOODS_NUMBER > 0
             <if test="goodsName!=null">AND GOODS_NAME = #{goodsName,jdbcType=VARCHAR}</if>
             <if test="goodsCategory!=null">AND GOODS_CATEGORY = #{goodsCategory,jdbcType=VARCHAR}</if>
             <if test="productionTime!=null">AND PRODUCTION_TIME = #{productionTime,jdbcType=DATE}</if>

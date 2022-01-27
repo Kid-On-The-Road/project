@@ -49,19 +49,28 @@ public class ShoppingServiceImpl implements ShoppingService {
 
     /**
      * 保存编辑
+     *
+     * @return
      */
     @Override
-    public void saveOrder(Long userId, Long goodsId, int orderNumber) {
+    public int saveOrder(Long userId, Long goodsId, int orderNumber) {
+
         Map<String, Object> userInfo = (Map<String, Object>) redisTemplate.boundHashOps("用户信息").get(userId + goodsId);
-        if (redisTemplate.boundHashOps("上架商品").get(goodsId) != null) {
+        if (redisTemplate.boundHashOps("上架商品").get(goodsId) != null && (int) redisTemplate.boundHashOps("上架商品").get(goodsId)+(int)userInfo.get("orderNumber") >= orderNumber) {
             redisTemplate.boundHashOps("上架商品").put(goodsId, (int) redisTemplate.boundHashOps("上架商品").get(goodsId) - (orderNumber - (int) userInfo.get("orderNumber")));
-        } else {
-            GoodsEntity goodsEntity = goodsEntityMapper.selectByPrimaryKey(goodsId);
-            goodsEntity.setGoodsNumber(goodsEntity.getGoodsNumber() - (orderNumber - (int)userInfo.get("orderNumber")));
-            goodsEntityMapper.updateById(goodsEntity);
+            userInfo.put("orderNumber", orderNumber);
+            redisTemplate.boundHashOps("用户信息").put(goodsId + userId, userInfo);
+            return 1;
         }
-        userInfo.put("orderNumber", orderNumber);
-        redisTemplate.boundHashOps("用户信息").put(goodsId + userId, userInfo);
+        GoodsEntity goodsEntity = goodsEntityMapper.selectByPrimaryKey(goodsId);
+        if (redisTemplate.boundHashOps("上架商品").get(goodsId) == null && goodsEntity.getGoodsNumber()+(int)userInfo.get("orderNumber") >= orderNumber) {
+            goodsEntity.setGoodsNumber(goodsEntity.getGoodsNumber() - (orderNumber - (int) userInfo.get("orderNumber")));
+            goodsEntityMapper.updateById(goodsEntity);
+            userInfo.put("orderNumber", orderNumber);
+            redisTemplate.boundHashOps("用户信息").put(goodsId + userId, userInfo);
+            return 1;
+        }
+        return 0;
     }
 
     /**
@@ -73,9 +82,9 @@ public class ShoppingServiceImpl implements ShoppingService {
         Map<String, Object> userInfo = (Map<String, Object>) redisTemplate.boundHashOps("用户信息").get(goodsId + userId);
         if (redisTemplate.boundHashOps("上架商品").get(goodsId) != null) {
             redisTemplate.boundHashOps("上架商品").put(goodsId, (int) userInfo.get("orderNumber") + (int) redisTemplate.boundHashOps("上架商品").get(goodsId));
-        }else{
+        } else {
             GoodsEntity goodsEntity = goodsEntityMapper.selectByPrimaryKey(goodsId);
-            goodsEntity.setGoodsNumber(goodsEntity.getGoodsNumber() + (int)userInfo.get("orderNumber"));
+            goodsEntity.setGoodsNumber(goodsEntity.getGoodsNumber() + (int) userInfo.get("orderNumber"));
             goodsEntityMapper.updateById(goodsEntity);
         }
         //删除订单信息

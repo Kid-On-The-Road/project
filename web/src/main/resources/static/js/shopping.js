@@ -55,9 +55,13 @@ function saveOrder(){
             "userId":document.getElementById("userId").value,
             "orderNumber":document.getElementById("modalGoodsNumber").value
         },
-        success:function (){
+        success:function (result){
             $(".goodsList").load("../selectShoppingGoods" + "?userId=" + document.getElementById("userId").value + " .goodsList>*");
-            toastr.success("修改成功");
+            if(result ===1){
+                toastr.success("修改成功");
+            }else if (result === 0) {
+                toastr.warning("库存不足");
+            }
         }
     })
 }

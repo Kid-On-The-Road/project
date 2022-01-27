@@ -67,12 +67,12 @@ public class ShoppingController {
     //保存编辑
     @RequestMapping(value = "saveOrder")
     @ResponseBody
-    public void saveOrder(
+    public int saveOrder(
             @RequestParam(required = false, value = "userId") Long userId,
             @RequestParam(required = false, value = "goodsId") Long goodsId,
             @RequestParam(required = false, value = "orderNumber") int orderNumber
     ){
-        shoppingService.saveOrder(userId,goodsId,orderNumber);
+        return shoppingService.saveOrder(userId, goodsId, orderNumber);
     }
     //删除
     @RequestMapping(value = "delRecord")
