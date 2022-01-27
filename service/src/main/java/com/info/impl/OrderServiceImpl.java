@@ -61,7 +61,7 @@ public class OrderServiceImpl implements OrderService {
             redisTemplate.boundHashOps("用户信息").put(goodsId + userId, userInfo);
             redisTemplate.boundHashOps("上架商品").put(goodsId, (int) redisTemplate.boundHashOps("上架商品").get(goodsId) - orderNumber);
             //设置过期时间
-            redisTemplate.boundValueOps(String.valueOf(goodsId+userId)).set(userId,10, TimeUnit.SECONDS);
+            redisTemplate.boundValueOps(String.valueOf(goodsId+userId)).set(goodsId,5, TimeUnit.SECONDS);
             return 1;
         }
         return 0;

@@ -20,5 +20,4 @@ public interface OrderService {
 
     //根据商品ID查询商品
     GoodsDto selectByGoodsId(Long goodsId) throws Exception;
-
 }
