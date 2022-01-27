@@ -1,9 +1,6 @@
 package com.info.controller;
 
-import com.info.service.GoodsService;
-import com.info.service.OrderService;
 import com.info.service.ShoppingService;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,12 +14,6 @@ import java.util.Objects;
 
 @Controller
 public class ShoppingController {
-    @Resource
-    private GoodsService goodsService;
-    @Resource
-    private RedisTemplate<String, Object> redisTemplate;
-    @Resource
-    private OrderService OrderService;
     @Resource
     private ShoppingService shoppingService;
 

@@ -5,8 +5,6 @@ import com.info.dto.GoodsDto;
 import com.info.entity.GoodsEntity;
 import com.info.mapper.GoodsEntityMapper;
 import com.info.service.GoodsService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +22,6 @@ public class GoodsServiceImpl implements GoodsService {
 
     @Override
     public int save(GoodsDto goodsDto) throws Exception {
-        //数据库中修改已上架商品数量,同步到redis
         if (redisTemplate.boundHashOps("上架商品").get(goodsDto.getGoodsId()) != null) {
             redisTemplate.boundHashOps("上架商品").put(
                     goodsDto.getGoodsId(),

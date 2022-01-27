@@ -3,14 +3,9 @@ package com.info.controller;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.info.convert.ConvertUtil;
 import com.info.dto.GoodsDto;
-import com.info.impl.GoodsServiceImpl;
-import com.info.mapper.GoodsEntityMapper;
-import com.info.mapper.ShoppingCarEntityMapper;
 import com.info.redis.RedissonLock;
 import com.info.service.OrderService;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,20 +15,15 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Controller
 public class OrderController {
     @Resource
-    private GoodsServiceImpl goodsService;
-    @Resource
-    private RedisTemplate<String, Object> redisTemplate;
-    @Resource
     private OrderService orderService;
-    @Resource
-    private ShoppingCarEntityMapper shoppingCarEntityMapper;
-    @Resource
-    private GoodsEntityMapper goodsEntityMapper;
 
     /**
      * 加入购物车
@@ -83,7 +73,7 @@ public class OrderController {
                 map.put("productionTime", new SimpleDateFormat("yyyy-MM-dd").parse(productionTime));
             }
             map.put("status","P");
-            List<GoodsDto> goodsDtos = orderService.selectByCondition(map, pageNum);
+            orderService.selectByCondition(map, pageNum);
             PageInfo<GoodsDto> pageInfo = page.toPageInfo();
             mv.addObject("pageInfo", pageInfo);
             mv.addObject("userId", userId);

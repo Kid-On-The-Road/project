@@ -6,8 +6,6 @@ import com.github.pagehelper.PageInfo;
 import com.info.dto.GoodsDto;
 import com.info.impl.GoodsServiceImpl;
 import com.info.service.OrderService;
-import org.springframework.amqp.core.AmqpTemplate;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -23,11 +21,7 @@ public class GoodsManageController {
     @Resource
     private GoodsServiceImpl goodsService;
     @Resource
-    private RedisTemplate<String, Object> redisTemplate;
-    @Resource
     private OrderService orderService;
-    @Resource
-    private AmqpTemplate amqpTemplate;
 
     /**
      * 保存/修改商品信息
