@@ -67,10 +67,9 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public int saveUserInfo(Long goodsId, Long userId, int orderNumber) {
-        Object o = redisTemplate.boundHashOps("用户信息").get(goodsId + userId);
         if (redisTemplate.boundHashOps("用户信息").get(goodsId + userId) != null) {
             return 2;
-        } else if ((Integer) redisTemplate.boundHashOps("上架商品").get(goodsId) > 0) {
+        } else if ((Integer) redisTemplate.boundHashOps("上架商品").get(goodsId)>=orderNumber) {
             Map<String, Object> userInfo = new HashMap<String, Object>();
             userInfo.put("userId", userId);
             userInfo.put("goodsId", goodsId);

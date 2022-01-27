@@ -77,7 +77,7 @@ function addShoppingCar() {
             }else if (result === 2) {
                 toastr.warning('购物车中已存在相同商品!')
             }else {
-                toastr.warning('添加购物车失败');
+                toastr.warning('库存不足');
             }
         }
     });
