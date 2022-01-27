@@ -103,7 +103,8 @@ public class ShoppingServiceImpl implements ShoppingService {
         }
         //删除订单信息
         redisTemplate.boundHashOps("用户信息").delete(goodsId + userId);
+        if(userInfo.get("status").equals("W")||userInfo.get("status").equals("R")){
+            redisTemplate.delete(String.valueOf(goodsId+userId));
+        }
     }
-
-
 }
