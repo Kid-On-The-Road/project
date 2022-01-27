@@ -53,7 +53,13 @@ public class ShoppingServiceImpl implements ShoppingService {
     @Override
     public void saveOrder(Long userId, Long goodsId, int orderNumber) {
         Map<String, Object> userInfo = (Map<String, Object>) redisTemplate.boundHashOps("用户信息").get(userId + goodsId);
-        redisTemplate.boundHashOps("上架商品").put(goodsId, (int)redisTemplate.boundHashOps("上架商品").get(goodsId)-(orderNumber-(int)userInfo.get("orderNumber")));
+        if (redisTemplate.boundHashOps("上架商品").get(goodsId) != null) {
+            redisTemplate.boundHashOps("上架商品").put(goodsId, (int) redisTemplate.boundHashOps("上架商品").get(goodsId) - (orderNumber - (int) userInfo.get("orderNumber")));
+        } else {
+            GoodsEntity goodsEntity = goodsEntityMapper.selectByPrimaryKey(goodsId);
+            goodsEntity.setGoodsNumber(goodsEntity.getGoodsNumber() - (orderNumber - (int)userInfo.get("orderNumber")));
+            goodsEntityMapper.updateById(goodsEntity);
+        }
         userInfo.put("orderNumber", orderNumber);
         redisTemplate.boundHashOps("用户信息").put(goodsId + userId, userInfo);
     }
@@ -64,8 +70,14 @@ public class ShoppingServiceImpl implements ShoppingService {
     @Override
     public void deleteOrderRecord(Long goodsId, Long userId) throws Exception {
         //恢复缓存中商品的库存
-        Map<String, Object> goodsInfo = (Map<String, Object>)redisTemplate.boundHashOps("用户信息").get(goodsId + userId);
-        redisTemplate.boundHashOps("上架商品").put(goodsId, (int)goodsInfo.get("orderNumber")+(int)redisTemplate.boundHashOps("上架商品").get(goodsId));
+        Map<String, Object> userInfo = (Map<String, Object>) redisTemplate.boundHashOps("用户信息").get(goodsId + userId);
+        if (redisTemplate.boundHashOps("上架商品").get(goodsId) != null) {
+            redisTemplate.boundHashOps("上架商品").put(goodsId, (int) userInfo.get("orderNumber") + (int) redisTemplate.boundHashOps("上架商品").get(goodsId));
+        }else{
+            GoodsEntity goodsEntity = goodsEntityMapper.selectByPrimaryKey(goodsId);
+            goodsEntity.setGoodsNumber(goodsEntity.getGoodsNumber() + (int)userInfo.get("orderNumber"));
+            goodsEntityMapper.updateById(goodsEntity);
+        }
         //删除订单信息
         redisTemplate.boundHashOps("用户信息").delete(goodsId + userId);
     }
