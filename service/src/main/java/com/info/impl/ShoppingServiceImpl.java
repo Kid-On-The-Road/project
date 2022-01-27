@@ -1,5 +1,7 @@
 package com.info.impl;
 
+import com.info.convert.ConvertUtil;
+import com.info.dto.GoodsDto;
 import com.info.entity.GoodsEntity;
 import com.info.mapper.GoodsEntityMapper;
 import com.info.service.ShoppingService;
@@ -41,10 +43,20 @@ public class ShoppingServiceImpl implements ShoppingService {
      * 付款
      */
     @Override
-    public void payment(String type, Long goodsId, Long userId) {
+    public void payment(String type, Long goodsId, Long userId) throws Exception {
         Map<String, Object> userInfo = (Map<String, Object>) redisTemplate.boundHashOps("用户信息").get(userId + goodsId);
         userInfo.put("status", type);
         redisTemplate.boundHashOps("用户信息").put(goodsId + userId, userInfo);
+        GoodsEntity goodsEntity = new GoodsEntity();
+        if(type.equals("P")){
+            goodsEntity.setGoodsNumber(goodsEntityMapper.selectByPrimaryKey(goodsId).getGoodsNumber()-(int)userInfo.get("orderNumber"));
+            goodsEntity.setGoodsId(goodsId);
+            goodsEntityMapper.updateStatus(ConvertUtil.convert(goodsEntity, GoodsDto.class));
+        }else if (type.equals("R")) {
+            goodsEntity.setGoodsNumber(goodsEntityMapper.selectByPrimaryKey(goodsId).getGoodsNumber()+(int)userInfo.get("orderNumber"));
+            goodsEntity.setGoodsId(goodsId);
+            goodsEntityMapper.updateStatus(ConvertUtil.convert(goodsEntity, GoodsDto.class));
+        }
     }
 
     /**

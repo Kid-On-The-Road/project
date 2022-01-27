@@ -51,7 +51,7 @@ public class ShoppingController {
             @RequestParam(required = false, value = "goodsId") Long goodsId,
             @RequestParam(required = false, value = "type") String type,
             @RequestParam(required = false, value = "userId") Long userId
-    ) {
+    ) throws Exception {
         shoppingService.payment(type, goodsId,userId);
     }
 
