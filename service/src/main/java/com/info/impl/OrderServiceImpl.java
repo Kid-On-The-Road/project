@@ -50,9 +50,7 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public int saveUserInfo(Long goodsId, Long userId, int orderNumber) {
-        if (redisTemplate.boundHashOps("用户信息").get(goodsId + userId) != null) {
-            return 2;
-        } else if ((Integer) redisTemplate.boundHashOps("上架商品").get(goodsId)>=orderNumber) {
+        if ((Integer) redisTemplate.boundHashOps("上架商品").get(goodsId) >= orderNumber) {
             Map<String, Object> userInfo = new HashMap<String, Object>();
             userInfo.put("userId", userId);
             userInfo.put("goodsId", goodsId);
@@ -61,7 +59,7 @@ public class OrderServiceImpl implements OrderService {
             redisTemplate.boundHashOps("用户信息").put(goodsId + userId, userInfo);
             redisTemplate.boundHashOps("上架商品").put(goodsId, (int) redisTemplate.boundHashOps("上架商品").get(goodsId) - orderNumber);
             //设置过期时间
-            redisTemplate.boundValueOps(String.valueOf(goodsId+userId)).set(goodsId,5, TimeUnit.SECONDS);
+            redisTemplate.boundValueOps(String.valueOf(goodsId + userId)).set(goodsId, 100, TimeUnit.SECONDS);
             return 1;
         }
         return 0;

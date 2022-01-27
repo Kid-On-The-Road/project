@@ -1,6 +1,7 @@
 package com.info.controller;
 
 import com.info.service.ShoppingService;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +17,8 @@ import java.util.Objects;
 public class ShoppingController {
     @Resource
     private ShoppingService shoppingService;
+    @Resource
+    private RedisTemplate redisTemplate;
 
     //查询购物车商品
     @RequestMapping(value = "selectShoppingGoods")
@@ -52,7 +55,7 @@ public class ShoppingController {
             @RequestParam(required = false, value = "type") String type,
             @RequestParam(required = false, value = "userId") Long userId
     ) throws Exception {
-        shoppingService.payment(type, goodsId,userId);
+        shoppingService.payment(type, goodsId, userId);
     }
 
     //保存编辑
@@ -62,16 +65,31 @@ public class ShoppingController {
             @RequestParam(required = false, value = "userId") Long userId,
             @RequestParam(required = false, value = "goodsId") Long goodsId,
             @RequestParam(required = false, value = "orderNumber") int orderNumber
-    ){
+    ) {
         return shoppingService.saveOrder(userId, goodsId, orderNumber);
     }
+
     //删除
     @RequestMapping(value = "delRecord")
     @ResponseBody
     public void delRecord(
-            @RequestParam(required = false,value = "goodsId")Long goodsId,
+            @RequestParam(required = false, value = "goodsId") Long goodsId,
             @RequestParam(required = false, value = "userId") Long userId
     ) throws Exception {
-        shoppingService.deleteOrderRecord(goodsId,userId);
+        shoppingService.deleteOrderRecord(goodsId, userId);
+    }
+
+    //根据id查询订单
+    @RequestMapping(value = "selectOrderById")
+    @ResponseBody
+    public int selectOrderById(
+            @RequestParam(required = false, value = "goodsId") Long goodsId,
+            @RequestParam(required = false, value = "userId") Long userId
+    ) {
+        Map<String, Object> userInfo = (Map<String, Object>) redisTemplate.boundHashOps("用户信息").get(goodsId + userId);
+        if (userInfo.get("status").equals("P")) {
+            return 1;
+        }
+        return 0;
     }
 }

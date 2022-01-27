@@ -42,8 +42,23 @@ function payment(goodsId, type) {
 }
 //编辑订单
 function editOrder(goodsId){
-    $('.modalForm input').val('');
-    $('#modalGoodsId').val(goodsId);
+    $.ajax({
+        type:'POST',
+        url : ' selectOrderById',
+        data : {
+            "goodsId":goodsId,
+            "userId":document.getElementById("userId").value
+        },
+        success : function(result) {
+            if (result===1) {
+                toastr.warning("订单已支付不允许更改")
+            }else{
+                $('.modalForm input').val('');
+                $('#modalGoodsId').val(goodsId);
+                $('#goodsModal').modal();
+            }
+        }
+    })
 }
 //保存编辑
 function saveOrder(){

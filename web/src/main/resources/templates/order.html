@@ -66,8 +66,7 @@
                     <button id="orderGoodsButton" type="button"
                             class="btn btn-warning btn-xs glyphicon glyphicon-shopping-cart "
                             th:style="${pageInfo.list.size()==0}?'display:none;margin-left: 20px;position:static;':'margin-left: 20px;position:static;'"
-                            data-toggle="modal" data-target="#goodsModal"
-                            th:onclick="|addOrder('${g.goodsId}')|">&nbsp;加入购物车
+                            th:onclick="|confirmOrder('${g.goodsId}')|">&nbsp;加入购物车
                     </button>
                     <!-- 模态框   信息删除确认 -->
                     <div class="modal fade" id="delModalLabel">

@@ -6,6 +6,7 @@ import com.github.pagehelper.PageInfo;
 import com.info.dto.GoodsDto;
 import com.info.redis.RedissonLock;
 import com.info.service.OrderService;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,6 +25,8 @@ import java.util.Objects;
 public class OrderController {
     @Resource
     private OrderService orderService;
+    @Resource
+    private RedisTemplate redisTemplate;
 
     /**
      * 加入购物车
@@ -62,7 +65,7 @@ public class OrderController {
         if (!Objects.equals(userId, "") && !Objects.equals(userId, null)) {
             Page<GoodsDto> page = PageHelper.startPage(pageNum, pageSize);
             Map<String, Object> map = new HashMap<>();
-            map.put("userId",userId);
+            map.put("userId", userId);
             if (!Objects.isNull(goodsName) && goodsName.length() > 0) {
                 map.put("goodsName", goodsName);
             }
@@ -72,7 +75,7 @@ public class OrderController {
             if (!Objects.isNull(productionTime) && productionTime.length() > 0) {
                 map.put("productionTime", new SimpleDateFormat("yyyy-MM-dd").parse(productionTime));
             }
-            map.put("status","P");
+            map.put("status", "P");
             orderService.selectByCondition(map, pageNum);
             PageInfo<GoodsDto> pageInfo = page.toPageInfo();
             mv.addObject("pageInfo", pageInfo);
@@ -94,5 +97,19 @@ public class OrderController {
     public GoodsDto selectGoods(
             @RequestParam(required = false, value = "goodsId") Long goodsId) throws Exception {
         return orderService.selectByGoodsId(goodsId);
+    }
+
+    //根据id查询订单
+    @RequestMapping(value = "selectOrderByIdFromRedis")
+    @ResponseBody
+    public int selectOrderByIdFromRedis(
+            @RequestParam(required = false, value = "goodsId") Long goodsId,
+            @RequestParam(required = false, value = "userId") Long userId
+    ) {
+        Map<String, Object> userInfo = (Map<String, Object>) redisTemplate.boundHashOps("用户信息").get(goodsId + userId);
+        if (userInfo!=null) {
+            return 1;
+        }
+        return 0;
     }
 }

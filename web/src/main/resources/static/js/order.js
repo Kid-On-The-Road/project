@@ -37,7 +37,25 @@ function shopping() {
         }
     })
 }
-
+//查看是否下单
+function confirmOrder(goodsId){
+    $.ajax({
+        type:'POST',
+        url : ' selectOrderByIdFromRedis',
+        data : {
+            "goodsId":goodsId,
+            "userId":document.getElementById("userId").value
+        },
+        success : function(result) {
+            if (result===1) {
+                toastr.warning("商品已添加购物车")
+            }else{
+                $('#goodsModal').modal();
+                addOrder(goodsId)
+            }
+        }
+    })
+}
 // 编辑订单信息
 function addOrder(goodsId) {
     $('.modalForm input').val('');
@@ -74,9 +92,7 @@ function addShoppingCar() {
             if (result === 1) {
                 $(".goodsList").load(location.href + "?userId=" + document.getElementById("userId").value + " .goodsList>*");
                 toastr.success('添加购物车成功');
-            }else if (result === 2) {
-                toastr.warning('购物车中已存在相同商品!')
-            }else {
+            } else {
                 toastr.warning('库存不足');
             }
         }
