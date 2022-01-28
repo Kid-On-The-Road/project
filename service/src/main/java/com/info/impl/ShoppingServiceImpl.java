@@ -57,7 +57,7 @@ public class ShoppingServiceImpl implements ShoppingService {
             goodsEntity.setGoodsNumber(goodsEntityMapper.selectByPrimaryKey(goodsId).getGoodsNumber()+(int)userInfo.get("orderNumber"));
             goodsEntity.setGoodsId(goodsId);
             goodsEntityMapper.updateStatus(ConvertUtil.convert(goodsEntity, GoodsDto.class));
-            redisTemplate.boundValueOps(String.valueOf(goodsId+userId)).set(goodsId,100, TimeUnit.SECONDS);
+            redisTemplate.boundValueOps(String.valueOf(goodsId+userId)).set(goodsId,5, TimeUnit.SECONDS);
         }
     }
 
