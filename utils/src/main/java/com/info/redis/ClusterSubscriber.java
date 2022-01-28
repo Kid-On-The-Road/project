@@ -65,9 +65,8 @@ public class ClusterSubscriber extends RedisPubSubAdapter implements Application
         pubSubConnection.addListener(new RedisClusterPubSubAdapter() {
             @Override
             public void message(RedisClusterNode node, Object channel, Object message) {
-                String oldLock = redisUtil.getAndSet(message.toString()+".lock","1");
-                if("1".equals(oldLock))return;
                 Integer userGoodsId = Integer.valueOf(String.valueOf(message).replace("\"", ""));
+                if(userGoodsId == null) return;
                 Map<String, Object> userInfo = (Map<String, Object>) redisTemplate.boundHashOps("用户信息").get(userGoodsId);
                 if (userInfo.get("status").equals("R") || userInfo.get("status").equals("W")) {
                     redisTemplate.boundHashOps("上架商品").put(userInfo.get("goodsId"), ((int) redisTemplate.boundHashOps("上架商品").get(userInfo.get("goodsId")) + (int) userInfo.get("orderNumber")));
