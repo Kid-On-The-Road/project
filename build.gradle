@@ -1,5 +1,17 @@
 group 'org.example'
 version '1.0-SNAPSHOT'
+buildscript {
+    ext {
+        springBootVersion = '2.5.2'
+    }
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion")
+    }
+}
 //通用配置
 subprojects {
     apply plugin: "java"
@@ -58,10 +70,17 @@ project(":service") {
 }
 //web模块配置
 project(":web") {
-    apply plugin: "war"
-    //自定义war包名
-    war {
-        archiveName("testJboss.war")
+//    apply plugin: "war"
+//    //自定义war包名
+//    war {
+//        archiveName("testJboss.war")
+//    }
+    apply plugin: 'org.springframework.boot'
+    springBoot {
+        mainClass = "com.SpringBootApplication"
+    }
+    bootJar{
+        archiveFileName = "jboss.jar"
     }
     dependencies {
         implementation project(':dao')
@@ -72,7 +91,7 @@ project(":web") {
         //替换tomcat服务器
 //        implementation 'org.springframework.boot:spring-boot-starter-undertow:2.5.2'
         //servlet
-        providedCompile 'javax.servlet:javax.servlet-api:4.0.1'
+//        providedCompile 'javax.servlet:javax.servlet-api:4.0.1'
         //bootstrap
         implementation 'org.webjars:bootstrap:3.3.5'
         //jquery
@@ -100,7 +119,7 @@ project(":web") {
     //全局排除依赖
     configurations {
 //        all*.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
-        all*.exclude module: 'spring-boot-starter-tomcat'
+//        all*.exclude module: 'spring-boot-starter-tomcat'
     }
 }
 
