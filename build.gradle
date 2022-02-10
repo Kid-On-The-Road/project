@@ -1,7 +1,9 @@
 group 'org.example'
 version '1.0-SNAPSHOT'
+//构建脚本
 buildscript {
     ext {
+        //指定版本号
         springBootVersion = '2.5.2'
     }
     repositories {
