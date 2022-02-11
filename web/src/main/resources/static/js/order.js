@@ -11,9 +11,9 @@ function selectOrderGoods(finish) {
         url: "selectOrderGoodsList",
         data: {
             "userId": document.getElementById("userId").value,
-            "goodsName": document.getElementById("userId").value,
-            "goodsCategory": document.getElementById("userId").value,
-            "productionTime": document.getElementById("userId").value
+            "goodsName": document.getElementById("goodsName").value,
+            "goodsCategory": document.getElementById("goodsCategory").value,
+            "productionTime": document.getElementById("productionTime").value
         },
         success: function (result) {
             //将结果在body中刷新
