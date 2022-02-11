@@ -1,12 +1,12 @@
 // 查询商品
 function selectGoods() {
-    $(".goodsPage").fadeIn();
+    $("#loadingModal").modal('show');
     const queryCondition = {
         "goodsName": document.getElementById("goodsName").value,
         "goodsCategory": document.getElementById("goodsCategory").value,
         "productionTime": document.getElementById("productionTime").value,
         "goodsStatus": document.getElementById("goodsStatus").value,
-        "userId": document.getElementById("userId").value,
+        "userId": document.getElementById("userId").value
     };
     $.ajax({
         type: "POST",
@@ -15,7 +15,6 @@ function selectGoods() {
         success: function (result) {
             //将结果在body中刷新
             $("body").html(result);
-            $(".goodsPage").fadeOut();
             toastr.success('查询完成');
         }
     });
@@ -96,7 +95,7 @@ function editGoods(goodsId, operation) {
 
 // 商品状态修改
 function goodsStatus(goodsId, status) {
-    $('#loading').modal('show');
+    $("#loadingModal").modal('show');
     $.ajax({
         type: "POST",
         url: "goodsStatus",
@@ -105,9 +104,9 @@ function goodsStatus(goodsId, status) {
             "status": status
         },
         success: function (result) {
+            $("#loadingModal").modal('hide');
             $(".goodsList").load(location.href + "?userId=" + document.getElementById("userId").value + " .goodsList>*");
             toastr.success('状态修改成功');
-            $('#loading').modal('hide');
         }
     })
 }

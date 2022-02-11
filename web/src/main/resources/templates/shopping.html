@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="webjars/bootstrap-datetimepicker/2.4.4/css/bootstrap-datetimepicker.min.css"/>
 </head>
 <!--onload="selectGoods()" :刷新页面时执行方法-->
-<body onbeforeunload="goodsLoad()">
+<body>
 
 <!--顶部查询栏-->
 <div class="selectGoods form-inline">
@@ -147,27 +147,13 @@
         </div>
     </div>
 
-
     <!--页面加载动画-->
-    <div class="goodsPage">
-        <div class="cv-spinner">
-            <span class="spinner"></span>
-        </div>
-    </div>
-    <!--加载-->
-    <div class="modal fade" id="loading" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-         data-backdrop='static'>
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel">提示</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="cv-spinner">
-                        <span class="spinner"></span>
-                    </div>
-                </div>
+    <div class="modal fade" id="loadingModal">
+        <div style="width: 200px;height:20px; z-index: 20000; position: absolute; text-align: center; left: 50%; top: 50%;margin-left:-100px;margin-top:-10px">
+            <div class="progress progress-striped active" style="margin-bottom: 0;">
+                <div class="progress-bar" style="width: 100%;"></div>
             </div>
+            <h5>请稍后...</h5>
         </div>
     </div>
 </div>

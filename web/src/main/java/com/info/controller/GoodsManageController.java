@@ -90,7 +90,7 @@ public class GoodsManageController {
             if (!Objects.isNull(status) && status.length() > 0) {
                 map.put("status", status);
             }
-//        Thread.sleep(1000);
+        Thread.sleep(1000);
             goodsService.selectByCondition(map, pageNum);
             PageInfo<GoodsDto> pageInfo = page.toPageInfo();
             mv.addObject("pageInfo", pageInfo);

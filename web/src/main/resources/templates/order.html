@@ -27,7 +27,7 @@
         <input type='text' class="form-control date" id="productionTime"/>
     </label>
     <button type="button" class="btn btn-success glyphicon glyphicon-search "
-            style="margin-left: 20px;position:static" onclick="selectGoods()">&nbsp;查询
+            style="margin-left: 20px;position:static" onclick="selectOrderGoods()">&nbsp;查询
     </button>
     <button type="button" class="btn btn-success glyphicon glyphicon-shopping-cart"
             style="margin-left: 20px;position:static;"
@@ -137,22 +137,12 @@
     </div>
 </div>
 <!--页面加载动画-->
-<div class="goodsPage">
-    <div class="cv-spinner">
-        <span class="spinner"></span>
-    </div>
-</div>
-<!--加载-->
-<div class="modal fade" id="loading" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop='static'>
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabel">正在抢购</h4>
-            </div>
-            <div class="modal-body">
-                <p>请稍后...</p>
-            </div>
+<div class="modal fade" id="loadingModal">
+    <div style="width: 200px;height:20px; z-index: 20000; position: absolute; text-align: center; left: 50%; top: 50%;margin-left:-100px;margin-top:-10px">
+        <div class="progress progress-striped active" style="margin-bottom: 0;">
+            <div class="progress-bar" style="width: 100%;"></div>
         </div>
+        <h5>请稍后...</h5>
     </div>
 </div>
 <!--新增/修改/详情弹窗-->
@@ -211,6 +201,7 @@
             </div>
         </div>
     </div>
+</div>
 <!--引入js-->
 <script src="webjars/jquery/3.6.0/jquery.min.js"></script>
 <script src="webjars/bootstrap/3.3.5/js/bootstrap.min.js"></script>

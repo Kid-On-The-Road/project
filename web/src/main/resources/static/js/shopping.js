@@ -1,6 +1,6 @@
 // 查询商品
 function selectGoods() {
-    $(".goodsPage").fadeIn();
+    $("#loadingModal").modal('show');
     const queryCondition = {
         "goodsName": document.getElementById("goodsName").value,
         "goodsCategory": document.getElementById("goodsCategory").value,
@@ -14,7 +14,6 @@ function selectGoods() {
         success: function (result) {
             //将结果在body中刷新
             $("body").html(result);
-            $(".goodsPage").fadeOut();
             toastr.success('查询完成');
         }
     });

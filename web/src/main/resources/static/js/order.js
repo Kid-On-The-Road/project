@@ -1,5 +1,6 @@
 // 查询商品
 function selectOrderGoods(finish) {
+    $("#loadingModal").modal('show');
     if (finish === 'Y') {
         document.getElementById("orderGoodsButton").style.display = "none";
     } else {
@@ -97,10 +98,6 @@ function addShoppingCar() {
             }
         }
     });
-}
-// 页面加载动画
-function goodsLoad() {
-    $(".goodsPage").fadeIn();
 }
 
 toastr.options = {

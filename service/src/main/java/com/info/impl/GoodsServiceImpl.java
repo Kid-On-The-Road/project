@@ -5,6 +5,7 @@ import com.info.dto.GoodsDto;
 import com.info.entity.GoodsEntity;
 import com.info.mapper.GoodsEntityMapper;
 import com.info.service.GoodsService;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 

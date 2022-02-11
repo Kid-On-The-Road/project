@@ -1,6 +1,6 @@
 // 查询用户
 function selectUser() {
-    $(".userPage").fadeIn();
+    $("#loadingModal").modal('show');
     const queryCondition = {
         "userName": document.getElementById("userName").value,
         "createTime": document.getElementById("createTime").value,
@@ -156,9 +156,4 @@ toastr.options = {
     hideEasing: "linear",
     showMethod: "fadeIn",
     hideMethod: "fadeOut"
-};
-
-// 页面加载动画
-function userLoad() {
-    $(".userPage").fadeIn();
 };
