@@ -135,6 +135,7 @@ public class GoodsManageController {
     @RequestMapping(value = "importData")
     @ResponseBody
     public int importData(@RequestParam("file") MultipartFile file) throws Exception {
-        return goodsService.uploadGoods(file);
+         goodsService.uploadGoods(file);
+        return 1;
     }
 }

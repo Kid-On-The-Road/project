@@ -149,19 +149,20 @@ $("#fileinput").fileinput({
     showPreview: true, //是否显示预览
     showCaption: true,//是否显示标题
     browseClass: "btn btn-primary", //按钮样式
-    maxFileCount: 10, //表示允许同时上传的最大文件个数
+    maxFileCount: 4, //表示允许同时上传的最大文件个数
     maxFileSize: 2000,
-    maxFilesNum: 2,
+    maxFilesNum: 1,
     enctype: 'multipart/form-data',
     autoReplace: true,//替换当前文件
     previewFileIcon: '<i class="fa fa-file-excel-o text-success"></i>',
     msgFilesTooMany: "选择上传的文件数量({n}) 超过允许的最大数值{m}！"
-
-}).on("fileuploaded", function () {
-    $(".fileinput-remove-button").click();
-    $(".goodsList").load(location.href + "?userId=" + document.getElementById("userId").value + " .goodsList>*");
-    toastr.success('商品信息上传成功');
-})
+}).on("fileuploaded", function (event, data, previewId, index) {
+        if (data.response === 1) {
+            toastr.success("上传成功");
+            console.log(event);
+            $(".kv-file-remove").click();  //手动调用删除文件按钮的click方法
+        }
+    });
 //配置日期控件
 $('.date').datetimepicker({
     format: 'yyyy-mm-dd',
