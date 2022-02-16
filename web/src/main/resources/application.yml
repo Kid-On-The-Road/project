@@ -12,6 +12,10 @@ logging.level:
 server:
   port: 8082
 spring:
+  servlet:
+    multipart:
+      maxFileSize: 30MB
+      maxRequestSize: 30MB
   redis:
     timeout: 6000ms
     password:
@@ -65,5 +69,5 @@ spring:
       max-active: 20
       max-wait: 60000
 #    jndi-name: java:jboss/jdbc/oracleDS
-filter:
-  loginFilter:     no
+
+

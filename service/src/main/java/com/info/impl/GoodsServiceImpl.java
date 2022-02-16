@@ -1,5 +1,6 @@
 package com.info.impl;
 
+import com.info.Excel.ExcelUpload;
 import com.info.convert.ConvertUtil;
 import com.info.dto.GoodsDto;
 import com.info.entity.GoodsEntity;
@@ -8,8 +9,10 @@ import com.info.service.GoodsService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -64,4 +67,17 @@ public class GoodsServiceImpl implements GoodsService {
         goodsEntityMapper.updateStatus(goodsDto);
     }
 
+    @Override
+    public int uploadGoods(MultipartFile file) throws Exception {
+        Map<Object, List<Object>> goodsListMap = ExcelUpload.loadData(file, 1, 2);
+        List<String> headerList = ExcelUpload.getHeaderList();
+        for (Object o : goodsListMap.keySet()) {
+            List<Object> goodsInfos = goodsListMap.get(o);
+            GoodsEntity goodsEntity = ConvertUtil.listToObject(goodsInfos, GoodsEntity.class, headerList);
+            goodsEntity.setValidity("Y");
+            goodsEntity.setStatus("S");
+            return goodsEntityMapper.insert(goodsEntity);
+        }
+        return 0;
+    }
 }

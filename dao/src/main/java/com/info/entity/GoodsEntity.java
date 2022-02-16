@@ -4,15 +4,15 @@ import java.util.Date;
 
 public class GoodsEntity {
     //商品ID
-    private long goodsId;
+    private Long goodsId;
     //商品类型
     private String goodsCategory;
     //商品名称
     private String goodsName;
     //商品数量
-    private int goodsNumber;
+    private Integer goodsNumber;
     //商品价格
-    private double goodsPrice;
+    private Double goodsPrice;
     //生产日期
     private Date productionTime;
     //是否有效

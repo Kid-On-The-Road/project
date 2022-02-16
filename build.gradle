@@ -46,6 +46,12 @@ project(":utils") {
         implementation 'org.redisson:redisson:3.16.0'
         //Json工具
         implementation 'com.alibaba:fastjson:1.2.76'
+        //Apache POI
+        implementation 'org.apache.poi:poi:4.1.2'
+        //Apache poi-ooxml
+        implementation 'org.apache.poi:poi-ooxml:4.1.2'
+        //Apache poi-ooxml-schemas
+        implementation 'org.apache.poi:poi-ooxml-schemas:4.1.2'
     }
 }
 //dao模块配置
@@ -82,7 +88,7 @@ project(":web") {
         mainClass = "com.SpringBootApplication"
     }
     bootJar{
-        archiveFileName = "jboss.jar"
+        archiveFileName = "test.jar"
     }
     dependencies {
         implementation project(':dao')
@@ -117,6 +123,14 @@ project(":web") {
         implementation 'org.springframework.boot:spring-boot-starter-amqp:2.5.2'
         //redis依赖
         implementation 'org.springframework.boot:spring-boot-starter-data-redis:2.5.2'
+        //Apache POI
+        implementation 'org.apache.poi:poi:4.1.2'
+        //Apache poi-ooxml
+        implementation 'org.apache.poi:poi-ooxml:4.1.2'
+        //Apache poi-ooxml-schemas
+        implementation 'org.apache.poi:poi-ooxml-schemas:4.1.2'
+        //bootstrap-fileinput
+        implementation 'org.webjars.bowergithub.kartik-v:bootstrap-fileinput:5.0.7'
     }
     //全局排除依赖
     configurations {

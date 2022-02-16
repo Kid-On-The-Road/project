@@ -139,7 +139,29 @@ function delGoods(goodsId) {
     }
 }
 
+//初始化头像上传插件
+$("#fileinput").fileinput({
+    language: 'zh', //设置语言
+    allowedFileExtensions: ["xlsx", "xls"],//接收的文件后缀
+    uploadUrl: "../importData",
+    showUpload: true, //是否显示上传按钮
+    showRemove: true, //显示移除按钮
+    showPreview: true, //是否显示预览
+    showCaption: true,//是否显示标题
+    browseClass: "btn btn-primary", //按钮样式
+    maxFileCount: 10, //表示允许同时上传的最大文件个数
+    maxFileSize: 2000,
+    maxFilesNum: 2,
+    enctype: 'multipart/form-data',
+    autoReplace: true,//替换当前文件
+    previewFileIcon: '<i class="fa fa-file-excel-o text-success"></i>',
+    msgFilesTooMany: "选择上传的文件数量({n}) 超过允许的最大数值{m}！"
 
+}).on("fileuploaded", function () {
+    $(".fileinput-remove-button").click();
+    $(".goodsList").load(location.href + "?userId=" + document.getElementById("userId").value + " .goodsList>*");
+    toastr.success('商品信息上传成功');
+})
 //配置日期控件
 $('.date').datetimepicker({
     format: 'yyyy-mm-dd',

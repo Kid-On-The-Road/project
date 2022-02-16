@@ -45,4 +45,28 @@ public class ConvertUtil {
         String jsonStr = JSONObject.toJSONString(obj);
         return JSONObject.parseObject(jsonStr);
     }
+
+    /**
+     * list转java对象
+     */
+    public static <T> T listToObject(List<Object> list, Class<T> clazz, List<String> headerList) throws Exception {
+        T t = clazz.newInstance();
+        if (list != null) {
+            for (int i = 0; i < headerList.size(); i++) {
+                for (Field tField : clazz.getDeclaredFields()) {
+                    String s = headerList.get(i);
+                    Object o = list.get(i);
+                    if (tField.getName().equals(headerList.get(i))) {
+                        tField.setAccessible(true);
+                        if (!tField.getGenericType().getTypeName().equals(list.get(i).getClass().getTypeName())) {
+                            tField.set(t, ((Double) list.get(i)).intValue());
+                        } else {
+                            tField.set(t, list.get(i));
+                        }
+                    }
+                }
+            }
+        }
+        return t;
+    }
 }

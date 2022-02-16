@@ -3,16 +3,21 @@ package com.info.controller;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.info.Excel.ExcelUpload;
 import com.info.dto.GoodsDto;
 import com.info.impl.GoodsServiceImpl;
 import com.info.service.OrderService;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -123,5 +128,13 @@ public class GoodsManageController {
             goodsService.updateStatus(goodsDto);
             orderService.deleteInventory(goodsDto);
         }
+    }
+    /**
+     * 导入数据
+     */
+    @RequestMapping(value = "importData")
+    @ResponseBody
+    public int importData(@RequestParam("file") MultipartFile file) throws Exception {
+        return goodsService.uploadGoods(file);
     }
 }

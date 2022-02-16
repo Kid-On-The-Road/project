@@ -7,10 +7,11 @@
     <link rel="stylesheet" href="webjars/bootstrap/3.3.5/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="webjars/toastr/2.1.3/toastr.css"/>
     <link rel="stylesheet" href="webjars/bootstrap-datetimepicker/2.4.4/css/bootstrap-datetimepicker.min.css"/>
+    <link rel="stylesheet" href="webjars/bootstrap-fileinput/css/fileinput.css"/>
 </head>
 <!--onload="selectGoods()" :刷新页面时执行方法-->
 <!--onbeforeunload="goodsLoad()"-->
-<body >
+<body>
 
 <!--顶部查询栏-->
 <div class="selectGoods form-inline">
@@ -42,6 +43,12 @@
     </button>
     <button type="button" class="btn btn-primary glyphicon glyphicon-plus " style="position:static"
             data-toggle="modal" data-target="#goodsModal" th:onclick="|editGoods('','add')|">&nbsp;新增
+    </button>
+    <button type="button" class="btn btn-primary glyphicon glyphicon-import " style="position:static"
+            data-toggle="modal" data-target="#importGoodsModal">&nbsp;导入
+    </button>
+    <button type="button" class="btn btn-primary glyphicon glyphicon-export " style="position:static"
+            data-toggle="modal" data-target="#goodsModal" th:onclick="|export('','add')|">&nbsp;导出
     </button>
 </div>
 
@@ -136,24 +143,30 @@
                         th:href="@{/selectGoodsList(pageNum=${pageInfo.hasPreviousPage}?${pageInfo.prePage}:1,userId=${userId})}">上一页</a>
                 </li>
                 <li th:style="${pageInfo.pageNum<3}?'display:none':''">
-                    <a th:href="@{/selectGoodsList(pageNum=${pageInfo.pageNum}-2,userId=${userId})}" th:text="${pageInfo.pageNum}-2"></a>
+                    <a th:href="@{/selectGoodsList(pageNum=${pageInfo.pageNum}-2,userId=${userId})}"
+                       th:text="${pageInfo.pageNum}-2"></a>
                 </li>
                 <li th:style="${pageInfo.pageNum<2}?'display:none':''">
-                    <a th:href="@{/selectGoodsList(pageNum=${pageInfo.pageNum}-1,userId=${userId})}" th:text="${pageInfo.pageNum}-1"></a>
+                    <a th:href="@{/selectGoodsList(pageNum=${pageInfo.pageNum}-1,userId=${userId})}"
+                       th:text="${pageInfo.pageNum}-1"></a>
                 </li>
                 <li class="active">
-                    <a th:href="@{/selectGoodsList(pageNum=${pageInfo.pageNum},userId=${userId})}" th:text="${pageInfo.pageNum}"></a>
+                    <a th:href="@{/selectGoodsList(pageNum=${pageInfo.pageNum},userId=${userId})}"
+                       th:text="${pageInfo.pageNum}"></a>
                 </li>
                 <li th:style="${pageInfo.pageNum+1>pageInfo.pages}?'display:none':''">
-                    <a th:href="@{/selectGoodsList(pageNum=${pageInfo.pageNum}+1,userId=${userId})}" th:text="${pageInfo.pageNum}+1"></a>
+                    <a th:href="@{/selectGoodsList(pageNum=${pageInfo.pageNum}+1,userId=${userId})}"
+                       th:text="${pageInfo.pageNum}+1"></a>
                 </li>
                 <li th:style="${pageInfo.pageNum+2>pageInfo.pages||pageInfo.pageNum==2}?'display:none':''">
-                    <a th:href="@{/selectGoodsList(pageNum=${pageInfo.pageNum}+2,userId=${userId})}" th:text="${pageInfo.pageNum}+2"></a>
+                    <a th:href="@{/selectGoodsList(pageNum=${pageInfo.pageNum}+2,userId=${userId})}"
+                       th:text="${pageInfo.pageNum}+2"></a>
                 </li>
                 <li class="active"><a
                         th:href="@{/selectGoodsList(pageNum=${pageInfo.hasNextPage}?${pageInfo.nextPage}:${pageInfo.pages},userId=${userId})}">下一页</a>
                 </li>
-                <li class="active"><a th:href="@{/selectGoodsList(pageNum=${pageInfo.pages},userId=${userId})}">尾页</a></li>
+                <li class="active"><a th:href="@{/selectGoodsList(pageNum=${pageInfo.pages},userId=${userId})}">尾页</a>
+                </li>
             </ul>
         </div>
     </div>
@@ -225,6 +238,28 @@
         <h5>请稍后...</h5>
     </div>
 </div>
+<!--导入模态框-->
+<div class="modal fade text-center" id="importGoodsModal" tabindex="-1" role="dialog"
+     aria-labelledby="importGoodsModalLabel">
+    <div class="modal-dialog" style="display: inline-block;width: 50%;" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title">导入数据</h4>
+            </div>
+            <div class="modal-body">
+                <input id="fileinput" type="file" name="file" data-browse-on-zone-click="true" multiple><br>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!--引入js-->
 <script src="webjars/jquery/3.6.0/jquery.min.js"></script>
 <script src="webjars/bootstrap/3.3.5/js/bootstrap.min.js"></script>
@@ -233,14 +268,9 @@
 <script src="webjars/moment/2.29.1/moment.js"></script>
 <script src="webjars/bootstrap-datetimepicker/2.4.4/js/locales/bootstrap-datetimepicker.fr.js"></script>
 <script src="webjars/bootstrap-datetimepicker/2.4.4/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="webjars/bootstrap-fileinput/js/fileinput.js"></script>
+<script src="webjars/bootstrap-fileinput/js/locales/zh.js"></script>
 <script src="webjars/toastr/2.1.3/toastr.js"></script>
 <script type="text/javascript" th:src="@{/js/goodsManage.js}"></script>
-<!--<script>-->
-<!--    $(function () {-->
-<!--        //禁用“确认重新提交表单”-->
-<!--        window.history.replaceState(null, null, window.location.href);-->
-<!--    })-->
-<!--</script>-->
-</script>
 </body>
 </html>

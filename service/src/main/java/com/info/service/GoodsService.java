@@ -1,7 +1,9 @@
 package com.info.service;
 
 import com.info.dto.GoodsDto;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -30,5 +32,13 @@ public interface GoodsService {
      */
     int deleteByGoodsId(Long goodsId);
 
+    /**
+     * 更新商品状态
+     * @param goodsDto
+     */
     void updateStatus(GoodsDto goodsDto);
+    /**
+     * 上传数据
+     */
+    int uploadGoods(MultipartFile file) throws Exception;
 }
